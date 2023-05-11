@@ -483,6 +483,7 @@ Joel Nitta
 <li>Misspelled names</li>
 <li><strong>Mismatching synonyms</strong></li>
 </ul>
+<p>We need to <strong>resolve names</strong> to a standard taxonomic database</p>
 </section></section>
 <section>
 <section id="part-2-r-tools-for-assembling-spatial-and-genetic-data" class="title-slide slide level1 center">
@@ -491,36 +492,44 @@ Joel Nitta
 </section>
 <section id="live-coding" class="slide level2">
 <h2>Live coding</h2>
-<p>Live coding session demonstrating how to use <code>rgbif</code>, <code>CoordinateCleaner</code>, <code>taxonDB</code>, and <code>rotl</code> to obtain data</p>
-<p>Code is available here: <a href="https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/occ_phy.md" class="uri">https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/occ_phy.md</a></p>
+<ul>
+<li><p>Live coding session demonstrating how to use <code>rgbif</code>, <code>CoordinateCleaner</code>, <code>taxonDB</code>, and <code>rotl</code> to obtain data</p></li>
+<li><p>Code is available here: <a href="https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/occ_phy.md" class="uri">https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/occ_phy.md</a></p></li>
+</ul>
 </section>
 <section id="workflow" class="slide level2">
 <h2>Workflow</h2>
 <p>A typical workflow involves the following steps:</p>
 <ol type="1">
-<li><strong>Download occurrence records (<code>rgbif</code>)</strong></li>
-<li><strong>Clean occurrence records (<code>CoordinateCleaner</code>)</strong></li>
-<li><strong>Download (or assemble) tree (<code>rotl</code>)</strong></li>
-<li><strong>Standardize species names (<code>taxonDB</code>)</strong></li>
+<li>Download occurrence records (<code>rgbif</code>)</li>
+<li>Clean occurrence records (<code>CoordinateCleaner</code>, <code>bdc</code>)</li>
+<li>Standardize species names (<code>taxonDB</code>, <code>bdc</code>)</li>
 <li>Convert points to assemblages (<code>phyloregion</code>)</li>
 <li>Join assemblage data to phylogeny during spatial phylogenetic analysis (<code>canaper</code>)</li>
 </ol>
 </section>
-<section id="other-packages" class="slide level2">
+<section id="other-packages" class="slide level2 smaller">
 <h2>Other packages</h2>
 <ul>
-<li>bdc</li>
-<li>rentrez
+<li><a href="https://github.com/joelnitta/taxastand">taxastand</a>
 <ul>
-<li>Interface to Entrez databases (including GenBank) in R</li>
+<li>Standardize names to a custom database</li>
 </ul></li>
-<li>U.PhyloMaker
+<li><a href="https://github.com/bmaitner/RBIEN">RBIEN</a>
 <ul>
-<li>Assemble phylogenies by grafting species names onto a backbone (this approach is not recommended)</li>
+<li>Interface to <a href="https://bien.nceas.ucsb.edu/bien/">BIEN</a> database of plant occurrences and traits</li>
 </ul></li>
-<li>occCite
+<li><a href="https://github.com/ropensci/rentrez">rentrez</a>
 <ul>
-<li>Downloads occurrence data from GBIF and BIEN, and provides references for all databases that contributed</li>
+<li>Interface to <a href="https://www.ncbi.nlm.nih.gov/search/">Entrez</a> databases (including <a href="https://www.ncbi.nlm.nih.gov/genbank/">GenBank</a>)</li>
+</ul></li>
+<li><a href="https://github.com/jinyizju/U.PhyloMaker">U.PhyloMaker</a>
+<ul>
+<li>Assemble phylogenies by grafting species names onto a backbone (<strong>this approach is not recommended</strong>)</li>
+</ul></li>
+<li><a href="https://github.com/ropensci/occCite">occCite</a>
+<ul>
+<li>Download occurrence data from GBIF and BIEN, and generate references for all databases that contributed</li>
 </ul></li>
 </ul>
 <div class="footer footer-default">
