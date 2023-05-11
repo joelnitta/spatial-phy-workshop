@@ -1,0 +1,185 @@
+---
+title: "Obtaining occurrence and phylogeny data in R"
+format: gfm
+execute: 
+  echo: true
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+library(rgbif)
+library(tidyverse)
+```
+
+This tutorial demonstrates how to obtain occurrence records and phylogenies to use for spatial phylogenetics in R. As an example, we will obtain occurrence records and a phylogeny for the fern genus *Crepidomanes*.
+
+## Obtaining occurrence data with rgbif
+
+```{r}
+#| label: current-num-records
+#| echo: false
+#| cache: true
+
+gbif_n_rec <- scales::number(occ_count(), big.mark = ",")
+```
+
+[GBIF](https://www.gbif.org/) is the largest platform for accessing biodiveristy data^[As of writing, GBIF includes `r gbif_n_rec` occurrence records!], making it an excellent source of occurrence data for spatial phylogenetics.
+
+[`rgbif`](https://docs.ropensci.org/rgbif/) is an R package that interfaces with the GBIF [API](https://en.wikipedia.org/wiki/API), allowing you to query and download GBIF data from R.
+
+### Setup: storing login credentials
+
+To do anything beyond simple queries with rgbif, you will need a GBIF account.
+
+If you don't have one yet, create it now by going to <https://www.gbif.org>, clicking on "Login" in the upper-right, then clicking on "Register".
+
+To make authentication easier, we will store login credentials in a special file called `.Renviron` outside of your project using the `usethis` package:
+
+```{r}
+#| label: setup-cred
+#| eval: false
+usethis::edit_r_environ("user")
+```
+
+This will open the `.Renviron` file in your editor.
+
+Fill in your credentials like this (replacing the dummy values like 'myname' with you real data):
+
+```
+GBIF_USER=myname
+GBIF_PWD=secretpassword
+GBIF_EMAIL=me@myemail.com
+```
+
+Save it and restart R. Now you will be able to use `rgbif` download functionality without having to enter your login credentials every time.
+
+### Quick searches
+
+`occ_search()` is a quick way to get data into R (and does not require logging in), but is limited to 100,000 records per query.
+
+```{r}
+#| label: rgbif-search
+#| cache: true
+#| message: false
+#| warning: false
+library(rgbif)
+library(tidyverse)
+
+# Query for the fern genus Crepidomanes
+crep_records <- occ_search(scientificName = "Crepidomanes")
+
+# Data are stored in 'data'
+crep_records$data[1:6, 1:6]
+
+# There are a *lot* of columns: 162!
+dim(crep_records$data)
+```
+
+### Downloading a complete dataset
+
+To download a complete dataset, use `occ_download()`. This requires you provide login credentials, but since we already set them up using the `.Renviron` file, you won't have to type them in.
+
+I assume that you are working in a project folder than includes a subdirectory called "data_raw". If not, set this up now.
+
+```{r}
+#| label: rgbif-download
+#| cache: true
+
+# First we need to look up the species key for Crepidomanes
+crep_key <- name_backbone("Crepidomanes")$genusKey
+
+# Send download request
+gbif_download <- occ_download(
+  pred("taxonKey", crep_key),
+  format = "SIMPLE_CSV")
+
+# Wait for the request to be completed
+occ_download_wait(gbif_download, curlopts = list(http_version=2))
+
+# Download the data
+crep_records_path <- occ_download_get(gbif_download, "data_raw")
+
+# Load the data into R
+crep_records_raw <- occ_download_import(crep_records_path)
+```
+
+### Inspect the dataset
+
+Let's take a look at the dataset.
+
+```{r}
+#| label: inspect-gbif-data-1
+#| cache: true
+crep_records_raw
+```
+
+The dataset is so large it is difficult to print out to the screen. This output type (`"SIMPLE_CSV"`) includes 50 columns, which is less than when we used `occ_search()`, but it's still a lot.
+
+The `dplyr::glimpse()` function is useful when there are lots of columns to get an idea of what each column holds.
+
+```{r}
+#| label: inspect-gbif-data-2
+#| cache: true
+glimpse(crep_records_raw[1, ])
+```
+
+That's better.
+
+There are number of columns that bear mentioning^[Most of these columns are [Darwin Core terms](https://www.gbif.org/darwin-core), which is a standard for exchanging biodiversity data].
+
+- `datasetKey` is a unique identifier for the dataset that the occurrence record belongs to. You will want to cite this for each occurrence record you use.
+- `species` is the Latin binomial.
+- `scientificName` is the scientific name including the taxonomic authority. This is the official name used by GBIF (the "GBIF backbone taxonomy").
+- `verbatimScientificName` is the scientific name that was originally associated with this record.
+- `decimalLatitude` is the latitude in decimal-degrees.
+- `decimalLongitude` is the longitude in decimal-degrees.
+- `basisOfRecord` describes what kind of occurrence record this is (more on that below).
+- `issue` lists any possible data-quality issues associated with this record.
+
+What is the deal with `basisOfRecord`? Let's see what values are included in this dataset:
+
+```{r}
+#| label: basis
+crep_records_raw %>%
+  count(basisOfRecord)
+```
+
+We see that the majority of these are `PRESERVED_SPECIMEN`; in the case of plants, those are almost certainly herbarium specimens.
+You can treat such occurrence records as high-quality because they have a voucher specimen to back them up; if you really wanted to, you could theoretically track down the specimen for any of these occurrence records and inspect it.
+
+The next most common is `HUMAN_OBSERVATION`. This means that this species was recorded as being in a particular place, but there is no voucher specimen for it. Most of these types of records come from [iNaturalist](https://www.inaturalist.org/). These should be treated as less reliable than `PRESERVED_SPECIMEN` since we can't verify them. However, only iNaturalist records that have been certified as "Research Grade"^[[According to GBIF](https://www.gbif.org/dataset/50c9509d-22c7-4a22-a47d-8c48425ef4a7), "iNaturalist observations become candidates for Research Grade when they have a photo, date, and coordinates. They become 'Research Grade' when the community agrees on an identification."] are included in GBIF, so that does offer some assurance of quality.
+
+Another common type of `basisOfRecord` that comes up is `FOSSIL_SPECIMEN`, which are fossils as the name suggests. If you are only interested in extant organisms you probably want to exclude these. The complete list of possible values is at <https://gbif.github.io/parsers/apidocs/org/gbif/api/vocabulary/BasisOfRecord.html>.
+
+Let's see how many species there for each type of `basisOfRecord`:
+
+```{r}
+#| label: count-species-by-obs-type
+crep_records_raw %>%
+  group_by(basisOfRecord) %>%
+  summarize(
+    n_sp = n_distinct(species)
+  )
+```
+
+Most of them are preserved specimens, as expected.
+
+How many species are only represented by `HUMAN_OBSERVATION` records? In other words, if we were to drop all `HUMAN_OBSERVATION` records, how many species would we lose?
+
+```{r}
+#| label: count-hum-obs-only
+crep_records_raw %>%
+  group_by(species) %>%
+  add_count(basisOfRecord) %>%
+  filter(basisOfRecord == "HUMAN_OBSERVATION", n == 1) %>%
+  count(species)
+```
+
+These are the sorts of things you need to consider when working with data from GBIF.
+
+## Cleaning occurrence data with CoordinateCleaner
+
+
