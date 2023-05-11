@@ -1,0 +1,156 @@
+---
+title: "Spatial Phylogenetics Workshop"
+format:
+  revealjs:
+    incremental: false
+    css: styles.css
+author: Joel Nitta
+institute: <a href="https://joelnitta.com">https://joelnitta.com</a>
+footer: <a href="https://joelnitta.github.io/spatial-phy-workshop">https://joelnitta.github.io/spatial-phy-workshop</a>
+---
+
+# Part 1: Assembling Spatial and Genetic Data
+
+## Basic inputs for spatial phylogenetics
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- A phylogeny
+<br>
+<br>
+<br>
+<br>
+<br>
+- Spatial occurrence data
+:::
+
+::: {.column width="50%"}
+![](images/phylogeny.png){fig-alt="a phylogeny" height="200"}<br>
+![](images/ocurrence.png){fig-alt="an occurrence map" height="200"}
+:::
+
+::::
+
+... which are linked by taxonomic names (OTUs)
+
+## Sources of occurrence data
+
+- Herbaria or museums
+- Floras or checklists
+- Previous studies
+- Your own data
+
+## Online sources of occurrence data
+
+- GBIF
+- Kew Plants of the World Online (POWO)
+- VertNet
+
+## GBIF
+
+GBIF is not one database; it is a portal to many databases
+
+You should try the web interface first to familiarize yourself with it
+
+We can't use the occurrence records in GBIF as-is. They may include many errors and need to be checked carefully. This will be demonstrated during the coding session.
+
+## Types of occurrence data
+
+Can take many forms:
+
+- geometric shapes
+- points
+- checklists
+- your own surveys
+
+We will focus on point data during the coding session
+
+## Coordinate Reference Systems
+
+The earth is round, but we project it onto flat maps
+
+The decision of how to do this is not trivial
+
+There will always be some amount of distortion in area, distance, or direction
+
+## Coordinate Reference Systems
+
+You need to choose an appropriate CRS for your study
+
+If you assume that your sampling units have equal area, make sure to use an equal-area projection
+
+## From occurrences to communities
+
+Raw data are often provided on a per-species basis
+
+But we are interested in **assemblages** (communities) of species → need to group species together
+
+## From occurrences to communities
+
+For point data, a typical method is to divide the study area into equal size grid-cells, then count the species occurring in each grid-cell
+
+For shape data, you would overlay the shapes
+
+For checklist data, the communities may not be equal sized. You could simply use the sampling units in the checklist (e.g., counties, countries, etc.)
+
+## Phylogenetic data
+
+Is there a tree available, or do you need to build it from scratch?
+
+## Sources of DNA sequence data
+
+- GenBank
+- access in R via the `rentrez` package
+
+## Building a tree from scratch
+
+We don't have time to cover this today - that is a whole topic of study unto itself!
+
+## Sources of phylogenetic trees
+
+- Previous publications
+- Open Tree of Life (`rotl` R package)
+- Software that places tips on the tree by taxonomy
+
+## What if I don't have a tree for my group?
+
+- A tree at the species level may not be necessary. Consider doing the analysis at a higher taxonomic level (genus)
+
+## Is it OK to use taxonomy in place of DNA?
+
+In other words, to place species on the tree based on their taxonomy
+
+- Not such a good idea. This makes a lot of assumptions.
+  - Monophyly of the taxa involved
+  - Correctness of the taxonomy
+- Also produces weird trees with lots of polytomies that may not be suitable for spatial phylogenetics
+
+# Part 2: R tools for assembling spatial and genetic data
+
+## Live coding
+
+Live coding session demonstrating how to use `rgbif`, `CoordinateCleaner`, `taxonDB`, and `rotl` to obtain data
+
+Code is available here: 
+
+## Workflow
+
+A typical workflow involves the following steps:
+
+1. **Download occurrence records (`rgbif`)**
+2. **Clean occurrence records (`CoordinateCleaner`)**
+3. **Download (or assemble) tree (`rotl`)**
+3. **Standardize species names (`taxonDB`)**
+4. Convert points to assemblages (`phyloregion`)
+5. Join assemblage data to phylogeny during spatial phylogenetic analysis (`canaper`)
+
+## Other packages
+
+- bdc
+- rentrez
+  - Interface to Entrez databases (including GenBank) in R
+- U.PhyloMaker
+  - Assemble phylogenies by grafting species names onto a backbone (this approach is not recommended)
+- occCite
+  - Downloads occurrence data from GBIF and BIEN, and provides references for all databases that contributed
