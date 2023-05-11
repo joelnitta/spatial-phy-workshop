@@ -370,11 +370,17 @@ Joel Nitta
 </section>
 <section id="online-sources-of-occurrence-data" class="slide level2">
 <h2>Online sources of occurrence data</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li>GBIF</li>
 <li>Kew Plants of the World Online (POWO)</li>
-<li>VertNet</li>
+<li>VertNet etc…</li>
 </ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="images/gbif_logo.png" alt="gbif logo" height="150"><br> <img data-src="images/vertnet_logo.png" alt="vertnet logo" height="150"><br> <img data-src="images/powo_logo.png" alt="powo logo" height="150"></p>
+</div>
+</div>
 </section>
 <section id="gbif" class="slide level2">
 <h2>GBIF</h2>
@@ -398,6 +404,7 @@ Joel Nitta
 <p>The earth is round, but we project it onto flat maps</p>
 <p>The decision of how to do this is not trivial</p>
 <p>There will always be some amount of distortion in area, distance, or direction</p>
+<p><img data-src="images/georefs.png" alt="Comparison of different types of georeference systems" height="450"></p>
 </section>
 <section id="coordinate-reference-systems-1" class="slide level2">
 <h2>Coordinate Reference Systems</h2>
@@ -455,6 +462,14 @@ Joel Nitta
 </ul></li>
 <li>Also produces weird trees with lots of polytomies that may not be suitable for spatial phylogenetics</li>
 </ul>
+</section>
+<section id="taxonomic-issues" class="slide level2">
+<h2>Taxonomic issues</h2>
+<ul>
+<li>Old names</li>
+<li>Misspelled names</li>
+<li><strong>Mismatching synonyms</strong></li>
+</ul>
 </section></section>
 <section>
 <section id="part-2-r-tools-for-assembling-spatial-and-genetic-data" class="title-slide slide level1 center">
@@ -464,7 +479,7 @@ Joel Nitta
 <section id="live-coding" class="slide level2">
 <h2>Live coding</h2>
 <p>Live coding session demonstrating how to use <code>rgbif</code>, <code>CoordinateCleaner</code>, <code>taxonDB</code>, and <code>rotl</code> to obtain data</p>
-<p>Code is available here:</p>
+<p>Code is available here: <a href="https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/occ_phy.md" class="uri">https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/occ_phy.md</a></p>
 </section>
 <section id="workflow" class="slide level2">
 <h2>Workflow</h2>
@@ -472,7 +487,7 @@ Joel Nitta
 <ol type="1">
 <li><strong>Download occurrence records (<code>rgbif</code>)</strong></li>
 <li><strong>Clean occurrence records (<code>CoordinateCleaner</code>)</strong></li>
-<li><strong>Download (or assemle) tree (<code>rotl</code>)</strong></li>
+<li><strong>Download (or assemble) tree (<code>rotl</code>)</strong></li>
 <li><strong>Standardize species names (<code>taxonDB</code>)</strong></li>
 <li>Convert points to assemblages (<code>phyloregion</code>)</li>
 <li>Join assemblage data to phylogeny during spatial phylogenetic analysis (<code>canaper</code>)</li>
@@ -488,7 +503,7 @@ Joel Nitta
 </ul></li>
 <li>U.PhyloMaker
 <ul>
-<li>Helps to assemble phylogenies by grafting species names onto a backbone phylogeny (this approach is not recommended)</li>
+<li>Assemble phylogenies by grafting species names onto a backbone (this approach is not recommended)</li>
 </ul></li>
 <li>occCite
 <ul>

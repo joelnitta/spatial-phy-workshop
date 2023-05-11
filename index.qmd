@@ -43,17 +43,31 @@ footer: <a href="https://joelnitta.github.io/spatial-phy-workshop">https://joeln
 
 ## Online sources of occurrence data
 
+:::: {.columns}
+
+::: {.column width="50%"}
 - GBIF
 - Kew Plants of the World Online (POWO)
 - VertNet
 
+etc...
+:::
+
+::: {.column width="50%"}
+![](images/gbif_logo.png){fig-alt="gbif logo" height="150"}<br>
+![](images/vertnet_logo.png){fig-alt="vertnet logo" height="150"}<br>
+![](images/powo_logo.png){fig-alt="powo logo" height="150"}
+:::
+
+::::
+
 ## GBIF
 
-GBIF is not one database; it is a portal to many databases
+- GBIF is not one database; it is a portal to many databases
 
-You should try the web interface first to familiarize yourself with it
+- You should try the web interface first to familiarize yourself with it
 
-We can't use the occurrence records in GBIF as-is. They may include many errors and need to be checked carefully. This will be demonstrated during the coding session.
+- **We can't use the occurrence records in GBIF as-is.** They may include many errors and need to be checked carefully. This will be demonstrated during the coding session.
 
 ## Types of occurrence data
 
@@ -68,35 +82,37 @@ We will focus on point data during the coding session
 
 ## Coordinate Reference Systems
 
-The earth is round, but we project it onto flat maps
+- The earth is round, but we project it onto flat maps
 
-The decision of how to do this is not trivial
+- The decision of how to do this is not trivial
 
-There will always be some amount of distortion in area, distance, or direction
+- **There will always be some amount of distortion in area, distance, or direction**
+
+![](images/georefs.png){fig-alt="Comparison of different types of georeference systems" height="450"}
 
 ## Coordinate Reference Systems
 
-You need to choose an appropriate CRS for your study
+- You need to choose an appropriate CRS for your study (there are thousands)
 
-If you assume that your sampling units have equal area, make sure to use an equal-area projection
-
-## From occurrences to communities
-
-Raw data are often provided on a per-species basis
-
-But we are interested in **assemblages** (communities) of species → need to group species together
+- If you assume that your sampling units have equal area, make sure to use an equal-area projection
 
 ## From occurrences to communities
 
-For point data, a typical method is to divide the study area into equal size grid-cells, then count the species occurring in each grid-cell
+- Raw data are often provided on a per-species basis
 
-For shape data, you would overlay the shapes
+- But we are interested in **assemblages** (communities) of species → need to group species together
 
-For checklist data, the communities may not be equal sized. You could simply use the sampling units in the checklist (e.g., counties, countries, etc.)
+## From occurrences to communities
+
+- For point data, a typical method is to divide the study area into equal size grid-cells, then count the species occurring in each grid-cell
+
+- For shape data, you would overlay the shapes
+
+- For checklist data, the communities may not be equal sized. You could simply use the sampling units in the checklist (e.g., counties, countries, etc.)
 
 ## Phylogenetic data
 
-Is there a tree available, or do you need to build it from scratch?
+- Is there a tree available, or do you need to build it from scratch?
 
 ## Sources of DNA sequence data
 
@@ -126,13 +142,19 @@ In other words, to place species on the tree based on their taxonomy
   - Correctness of the taxonomy
 - Also produces weird trees with lots of polytomies that may not be suitable for spatial phylogenetics
 
+## Taxonomic issues
+
+- Old names
+- Misspelled names
+- **Mismatching synonyms**
+
 # Part 2: R tools for assembling spatial and genetic data
 
 ## Live coding
 
 Live coding session demonstrating how to use `rgbif`, `CoordinateCleaner`, `taxonDB`, and `rotl` to obtain data
 
-Code is available here: 
+Code is available here: <https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/occ_phy.md>
 
 ## Workflow
 
