@@ -375,8 +375,9 @@ Joel Nitta
 <ul>
 <li>GBIF</li>
 <li>Kew Plants of the World Online (POWO)</li>
-<li>VertNet etc…</li>
+<li>VertNet</li>
 </ul>
+<p>etc…</p>
 </div><div class="column" style="width:50%;">
 <p><img data-src="images/gbif_logo.png" alt="gbif logo" height="150"><br> <img data-src="images/vertnet_logo.png" alt="vertnet logo" height="150"><br> <img data-src="images/powo_logo.png" alt="powo logo" height="150"></p>
 </div>
@@ -384,9 +385,11 @@ Joel Nitta
 </section>
 <section id="gbif" class="slide level2">
 <h2>GBIF</h2>
-<p>GBIF is not one database; it is a portal to many databases</p>
-<p>You should try the web interface first to familiarize yourself with it</p>
-<p>We can’t use the occurrence records in GBIF as-is. They may include many errors and need to be checked carefully. This will be demonstrated during the coding session.</p>
+<ul>
+<li><p>GBIF is not one database; it is a portal to many databases</p></li>
+<li><p>You should try the web interface first to familiarize yourself with it</p></li>
+<li><p><strong>We can’t use the occurrence records in GBIF as-is.</strong> They may include many errors and need to be checked carefully. This will be demonstrated during the coding session.</p></li>
+</ul>
 </section>
 <section id="types-of-occurrence-data" class="slide level2">
 <h2>Types of occurrence data</h2>
@@ -401,30 +404,40 @@ Joel Nitta
 </section>
 <section id="coordinate-reference-systems" class="slide level2">
 <h2>Coordinate Reference Systems</h2>
-<p>The earth is round, but we project it onto flat maps</p>
-<p>The decision of how to do this is not trivial</p>
-<p>There will always be some amount of distortion in area, distance, or direction</p>
+<ul>
+<li><p>The earth is round, but we project it onto flat maps</p></li>
+<li><p>The decision of how to do this is not trivial</p></li>
+<li><p><strong>There will always be some amount of distortion in area, distance, or direction</strong></p></li>
+</ul>
 <p><img data-src="images/georefs.png" alt="Comparison of different types of georeference systems" height="450"></p>
 </section>
 <section id="coordinate-reference-systems-1" class="slide level2">
 <h2>Coordinate Reference Systems</h2>
-<p>You need to choose an appropriate CRS for your study</p>
-<p>If you assume that your sampling units have equal area, make sure to use an equal-area projection</p>
+<ul>
+<li><p>You need to choose an appropriate CRS for your study (there are thousands)</p></li>
+<li><p>If you assume that your sampling units have equal area, make sure to use an equal-area projection</p></li>
+</ul>
 </section>
 <section id="from-occurrences-to-communities" class="slide level2">
 <h2>From occurrences to communities</h2>
-<p>Raw data are often provided on a per-species basis</p>
-<p>But we are interested in <strong>assemblages</strong> (communities) of species → need to group species together</p>
+<ul>
+<li><p>Raw data are often provided on a per-species basis</p></li>
+<li><p>But we are interested in <strong>assemblages</strong> (communities) of species → need to group species together</p></li>
+</ul>
 </section>
 <section id="from-occurrences-to-communities-1" class="slide level2">
 <h2>From occurrences to communities</h2>
-<p>For point data, a typical method is to divide the study area into equal size grid-cells, then count the species occurring in each grid-cell</p>
-<p>For shape data, you would overlay the shapes</p>
-<p>For checklist data, the communities may not be equal sized. You could simply use the sampling units in the checklist (e.g., counties, countries, etc.)</p>
+<ul>
+<li><p>For point data, a typical method is to divide the study area into equal size grid-cells, then count the species occurring in each grid-cell</p></li>
+<li><p>For shape data, you would overlay the shapes</p></li>
+<li><p>For checklist data, the communities may not be equal sized. You could simply use the sampling units in the checklist (e.g., counties, countries, etc.)</p></li>
+</ul>
 </section>
 <section id="phylogenetic-data" class="slide level2">
 <h2>Phylogenetic data</h2>
-<p>Is there a tree available, or do you need to build it from scratch?</p>
+<ul>
+<li>Is there a tree available, or do you need to build it from scratch?</li>
+</ul>
 </section>
 <section id="sources-of-dna-sequence-data" class="slide level2">
 <h2>Sources of DNA sequence data</h2>
