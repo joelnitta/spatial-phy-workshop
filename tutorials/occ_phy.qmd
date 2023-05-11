@@ -3,6 +3,7 @@ title: "Obtaining occurrence and phylogeny data in R"
 format: gfm
 execute: 
   echo: true
+output-dir: tutorials
 ---
 
 ```{r}
@@ -179,7 +180,3 @@ crep_records_raw %>%
 ```
 
 These are the sorts of things you need to consider when working with data from GBIF.
-
-## Cleaning occurrence data with CoordinateCleaner
-
-

@@ -9,9 +9,8 @@ will obtain occurrence records and a phylogeny for the fern genus
 ## Obtaining occurrence data with rgbif
 
 [GBIF](https://www.gbif.org/) is the largest platform for accessing
-biodiveristy data (as of writing, in includes 2,315,318,585 occurrence
-records!), making it an excellent source of occurrence data for spatial
-phylogenetics.
+biodiveristy data[^1], making it an excellent source of occurrence data
+for spatial phylogenetics.
 
 [`rgbif`](https://docs.ropensci.org/rgbif/) is an R package that
 interfaces with the GBIF [API](https://en.wikipedia.org/wiki/API),
@@ -34,8 +33,7 @@ special file called `.Renviron` outside of your project using the
 usethis::edit_r_environ("user")
 ```
 
-This will open the `.Renviron` file in RStudio (or whatever IDE you are
-using).
+This will open the `.Renviron` file in your editor.
 
 Fill in your credentials like this (replacing the dummy values like
 ‘myname’ with you real data):
@@ -45,7 +43,7 @@ Fill in your credentials like this (replacing the dummy values like
     GBIF_EMAIL=me@myemail.com
 
 Save it and restart R. Now you will be able to use `rgbif` download
-functionality without having to enter your login credentials everytime.
+functionality without having to enter your login credentials every time.
 
 ### Quick searches
 
@@ -83,8 +81,8 @@ dim(crep_records$data)
 ### Downloading a complete dataset
 
 To download a complete dataset, use `occ_download()`. This requires you
-provide login credentials (but if you set them up using the `.Renviron`
-file, you won’t have to type them in).
+provide login credentials, but since we already set them up using the
+`.Renviron` file, you won’t have to type them in.
 
 I assume that you are working in a project folder than includes a
 subdirectory called “data_raw”. If not, set this up now.
@@ -222,7 +220,7 @@ glimpse(crep_records_raw[1, ])
 
 That’s better.
 
-There are number of columns that bear mentioning[^1].
+There are number of columns that bear mentioning[^2].
 
 - `datasetKey` is a unique identifier for the dataset that the
   occurrence record belongs to. You will want to cite this for each
@@ -273,7 +271,7 @@ voucher specimen for it. Most of these types of records come from
 [iNaturalist](https://www.inaturalist.org/). These should be treated as
 less reliable than `PRESERVED_SPECIMEN` since we can’t verify them.
 However, only iNaturalist records that have been certified as “Research
-Grade”[^2] are included in GBIF, so that does offer some assurance of
+Grade”[^3] are included in GBIF, so that does offer some assurance of
 quality.
 
 Another common type of `basisOfRecord` that comes up is
@@ -332,13 +330,13 @@ crep_records_raw %>%
 These are the sorts of things you need to consider when working with
 data from GBIF.
 
-## Cleaning occurrence data with CoordinateCleaner
+[^1]: As of writing, GBIF includes 2,315,318,585 occurrence records!
 
-[^1]: Most of these columns are [Darwin Core
+[^2]: Most of these columns are [Darwin Core
     terms](https://www.gbif.org/darwin-core), which is a standard for
     exchanging biodiversity data
 
-[^2]: [According to
+[^3]: [According to
     GBIF](https://www.gbif.org/dataset/50c9509d-22c7-4a22-a47d-8c48425ef4a7),
     “iNaturalist observations become candidates for Research Grade when
     they have a photo, date, and coordinates. They become ‘Research
