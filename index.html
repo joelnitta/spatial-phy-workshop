@@ -341,8 +341,8 @@ Joel Nitta
 
 </section>
 <section>
-<section id="part-1-assembling-spatial-and-genetic-data" class="title-slide slide level1 center">
-<h1>Part 1: Assembling Spatial and Genetic Data</h1>
+<section id="assembling-spatial-and-genetic-data" class="title-slide slide level1 center">
+<h1>Assembling Spatial and Genetic Data</h1>
 
 </section>
 <section id="basic-inputs-for-spatial-phylogenetics" class="slide level2">
@@ -409,7 +409,7 @@ Joel Nitta
 <li><p>The decision of how to do this is not trivial</p></li>
 <li><p><strong>There will always be some amount of distortion in area, distance, or direction</strong></p></li>
 </ul>
-<p><img data-src="images/georefs.png" alt="Comparison of different types of georeference systems" height="450"></p>
+<p><img data-src="images/georefs.png" alt="Comparison of different types of georeference systems" height="400"></p>
 </section>
 <section id="coordinate-reference-systems-1" class="slide level2">
 <h2>Coordinate Reference Systems</h2>
@@ -486,8 +486,8 @@ Joel Nitta
 <p>We need to <strong>resolve names</strong> to a standard taxonomic database</p>
 </section></section>
 <section>
-<section id="part-2-r-tools-for-assembling-spatial-and-genetic-data" class="title-slide slide level1 center">
-<h1>Part 2: R tools for assembling spatial and genetic data</h1>
+<section id="r-tools-for-assembling-spatial-and-genetic-data" class="title-slide slide level1 center">
+<h1>R tools for assembling spatial and genetic data</h1>
 
 </section>
 <section id="live-coding" class="slide level2">
@@ -532,6 +532,206 @@ Joel Nitta
 <li>Download occurrence data from GBIF and BIEN, and generate references for all databases that contributed</li>
 </ul></li>
 </ul>
+</section></section>
+<section>
+<section id="applications-of-spatial-phylogenetics" class="title-slide slide level1 center">
+<h1>Applications of Spatial Phylogenetics</h1>
+
+</section>
+<section id="spatial-phylogenetics-can-tell-us-about" class="slide level2">
+<h2>Spatial phylogenetics can tell us about</h2>
+<ul>
+<li><p>The <strong>distribution</strong> of endemicity</p></li>
+<li><p>Environmental <strong>drivers</strong> of biodiversity</p></li>
+<li><p><strong>Structure</strong> of biodiversity</p></li>
+</ul>
+</section>
+<section id="distribution-of-endemicity" class="slide level2">
+<h2>Distribution of endemicity</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Paleoendemism
+<ul>
+<li><strong>Refugia</strong></li>
+<li>Colonization by distantly related lineages</li>
+</ul></li>
+<li>Neoendemism
+<ul>
+<li>Recent speciation</li>
+</ul></li>
+<li>Mixed endemism
+<ul>
+<li>Multiple processes</li>
+</ul></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://www.pnas.org/cms/10.1073/pnas.1403594111/asset/01fe3733-197f-4c31-9d83-17a440db3575/assets/graphic/pnas.1403594111fig01.jpeg" alt="diagram of refugia" width="450"></p>
+<div class="small">
+<p><a href="https://doi.org/10.1073/pnas.1403594111" class="uri">https://doi.org/10.1073/pnas.1403594111</a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-of-endemicity-1" class="slide level2">
+<h2>Distribution of endemicity</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Paleoendemism
+<ul>
+<li>Refugia</li>
+<li>Colonization by distantly related lineages</li>
+</ul></li>
+<li>Neoendemism
+<ul>
+<li><strong>Recent speciation</strong></li>
+</ul></li>
+<li>Mixed endemism
+<ul>
+<li>Multiple processes</li>
+</ul></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://handwiki.org/wiki/images/9/97/Darwin%27s_finches.jpeg" alt="Darwin's finches" width="450"></p>
+<div class="small">
+<p><a href="https://handwiki.org/wiki/Biology:Neoendemism" class="uri">https://handwiki.org/wiki/Biology:Neoendemism</a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="case-study-ferns-of-japan" class="slide level2">
+<h2>Case study: Ferns of Japan</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>&gt; 600 species</li>
+<li>Dense sampling
+<ul>
+<li>10 x 10 km maps of every species</li>
+<li>DNA (<em>rbcL</em>) for &gt; 98% of species</li>
+</ul></li>
+</ul>
+<div class="medsmall">
+<p>Nitta et al.&nbsp;AJB 2022 <a href="https://doi.org/10.1002/ajb2.1848" class="uri">https://doi.org/10.1002/ajb2.1848</a></p>
+</div>
+<div class="small">
+<p>Photos A. Ebihara</p>
+</div>
+</div><div class="column" style="width:10%;">
+
+</div><div class="column" style="width:40%;">
+<p><img data-src="https://joelnitta.github.io/botany2020/images/ja_example_ferns.png" alt="alt-text" height="650"></p>
+</div>
+</div>
+</section>
+<section id="case-study-ferns-of-japan-1" class="slide level2">
+<h2>Case study: Ferns of Japan</h2>
+<div class="columns">
+<div class="column" style="width:35%;">
+<ul>
+<li><p>Wide variation in climate from north (subarctic) to south (subtropical)</p></li>
+<li><p>Wide variation in elevation</p></li>
+<li><p>Main islands continental, southern islands oceanic</p></li>
+</ul>
+<div class="medsmall">
+<p>Nitta et al.&nbsp;AJB 2022 <a href="https://doi.org/10.1002/ajb2.1848" class="uri">https://doi.org/10.1002/ajb2.1848</a></p>
+</div>
+</div><div class="column" style="width:5%;">
+
+</div><div class="column" style="width:60%;">
+<p><img data-src="https://joelnitta.github.io/botany2020/images/japan_intro.png" alt="alt-text" height="650"></p>
+</div>
+</div>
+</section>
+<section id="skewed-distribution-of-endemism" class="slide level2">
+<h2>Skewed distribution of endemism</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Southern-most islands are subtropical
+<ul>
+<li>Very different climate from rest of country</li>
+</ul></li>
+<li>High rates of mixed- and paleo-endemism
+<ul>
+<li><strong>Due to distantly related (tropical) lineages</strong></li>
+</ul></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="images/japan_endem.png" alt="Pattern of phylogenetic endemism in Japan" width="450"></p>
+</div>
+</div>
+</section>
+<section id="reproductive-mode-as-driver-of-biodiversity" class="slide level2">
+<h2>Reproductive mode as driver of biodiversity</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Phylogenetic diversity is predicted by % of apogamous (asexual) species</p>
+<ul>
+<li>Apogamous species tend to be <strong>hybrids that share identical plastid sequences</strong> with other species</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="images/japan_apo.png" alt="Chart showing relationship between % apogamy and PD in Japanese ferns, with negative trend" width="450"></p>
+</div>
+</div>
+</section>
+<section id="drivers-of-biodiversity" class="slide level2">
+<h2>Drivers of biodiversity</h2>
+<p><br></p>
+<p>When testing <strong>spatial</strong> hypotheses (e.g., richness is determined by temperature), we must use <strong>spatial</strong> methods</p>
+<div class="fragment">
+<p><br></p>
+<div class="medlarge">
+<p>Because of <strong>spatial autocorrelation</strong></p>
+</div>
+</div>
+</section>
+<section id="spatial-autocorrelation" class="slide level2">
+<h2>Spatial autocorrelation</h2>
+<p><img data-src="https://mgimond.github.io/Spatial/img/Random_maps.png" alt="Hypothetical maps of US showing effect of spatial autocorrelation" height="550"></p>
+<div class="small">
+<p><a href="https://mgimond.github.io/Spatial/spatial-autocorrelation.html" class="uri">https://mgimond.github.io/Spatial/spatial-autocorrelation.html</a></p>
+</div>
+</section>
+<section id="accounting-for-spatial-autocorrelation" class="slide level2">
+<h2>Accounting for spatial autocorrelation</h2>
+<p>Need to compare amount of observed autocorrelation to some expected value: <strong>Moran’s I</strong></p>
+<p><img data-src="https://static.cambridge.org/binary/version/id/urn:cambridge.org:id:binary:20200421144010724-0711:9781108614528:49898fig4_1.png?pub-status=live" alt="Image of different values of Moran's I" height="450"></p>
+<div class="small">
+<p><a href="https://www.cambridge.org/core/books/abs/spatial-analysis-methods-and-practice/spatial-autocorrelation/F6A01B574C69076F28318445C33397E4" class="uri">https://www.cambridge.org/core/books/abs/spatial-analysis-methods-and-practice/spatial-autocorrelation/F6A01B574C69076F28318445C33397E4</a></p>
+</div>
+</section>
+<section id="accounting-for-spatial-autocorrelation-1" class="slide level2">
+<h2>Accounting for spatial autocorrelation</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Workflow:</p>
+<ul>
+<li>Conduct non-spatial analysis</li>
+<li>Check degree of Moran’s I in model residuals</li>
+<li>If significant, re-do analysis using spatial model</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://anddavies.co.uk/wp-content/uploads/2020/02/rspb.2020.287.issue-1920.largecover-1024x675.jpg" alt="Image showing river elevation in relief" width="450"></p>
+</div>
+</div>
+</section>
+<section id="structure-of-biodiversity" class="slide level2">
+<h2>Structure of biodiversity</h2>
+<p>Understanding distribution of bio-regions</p>
+<ul>
+<li>Used to be done <em>ad-hoc</em>
+<ul>
+<li>Not objective</li>
+</ul></li>
+<li>Newer approaches are quantitative (covered by Brent’s talk)</li>
+</ul>
+</section>
+<section id="regions-in-ferns-of-japan" class="slide level2">
+<h2>3-4 regions in ferns of Japan</h2>
+<p><img data-src="images/japan_region.png" alt="Figure showing bioregions of ferns of Japan" height="500"></p>
+<p>High rates of endemism on remote islands cause difference in taxonomic and phylogenetic bioregions</p>
 <div class="footer footer-default">
 <p><a href="https://joelnitta.github.io/spatial-phy-workshop">https://joelnitta.github.io/spatial-phy-workshop</a></p>
 </div>

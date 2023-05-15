@@ -9,7 +9,7 @@ institute: <a href="https://joelnitta.com">https://joelnitta.com</a>
 footer: <a href="https://joelnitta.github.io/spatial-phy-workshop">https://joelnitta.github.io/spatial-phy-workshop</a>
 ---
 
-# Part 1: Assembling Spatial and Genetic Data
+# Assembling Spatial and Genetic Data
 
 ## Basic inputs for spatial phylogenetics
 
@@ -88,7 +88,7 @@ We will focus on point data during the coding session
 
 - **There will always be some amount of distortion in area, distance, or direction**
 
-![](images/georefs.png){fig-alt="Comparison of different types of georeference systems" height="450"}
+![](images/georefs.png){fig-alt="Comparison of different types of georeference systems" height="400"}
 
 ## Coordinate Reference Systems
 
@@ -150,7 +150,7 @@ In other words, to place species on the tree based on their taxonomy
 
 We need to **resolve names** to a standard taxonomic database
 
-# Part 2: R tools for assembling spatial and genetic data
+# R tools for assembling spatial and genetic data
 
 ## Live coding
 
@@ -180,3 +180,235 @@ A typical workflow involves the following steps:
   - Assemble phylogenies by grafting species names onto a backbone (**this approach is not recommended**)
 - [occCite](https://github.com/ropensci/occCite)
   - Download occurrence data from GBIF and BIEN, and generate references for all databases that contributed
+
+# Applications of Spatial Phylogenetics
+
+## Spatial phylogenetics can tell us about
+
+- The **distribution** of endemicity
+
+- Environmental **drivers** of biodiversity
+
+- **Structure** of biodiversity
+
+## Distribution of endemicity
+
+:::: {.columns}
+::: {.column width="50%"}
+- Paleoendemism
+  - **Refugia**
+  - Colonization by distantly related lineages
+- Neoendemism
+  - Recent speciation
+- Mixed endemism
+  - Multiple processes
+:::
+
+
+::: {.column width="50%"}
+![](https://www.pnas.org/cms/10.1073/pnas.1403594111/asset/01fe3733-197f-4c31-9d83-17a440db3575/assets/graphic/pnas.1403594111fig01.jpeg){fig-alt="diagram of refugia" width="450"}
+
+::: {.small}
+<https://doi.org/10.1073/pnas.1403594111>
+:::
+
+:::
+
+::::
+
+## Distribution of endemicity
+
+:::: {.columns}
+::: {.column width="50%"}
+- Paleoendemism
+  - Refugia
+  - Colonization by distantly related lineages
+- Neoendemism
+  - **Recent speciation**
+- Mixed endemism
+  - Multiple processes
+:::
+
+
+::: {.column width="50%"}
+![](https://handwiki.org/wiki/images/9/97/Darwin%27s_finches.jpeg){fig-alt="Darwin's finches" width="450"}
+
+::: {.small}
+<https://handwiki.org/wiki/Biology:Neoendemism>
+:::
+
+:::
+
+::::
+
+## Case study: Ferns of Japan
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- \> 600 species
+- Dense sampling
+  - 10 x 10 km maps of every species
+  - DNA (*rbcL*) for > 98% of species
+
+::: {.medsmall}
+Nitta et al. AJB 2022 <https://doi.org/10.1002/ajb2.1848>
+:::
+
+::: {.small}
+Photos A. Ebihara
+:::
+
+:::
+
+::: {.column width="10%"}
+:::
+
+::: {.column width="40%"}
+![](https://joelnitta.github.io/botany2020/images/ja_example_ferns.png){fig-alt="alt-text" height="650"}
+:::
+
+::::
+
+## Case study: Ferns of Japan
+
+:::: {.columns}
+
+::: {.column width="35%"}
+
+- Wide variation in climate from north (subarctic) to south (subtropical)
+
+- Wide variation in elevation
+
+- Main islands continental, southern islands oceanic
+
+::: {.medsmall}
+Nitta et al. AJB 2022 <https://doi.org/10.1002/ajb2.1848>
+:::
+
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="60%"}
+![](https://joelnitta.github.io/botany2020/images/japan_intro.png){fig-alt="alt-text" height="650"}
+:::
+
+::::
+
+
+## Skewed distribution of endemism 
+
+:::: {.columns}
+::: {.column width="50%"}
+- Southern-most islands are subtropical
+  - Very different climate from rest of country
+- High rates of mixed- and paleo-endemism
+  - **Due to distantly related (tropical) lineages**
+:::
+
+::: {.column width="50%"}
+![](images/japan_endem.png){fig-alt="Pattern of phylogenetic endemism in Japan" width="450"}
+:::
+
+::::
+
+## Reproductive mode as driver of biodiversity
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Phylogenetic diversity is predicted by % of apogamous (asexual) species
+
+- Apogamous species tend to be **hybrids that share identical plastid sequences** with other species
+:::
+
+::: {.column width="50%"}
+![](images/japan_apo.png){fig-alt="Chart showing relationship between % apogamy and PD in Japanese ferns, with negative trend" width="450"}
+:::
+
+::::
+
+## Drivers of biodiversity
+
+<br>
+
+When testing **spatial** hypotheses (e.g., richness is determined by temperature), we must use **spatial** methods
+
+. . . 
+
+<br>
+
+::: {.medlarge}
+Because of **spatial autocorrelation**
+:::
+
+## Spatial autocorrelation
+
+![](https://mgimond.github.io/Spatial/img/Random_maps.png){fig-alt="Hypothetical maps of US showing effect of spatial autocorrelation" height="550"}
+
+::: {.small}
+<https://mgimond.github.io/Spatial/spatial-autocorrelation.html>
+:::
+
+## Accounting for spatial autocorrelation
+
+Need to compare amount of observed autocorrelation to some expected value: **Moran's I**
+
+![](https://static.cambridge.org/binary/version/id/urn:cambridge.org:id:binary:20200421144010724-0711:9781108614528:49898fig4_1.png?pub-status=live){fig-alt="Image of different values of Moran's I" height="450"}
+
+::: {.small}
+<https://www.cambridge.org/core/books/abs/spatial-analysis-methods-and-practice/spatial-autocorrelation/F6A01B574C69076F28318445C33397E4>
+:::
+
+## Accounting for spatial autocorrelation
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Workflow:
+
+- Conduct non-spatial analysis
+- Check degree of Moran's I in model residuals
+- If significant, re-do analysis using spatial model
+:::
+
+::: {.column width="50%"}
+![](https://anddavies.co.uk/wp-content/uploads/2020/02/rspb.2020.287.issue-1920.largecover-1024x675.jpg){fig-alt="Image showing river elevation in relief" width="450"}
+:::
+
+::::
+
+## Structure of biodiversity
+
+Understanding distribution of bio-regions
+
+- Used to be done *ad-hoc*
+  - Not objective
+
+- Newer approaches are quantitative (covered by Brent's talk)
+
+## 3-4 regions in ferns of Japan
+
+![](images/japan_region.png){fig-alt="Figure showing bioregions of ferns of Japan" height="500"}
+
+High rates of endemism on remote islands cause difference in taxonomic and phylogenetic bioregions
+
+# Spatial phylogenetics in R with `canaper`
+
+## Live coding
+
+- Live coding session demonstrating how to use `canaper` to conduct spatial phylogentic analysis
+
+- Code is available here: <https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/canaper.md>
+
+## Workflow
+
+A typical workflow involves the following steps:
+
+1. Load phylogeny and community data
+2. Determine appropriate null model
+3. Conduct randomization test
+4. Categorize results
+5. Plot results
