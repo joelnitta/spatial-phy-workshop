@@ -120,12 +120,12 @@ randomization that makes **biological sense** for our study.
 One kind of commonly used randomization algorithm (also sometimes
 referred to as the “null model”) preserves marginal sums; in other
 words, the total number of species in each site and total number of
-occurrences is unchanged, but the distribution of species in sites is
-shuffled. Generally, when testing hypotheses we only want to change one
-variable at a time, so it is probably good to leave abundance untouched
-while manipulating distribution patterns. But this might not always be
-the case depending on your study (you might want to manipulate something
-else). So think about it!
+occurrences of each species is unchanged, but the distribution of
+species across sites is shuffled. Generally, when testing hypotheses we
+only want to change one variable at a time, so it is probably good to
+leave abundance untouched while manipulating distribution patterns. But
+this might not always be the case depending on your study (you might
+want to manipulate something else). So think about it!
 
 Anyways, we will use a randomization algorithm called “curveball” that
 preserves marginal sums while shuffling occurrences. The next step is to
@@ -251,12 +251,15 @@ that `cpr_rand_test()` produces the exact answer we’re looking for.
 Rather, we will check that it starts to **converge on approximately the
 same result** once `n_reps` is high enough.
 
-Here, I will compare the percentile of observed phylogenetic diversity
-relative to random (`pd_obs_p_upper`, [one of the values used for
-calculating endemism
+The code below compares the percentile of observed phylogenetic
+diversity relative to random (`pd_obs_p_upper`, [one of the values used
+for calculating endemism
 type](https://docs.ropensci.org/canaper/articles/canape.html#classify-endemism))
 between pairs of random communities each generated with the same number
-of replicates[^3]. I will also time calculations for one of each pair.
+of replicates[^3].
+
+We are only running this on the `biod_example` data because the `acacia`
+dataset would take too long to run during a workshop.
 
 ``` r
 n_reps_test <- c(10, 100, 1000)
@@ -271,15 +274,7 @@ iter_sim_1 <- purrr::map(
     n_reps = .x,
     tbl_out = TRUE)
   )
-```
 
-    Warning: Abundance data detected. Results will be the same as if using presence/absence data (no abundance weighting is used).
-
-    Warning: Abundance data detected. Results will be the same as if using presence/absence data (no abundance weighting is used).
-
-    Warning: Abundance data detected. Results will be the same as if using presence/absence data (no abundance weighting is used).
-
-``` r
 iter_sim_2 <- purrr::map(
   n_reps_test,
   ~cpr_rand_test(
@@ -290,15 +285,7 @@ iter_sim_2 <- purrr::map(
     n_reps = .x,
     tbl_out = TRUE)
   )
-```
 
-    Warning: Abundance data detected. Results will be the same as if using presence/absence data (no abundance weighting is used).
-
-    Warning: Abundance data detected. Results will be the same as if using presence/absence data (no abundance weighting is used).
-
-    Warning: Abundance data detected. Results will be the same as if using presence/absence data (no abundance weighting is used).
-
-``` r
 plot(iter_sim_1[[1]]$pd_obs_p_upper, iter_sim_2[[1]]$pd_obs_p_upper)
 ```
 

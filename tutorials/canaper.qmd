@@ -127,11 +127,13 @@ Now that we've settled on the number of iterations per random replicate, let's l
 
 With randomizations, there is no "right" answer, so we can't test to see that `cpr_rand_test()` produces the exact answer we're looking for. Rather, we will check that it starts to **converge on approximately the same result** once `n_reps` is high enough. 
 
-Here, I will compare the percentile of observed phylogenetic diversity relative to random (`pd_obs_p_upper`, [one of the values used for calculating endemism type](https://docs.ropensci.org/canaper/articles/canape.html#classify-endemism)) between pairs of random communities each generated with the same number of replicates^[Other values based on the randomizations could be checked too (e.g., values ending in `_obs_z`, `_rand_mean`, or `_rand_sd`).]. I will also time calculations for one of each pair.
+The code below compares the percentile of observed phylogenetic diversity relative to random (`pd_obs_p_upper`, [one of the values used for calculating endemism type](https://docs.ropensci.org/canaper/articles/canape.html#classify-endemism)) between pairs of random communities each generated with the same number of replicates^[Other values based on the randomizations could be checked too (e.g., values ending in `_obs_z`, `_rand_mean`, or `_rand_sd`).].
 
+We are only running this on the `biod_example` data because the `acacia` dataset would take too long to run during a workshop.
 
 ```{r}
 #| label: n-reps-biodiverse
+#| warning: false
 n_reps_test <- c(10, 100, 1000)
 
 iter_sim_1 <- purrr::map(
