@@ -1,5 +1,4 @@
-Spatial phylogenetics in R with canaper
-================
+# Spatial phylogenetics in R with canaper
 
 This tutorial demonstrates how to use
 [`canaper`](https://github.com/ropensci/canaper) to conduct spatial
@@ -97,15 +96,24 @@ dim(acacia$comm)
 acacia$comm[1:8, 1:8]
 ```
 
-                      abbreviata acanthaster acanthoclada acinacea aciphylla acoma acradenia acrionastes
-    -1025000:-1825000          0           0            0        0         0     0         0           0
-    -1025000:-1875000          0           0            0        0         0     0         0           0
-    -1025000:-1925000          0           0            0        0         0     0         0           0
-    -1025000:-1975000          0           0            0        0         0     0         0           0
-    -1025000:-2025000          0           0            0        0         0     0         0           0
-    -1025000:-2075000          0           0            0        0         0     0         0           0
-    -1025000:-2125000          0           0            0        0         0     0         0           0
-    -1025000:-2225000          0           0            0        0         0     0         0           0
+                      abbreviata acanthaster acanthoclada acinacea aciphylla acoma
+    -1025000:-1825000          0           0            0        0         0     0
+    -1025000:-1875000          0           0            0        0         0     0
+    -1025000:-1925000          0           0            0        0         0     0
+    -1025000:-1975000          0           0            0        0         0     0
+    -1025000:-2025000          0           0            0        0         0     0
+    -1025000:-2075000          0           0            0        0         0     0
+    -1025000:-2125000          0           0            0        0         0     0
+    -1025000:-2225000          0           0            0        0         0     0
+                      acradenia acrionastes
+    -1025000:-1825000         0           0
+    -1025000:-1875000         0           0
+    -1025000:-1925000         0           0
+    -1025000:-1975000         0           0
+    -1025000:-2025000         0           0
+    -1025000:-2075000         0           0
+    -1025000:-2125000         0           0
+    -1025000:-2225000         0           0
 
 ## About randomizations
 
@@ -186,16 +194,16 @@ biod_iter_sim_res
     # A tibble: 1,000 × 2
        iteration similarity
            <int>      <dbl>
-     1        10      0.992
-     2        20      0.981
-     3        30      0.975
-     4        40      0.961
-     5        50      0.956
-     6        60      0.951
-     7        70      0.947
-     8        80      0.943
-     9        90      0.934
-    10       100      0.927
+     1        10      0.994
+     2        20      0.985
+     3        30      0.978
+     4        40      0.969
+     5        50      0.961
+     6        60      0.956
+     7        70      0.952
+     8        80      0.945
+     9        90      0.941
+    10       100      0.937
     # ℹ 990 more rows
 
 The output is simple: just two columns. But its hard to gain much
@@ -309,6 +317,107 @@ consistent when the number of reps has been set to at least 1,000.
 The number of reps needed is somewhat less variable than number of
 iterations across datasets. 1,000 is a good rule of thumb, but I still
 recommend testing with an analysis like this one to be sure.
+
+## Randomization test
+
+Now that we have decided on settings for the randomization (at least
+1,000 replicates of 2,000 iterations each), we will run the
+randomization test.
+
+The function to do this is canaper is `cpr_rand_test()`, which outputs a
+dataframe:
+
+``` r
+biod_example_rand_res <- cpr_rand_test(
+  biod_example$comm, biod_example$phy,
+  null_model = "curveball",
+  n_reps = 1000, n_iterations = 2000,
+  tbl_out = TRUE
+)
+```
+
+    Warning: Abundance data detected. Results will be the same as if using
+    presence/absence data (no abundance weighting is used).
+
+``` r
+biod_example_rand_res
+```
+
+    # A tibble: 127 × 55
+       site    pd_obs pd_rand_mean pd_rand_sd pd_obs_z pd_obs_c_upper pd_obs_c_lower
+       <chr>    <dbl>        <dbl>      <dbl>    <dbl>          <dbl>          <dbl>
+     1 195000… 0.0469       0.0469   5.04e-18    1.38             491              0
+     2 195000… 0.0469       0.0469   5.01e-18    1.38             491              0
+     3 205000… 0.0931       0.0870   6.83e- 3    0.893            759            220
+     4 205000… 0.0469       0.0469   4.92e-18    0                458              0
+     5 215000… 0.0469       0.0469   4.95e-18   -1.40              11            525
+     6 215000… 0.0683       0.0869   6.95e- 3   -2.67               7            986
+     7 215000… 0.0931       0.0873   6.74e- 3    0.854            751            231
+     8 225000… 0.0469       0.0469   4.96e-18   -1.40              11            522
+     9 225000… 0.0931       0.0871   6.97e- 3    0.855            721            267
+    10 225000… 0.182        0.196    1.41e- 2   -1.00             162            838
+    # ℹ 117 more rows
+    # ℹ 48 more variables: pd_obs_q <dbl>, pd_obs_p_upper <dbl>,
+    #   pd_obs_p_lower <dbl>, pd_alt_obs <dbl>, pd_alt_rand_mean <dbl>,
+    #   pd_alt_rand_sd <dbl>, pd_alt_obs_z <dbl>, pd_alt_obs_c_upper <dbl>,
+    #   pd_alt_obs_c_lower <dbl>, pd_alt_obs_q <dbl>, pd_alt_obs_p_upper <dbl>,
+    #   pd_alt_obs_p_lower <dbl>, rpd_obs <dbl>, rpd_rand_mean <dbl>,
+    #   rpd_rand_sd <dbl>, rpd_obs_z <dbl>, rpd_obs_c_upper <dbl>, …
+
+There are a lot of columns. We can decipher what they mean though by
+using a few keywords: columns starting with `pd` are values of
+phylogenetic diversity, `rpd` is relative phylogenetic diversity, `pe`
+is phylogenetic endemism, etc. Next, those with `rand` refer to values
+from the randomization, whereas those with `obs` are the observed value.
+
+So `pd_obs` is observed PD, `pd_rand_mean` is the mean of the random PD
+values, etc.
+
+While we don’t have time to go into all of these right now, but if you
+need to go back and look at any of the results in detail they are all
+there.
+
+## Classify endemism
+
+The next step is to classify endemism types based on the results of the
+randomization test. This is done with `cpr_classify_endem()`. Just give
+it the randomization results and it will add a column with endemism
+type:
+
+``` r
+biod_example_canape <- cpr_classify_endem(biod_example_rand_res)
+
+select(biod_example_canape, endem_type)
+```
+
+    # A tibble: 127 × 1
+       endem_type     
+       <chr>          
+     1 not significant
+     2 not significant
+     3 not significant
+     4 not significant
+     5 not significant
+     6 not significant
+     7 not significant
+     8 not significant
+     9 not significant
+    10 not significant
+    # ℹ 117 more rows
+
+Let’s count these to see how many times the different endemism types
+were observed:
+
+``` r
+count(biod_example_canape, endem_type)
+```
+
+    # A tibble: 3 × 2
+      endem_type          n
+      <chr>           <int>
+    1 mixed               7
+    2 not significant   118
+    3 paleo               2
 
 [^1]: You might think the dataset is all zeros, but that is not the
     case. It is just very sparse.

@@ -166,3 +166,45 @@ plot(iter_sim_1[[3]]$pd_obs_p_upper, iter_sim_2[[3]]$pd_obs_p_upper)
 This gives us a visual confirmation that our results are much more consistent when the number of reps has been set to at least 1,000.
 
 The number of reps needed is somewhat less variable than number of iterations across datasets. 1,000 is a good rule of thumb, but I still recommend testing with an analysis like this one to be sure.
+
+## Randomization test
+
+Now that we have decided on settings for the randomization (at least 1,000 replicates of 2,000 iterations each), we will run the randomization test.
+
+The function to do this is canaper is `cpr_rand_test()`, which outputs a dataframe:
+
+```{r}
+#| label: rand-test
+biod_example_rand_res <- cpr_rand_test(
+  biod_example$comm, biod_example$phy,
+  null_model = "curveball",
+  n_reps = 1000, n_iterations = 2000,
+  tbl_out = TRUE
+)
+
+biod_example_rand_res
+```
+
+There are a lot of columns. We can decipher what they mean though by using a few keywords: columns starting with `pd` are values of phylogenetic diversity, `rpd` is relative phylogenetic diversity, `pe` is phylogenetic endemism, etc. Next, those with `rand` refer to values from the randomization, whereas those with `obs` are the observed value.
+
+So `pd_obs` is observed PD, `pd_rand_mean` is the mean of the random PD values, etc.
+
+While we don't have time to go into all of these right now, but if you need to go back and look at any of the results in detail they are all there.
+
+## Classify endemism
+
+The next step is to classify endemism types based on the results of the randomization test. This is done with `cpr_classify_endem()`. Just give it the randomization results and it will add a column with endemism type:
+
+```{r}
+#| label: classify-endem
+biod_example_canape <- cpr_classify_endem(biod_example_rand_res)
+
+select(biod_example_canape, endem_type)
+```
+
+Let's count these to see how many times the different endemism types were observed:
+
+
+```{r}
+count(biod_example_canape, endem_type)
+```
