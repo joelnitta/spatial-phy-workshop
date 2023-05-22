@@ -96,37 +96,19 @@ gbif_download <- occ_download(
   pred("taxonKey", crep_key),
   format = "SIMPLE_CSV")
 
-# Wait for the request to be completed
+# Wait for the request to be completed (should take 2-3 minutes)
 occ_download_wait(gbif_download, curlopts = list(http_version=2))
-```
 
-    status: succeeded
-
-    download is done, status: succeeded
-
-    <<gbif download metadata>>
-      Status: SUCCEEDED
-      DOI: 10.15468/dl.ff4sck
-      Format: SIMPLE_CSV
-      Download key: 0231821-230224095556074
-      Created: 2023-05-11T04:27:38.961+00:00
-      Modified: 2023-05-11T04:28:42.850+00:00
-      Download link: https://api.gbif.org/v1/occurrence/download/request/0231821-230224095556074.zip
-      Total records: 20101
-
-``` r
 # Download the data
 crep_records_path <- occ_download_get(gbif_download, "data_raw")
-```
 
-    Download file size: 1.43 MB
-
-    On disk at data_raw/0231821-230224095556074.zip
-
-``` r
 # Load the data into R
 crep_records_raw <- occ_download_import(crep_records_path)
 ```
+
+    Download file size: 1.42 MB
+
+    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0256768-230224095556074.zip
 
 ### Inspect the dataset
 
@@ -249,7 +231,7 @@ crep_records_raw %>%
     # A tibble: 8 × 2
       basisOfRecord           n
       <chr>               <int>
-    1 HUMAN_OBSERVATION     714
+    1 HUMAN_OBSERVATION     715
     2 LIVING_SPECIMEN         4
     3 MACHINE_OBSERVATION     6
     4 MATERIAL_CITATION       5
@@ -330,7 +312,816 @@ crep_records_raw %>%
 These are the sorts of things you need to consider when working with
 data from GBIF.
 
-[^1]: As of writing, GBIF includes 2,315,318,585 occurrence records!
+## Cleaning spatial data with CoordinateCleaner
+
+As mentioned in the lecture this morning, we cannot treat GBIF data at
+face-value; unfortunately errors may creep into the data on GBIF. These
+may include typos, arbitrary data points such as country centroids used
+when actual GPS points are lacking, etc. We don’t want to include
+erroneous data points in our analysis, so we need to clean the data.
+
+### Visualize the raw data
+
+Before we clean the raw data, let’s visualize it (always a good idea,
+regardless of what kind of data you are working with). Here we will use
+the `ggplot2` package included in `tidyverse`.
+
+``` r
+# Download world map data
+library(rnaturalearth)
+
+world_map <- ne_countries(returnclass = "sf")
+
+ggplot()+
+  geom_sf(data = world_map) +
+  geom_point(
+    data = crep_records_raw,
+    aes(x = decimalLongitude, y = decimalLatitude, color = species),
+    size = 0.5) +
+  theme(legend.position = "none")
+```
+
+    Warning: Removed 10459 rows containing missing values (`geom_point()`).
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-12-1.png"
+width="672" />
+
+There are too many colors to distinguish all the species so I’m not
+showing their names, but its still interesting to see their overall
+distribution patterns.
+
+Looking at this map, are there any points that you think might be
+errors?
+
+### Remove missing values
+
+Did you notice the warning message when we ran `ggplot()`? It said 10459
+rows containing missing values had been removed rom the plot. Clearly we
+can’t use data that lack GPS points! The first step of cleaning the data
+is to remove these values.
+
+``` r
+crep_records_no_missing <-
+  crep_records_raw %>%
+  # Also remove data that are missing species names
+  mutate(species = na_if(species, "")) %>%
+  filter(
+    !is.na(species),
+    !is.na(decimalLongitude),
+    !is.na(decimalLatitude)
+  )
+
+crep_records_no_missing
+```
+
+    # A tibble: 9,410 × 50
+          gbifID datasetKey       occurrenceID kingdom phylum class order family genus species infraspecificEpithet taxonRank scientificName verbatimScientificName verbatimScientificNa…¹ countryCode locality stateProvince occurrenceStatus individualCount publishingOrgKey decimalLatitude decimalLongitude
+         <int64> <chr>            <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr> <chr>   <chr>                <chr>     <chr>          <chr>                  <chr>                  <chr>       <chr>    <chr>         <chr>                      <int> <chr>                      <dbl>            <dbl>
+     1 991749096 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes late-ala… ""                     TH          Doi Sut… Chiang Mai    PRESENT                       NA 98e934b0-5f31-1…           18.8              98.9
+     2 991749040 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Khao Ba… Phatthalung   PRESENT                       NA 98e934b0-5f31-1…            7.25            100. 
+     3 991748916 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Than Pl… Satun         PRESENT                       NA 98e934b0-5f31-1…            7.11             99.8
+     4 991748915 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Huay Ya… Prachuap Khi… PRESENT                       NA 98e934b0-5f31-1…           11.7              99.6
+     5 991748307 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Thale B… Satun         PRESENT                       NA 98e934b0-5f31-1…            6.71            100. 
+     6 991747797 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Khao Lu… Nakhon Si Th… PRESENT                       NA 98e934b0-5f31-1…            8.72             99.7
+     7 991747708 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes latemarg… ""                     TH          Kaeng K… Phetchaburi   PRESENT                       NA 98e934b0-5f31-1…           12.2              99.6
+     8 991747526 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes minutum … ""                     TH          Along T… Yala          PRESENT                       NA 98e934b0-5f31-1…            6.85            102. 
+     9 991747268 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes minutum … ""                     TH          Namtok … Prachuap Khi… PRESENT                       NA 98e934b0-5f31-1…           11.6              99.6
+    10 991746718 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes minutum … ""                     TH          Khao Ba… Phatthalung   PRESENT                       NA 98e934b0-5f31-1…            7.25            100. 
+    # ℹ 9,400 more rows
+    # ℹ abbreviated name: ¹​verbatimScientificNameAuthorship
+    # ℹ 27 more variables: coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, elevation <dbl>, elevationAccuracy <dbl>, depth <dbl>, depthAccuracy <lgl>, eventDate <dttm>, day <int>, month <int>, year <int>, taxonKey <int>, speciesKey <int>, basisOfRecord <chr>, institutionCode <chr>,
+    #   collectionCode <chr>, catalogNumber <chr>, recordNumber <chr>, identifiedBy <chr>, dateIdentified <dttm>, license <chr>, rightsHolder <chr>, recordedBy <chr>, typeStatus <chr>, establishmentMeans <chr>, lastInterpreted <dttm>, mediaType <chr>, issue <chr>
+
+That alone decreased our number of records by nearly half.
+
+### Example CoordinateCleaner cleaning function: `cc_sea()`
+
+So we have removed obviously unusable data points. Great! But we need to
+be careful that there may still be erroneous data lurking. For example,
+records of terrestrial plants that show up in the ocean, country
+centroids used instead of actual GPS points, etc. Fortunately, the
+`CoordinateCleaner` R package can detect these for us.
+
+To demonstrate how this works, let’s start with an example: data points
+in the ocean. Our study species is a terrestrial fern, so if any
+occurrence records show up in the middle of the ocean, they should be
+removed.
+
+Here, “scale” tells `CoordinateCleaner` to use the most detailed scale
+possible, `10` (you could choose `50` or `110` also, but these are
+progressively lower resolution[^4]).
+
+``` r
+library(CoordinateCleaner)
+
+crep_records_sea_flagged <- 
+  cc_sea(
+    crep_records_no_missing,
+    lon = "decimalLongitude",
+    lat = "decimalLatitude",
+    scale = 10,
+    value = "flagged"
+  )
+```
+
+    Testing sea coordinates
+
+    Flagged 555 records.
+
+The output here is a logical vector of occurrence records that passed
+the test: `TRUE` are those that passed, and `FALSE` are those that
+failed.
+
+``` r
+head(crep_records_sea_flagged)
+```
+
+    [1] TRUE TRUE TRUE TRUE TRUE TRUE
+
+However, we should not accept the results of `CoordinateCleaner`
+blindly. Let’s dig in to these in a bit more detail.
+
+First, filter the original records to only those that got flagged as
+being in the ocean:
+
+``` r
+crep_records_sea <-
+  crep_records_no_missing %>%
+  filter(!crep_records_sea_flagged)
+```
+
+We’d like to plot these, but there are too many to look at them in
+detail on a global scale. Instead, let’s see what country had the most
+and then zoom in there.
+
+``` r
+count(crep_records_sea, countryCode, sort = TRUE)
+```
+
+    # A tibble: 29 × 2
+       countryCode     n
+       <chr>       <int>
+     1 JP            222
+     2 PG             53
+     3 TW             40
+     4 AU             38
+     5 ID             36
+     6 PH             20
+     7 US             18
+     8 PF             12
+     9 CK             10
+    10 WS             10
+    # ℹ 19 more rows
+
+It looks like Japan (`JP`) had by far the most. OK, let’s plot those.
+
+``` r
+# Filter flagged records to just Japan
+crep_records_sea_jp <- 
+  crep_records_sea %>%
+  filter(countryCode == "JP")
+
+# Download map data for Japan
+japan <- rnaturalearth::ne_countries(country = "japan", scale = 10, returnclass = "sf")
+
+# Plot the flagged points
+ggplot() +
+  geom_sf(data = japan) +
+  geom_point(
+    data = crep_records_sea_jp,
+    mapping = aes(x = decimalLongitude, y = decimalLatitude),
+    color = "red"
+  )
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-19-1.png"
+width="672" />
+
+See a pattern? All (or at least the vast majority) of points that got
+flagged occur along coastlines or nearby small islands. So these are
+probably perfectly useable points, but they are close enough to the
+coast that they got mistakenly flagged. That is because the default
+`CoordinateCleaner` maps of coastlines expect very high accuracy of the
+GPS points. However, there is an alternate setting, a map with buffers
+around the coasts called “buffland”. Load it with `data("buffland")`.
+
+``` r
+data("buffland")
+```
+
+This is what it looks like when we plot it. Any points **outside** the
+grey area will be flagged as being in the ocean.
+
+``` r
+# We need to load the sf package for this (more on that in a bit)
+library(sf)
+```
+
+    Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
+
+``` r
+ggplot(st_as_sf(buffland)) +
+  geom_sf(fill = "grey70")
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-21-1.png"
+width="672" />
+
+As you can see, by using this map as a cutoff, we be sure that we are
+only excluding points in the open ocean, far from any coasts. Let’s try
+that.
+
+``` r
+crep_records_sea_flagged_buff <- 
+  cc_sea(
+    crep_records_no_missing,
+    lon = "decimalLongitude",
+    lat = "decimalLatitude",
+    ref = buffland,
+    value = "flagged"
+  )
+```
+
+    Testing sea coordinates
+
+    Warning in reproj(ref): no projection information for reference found, 
+                assuming '+proj=longlat +datum=WGS84 +no_defs'
+
+    Flagged 5 records.
+
+Many fewer records were flagged this time.
+
+We can plot them:
+
+``` r
+crep_records_sea_buff <-
+  crep_records_no_missing %>%
+     filter(crep_records_sea_flagged_buff == FALSE)
+
+ggplot() +
+  geom_sf(data = world_map) +
+  geom_point(
+    data = crep_records_sea_buff,
+    mapping = aes(x = decimalLongitude, y = decimalLatitude),
+    color = "red"
+  )
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-23-1.png"
+width="672" />
+
+This looks better, but you may want to zoom in to individual points, for
+example by querying their latitude and longitude on Google Maps.
+
+### Full CoordinateCleaner cleaning function: `clean_coordinates()`
+
+There are many functions starting with `cc_` that do other checks, such
+as `cc_dupl()` that checks for duplicates, `cc_urb()` that checks for
+species in urban areas, etc. You could pass your data through these
+individually. However, there is also a single function that can run them
+all at once, `clean_coordinates()`. The `tests` argument tells it which
+tests to conduct. Note that there is a long list of settings for the
+various tests. Here we are using mostly default settings, but **you
+should always check to make sure the settings make sense for your
+data**.
+
+``` r
+crep_records_flagged <-
+  clean_coordinates(
+    crep_records_no_missing,
+    lon = "decimalLongitude",
+    lat = "decimalLatitude",
+    species = "scientificName",
+    tests = c(
+      "capitals",     # records within 2km around country and province centroids
+      "centroids",    # records within 1km of capitals centroids
+      "duplicates",   # duplicated records
+      "equal",        # records with equal coordinates
+      "gbif",         # records within 1 degree (~111km) of GBIF headquarters
+      "institutions", # records within 100m of zoo and herbaria
+      "outliers",     # outliers
+      "zeros",        # records with coordinates 0,0
+      "urban",        # records within urban areas
+      "seas"          # records in the ocean
+    ),
+    seas_ref = buffland,
+    country_refcol = "countryCode",
+    value = "spatialvalid" # result of tests are appended in separate columns
+  )
+```
+
+    Testing coordinate validity
+
+    Flagged 0 records.
+
+    Testing equal lat/lon
+
+    Flagged 63 records.
+
+    Testing zero coordinates
+
+    Warning: GEOS support is provided by the sf and terra packages among others
+
+    Flagged 63 records.
+
+    Testing country capitals
+
+    Flagged 156 records.
+
+    Testing country centroids
+
+    Flagged 188 records.
+
+    Testing sea coordinates
+
+    Warning in reproj(ref): no projection information for reference found, 
+                assuming '+proj=longlat +datum=WGS84 +no_defs'
+
+    Flagged 5 records.
+
+    Testing urban areas
+
+    Downloading urban areas via rnaturalearth
+
+    Flagged 905 records.
+
+    Testing geographic outliers
+
+    Warning in cc_outl(otl_test, lon = lon, lat = lat, species = species, method = outliers_method, : Species with fewer than 7 unique records will not be tested.
+
+    Flagged 578 records.
+
+    Testing GBIF headquarters, flagging records around Copenhagen
+
+    Flagged 0 records.
+
+    Testing biodiversity institutions
+
+    Flagged 1 records.
+
+    Testing duplicates
+
+    Flagged 2532 records.
+
+    Flagged 3587 of 9410 records, EQ = 0.38.
+
+The output is our original dataframe with one column added for each
+test, as well as an overall column called `.summary`.
+
+Let’s get a summary of the results.
+
+``` r
+summary(crep_records_flagged)
+```
+
+        .val     .equ     .zer     .cap     .cen     .sea     .urb     .otl     .gbf    .inst     .dpl .summary 
+           0       63       63      156      188        5      905      410        0        1     2532     3587 
+
+Unfortunately the output is a bit cryptic because `CoordinateCleaner`
+uses very short abbreviations for column names, but we can see that
+duplicates (`.dpl`) account for the largest share of flagged records.
+This is because GBIF is an **aggregator** of databases, so it is quite
+possible that the same specimen shows up multiple times. Good thing we
+spotted these!
+
+Let’s plot the cleaned and flagged data together:
+
+``` r
+ggplot() +
+  geom_sf(data = world_map) +
+  geom_point(
+    data = crep_records_flagged,
+    mapping = aes(x = decimalLongitude, y = decimalLatitude, color = .summary)
+  )
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-26-1.png"
+width="672" />
+
+Finally, let’s trim the occurrence records down to just the clean data
+points.
+
+``` r
+crep_records_clean <-
+  crep_records_flagged %>%
+  filter(.summary == TRUE) %>%
+  select(-contains(".")) %>%
+  as_tibble()
+```
+
+## Aggregating points to communities
+
+The next step before conducting spatial phylogenetic analysis is to
+aggregate the occurrence points into grid-cells. For this, we will use
+the `points2comm()` function of the `phyloregion` package.
+
+``` r
+library(phyloregion)
+
+comm <-
+  points2comm(
+    dat = select(
+      crep_records_clean, species,
+      decimallongitude = decimalLongitude,
+      decimallatitude = decimalLatitude),
+    res = 1
+  )
+```
+
+`res` is the resolution to use for the grid-cells: here, we have
+selected 1 degree per side. Note that the default settings are to split
+up the entire earth into grid-cells, so if you set `res` to a small
+number (e.g., 0.01), you will end up with an extremely large
+(memory-intensive) data object, and R might even crash. In that case,
+you should use the `mask` argument to select a smaller area before
+generating grid-cells.
+
+In fact, the setting for `res` also deserves careful consideration
+because it represents your hypothesis about what defines a community:
+you are saying that you consider species occurring within each grid-cell
+to be capable of interacting. If `res` is too large, the grid-cells may
+include many different habitat types that do not actually have anything
+to do with each other; if it is too small you may not have sufficient
+sampling for each grid-cell and they will mostly be empty.
+
+The output of `points2comm` is a list including two items:
+
+``` r
+names(comm)
+```
+
+    [1] "comm_dat" "poly_shp"
+
+`comm_dat` is the community matrix (here only showing the first six rows
+and columns):
+
+``` r
+comm$comm_dat[1:6, 1:6]
+```
+
+    6 x 6 sparse Matrix of class "dgCMatrix"
+           Crepidomanes africanum Crepidomanes aphlebioides Crepidomanes assimilis Crepidomanes barnardianum Crepidomanes bilabiatum Crepidomanes bipunctatum
+    v15947                      .                         .                      .                         .                       .                        .
+    v15948                      .                         .                      .                         .                       .                        .
+    v16308                      .                         .                      .                         .                       .                        .
+    v16516                      .                         .                      .                         .                       .                        .
+    v16667                      .                         .                      .                         .                       .                        .
+    v16872                      .                         .                      .                         .                       .                        .
+
+`poly_shp` is the GIS layer data: the shapes of the grid-cells.
+
+``` r
+comm$poly_shp
+```
+
+    class       : SpatialPolygonsDataFrame 
+    features    : 697 
+    extent      : -180, 179, -39, 46  (xmin, xmax, ymin, ymax)
+    crs         : NA 
+    variables   : 3
+    names       :  grids, abundance, richness 
+    min values  : v15947,         1,        1 
+    max values  : v46407,       258,       13 
+
+`phyloregion` stores the GIS data as an R object called a
+`SpatialPolygonsDataFrame`, or class `sp`. Recently, a newer data format
+called “Simple features”, or class `sf`, has become popular and is
+gradually replacing `sp`. `sf` is the format that we have been using for
+plotting so far. We don’t have time to go into details about these, but
+just know that you can convert from `sp` to `sf` with the function
+`st_as_sf()`. We do this below so we can plot the grid-cells on the
+world map. Note that we also need to deal with the Coordinate Reference
+System (CRS).
+
+``` r
+# Set the CRS to match between the background map and points
+poly_shp_sf <- st_as_sf(comm$poly_shp)
+st_crs(poly_shp_sf) <- st_crs(world_map)
+
+ggplot() +
+  geom_sf(data = world_map) +
+  geom_sf(
+    data = poly_shp_sf,
+    aes(fill = richness)
+  ) +
+  # Use a log scale because richness is highly skewed
+  scale_fill_viridis_c(trans = "log10")
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-32-1.png"
+width="672" />
+
+We can see that there is highest richness in SE Asia. Cool!
+
+## Obtaining a phylogeny
+
+As mentioned in the lecture, there are various sources of phylogenies,
+but unfortunately no “one size fits all” solution.
+
+Since this example is for ferns, we will download a fern phylogeny that
+is conveniently available via the `ftolr` package.
+
+You will need to install it first using devtools since it isn’t on CRAN:
+
+``` r
+library(devtools)
+
+install_github("joelnitta/ftolr")
+```
+
+Once it’s installed, we can obtain the tree with the `ft_tree()`
+function.
+
+``` r
+library(ftolr)
+
+fern_tree <- ft_tree()
+
+fern_tree
+```
+
+
+    Phylogenetic tree with 5581 tips and 5580 internal nodes.
+
+    Tip labels:
+      Acrostichum_danaeifolium, Acrostichum_speciosum, Acrostichum_aureum, Ceratopteris_richardii, Ceratopteris_cornuta, Ceratopteris_pteridoides, ...
+    Node labels:
+      Root, 100, 100, 100, 100, 100, ...
+
+    Rooted; includes branch lengths.
+
+## Matching names
+
+There’s not much to say about the phylogeny, since that will be highly
+particular to your study.
+
+But a much more frequently encountered problem is matching names between
+the phylogeny and the community data. How can we do that?
+
+First let’s see how many species are in common between the two to begin
+with. Notice that the tree uses underscores in the species names, so we
+need to account for that.
+
+``` r
+common_species <- intersect(fern_tree$tip.label, str_replace_all(colnames(comm$comm_dat), " ", "_"))
+length(common_species)
+```
+
+    [1] 30
+
+``` r
+ncol(comm$comm_dat)
+```
+
+    [1] 49
+
+Of the 49 species in the community data matrix, 30 are in the tree.
+
+Are the missing species truly missing, or are they just differences in
+taxonomy (different synonyms)?
+
+The names from the GBIF data are already standardized to the GBIF
+taxonomy.
+
+However, the names in the tree may not conform to the GBIF taxonomy. We
+can query the names in the tree against the GBIF taxonomy using the
+`name_backbone_checklist()` function of the `rgbif` package.
+
+The first step is to format the query. `rgbif` expects this to be in the
+form of a dataframe. Since we are only interested in ferns, we will set
+the `class` column to “Polypodiopsida”. You could similarly set other
+taxonomic ranks like `phylum`, `order`, `family`, etc.
+
+``` r
+# Set up query
+names_query <- tibble(
+  name = str_replace_all(fern_tree$tip.label, "_", " "),
+  class = "Polypodiopsida"
+)
+```
+
+Next, run the query. This may take a few minutes.
+
+``` r
+fern_tree_names_lookup <- name_backbone_checklist(names_query)
+dim(fern_tree_names_lookup)
+```
+
+    [1] 5581   26
+
+As so often, the results are a large dataframe. Let’s just peak at the
+first row to see what’s going on.
+
+``` r
+fern_tree_names_lookup %>%
+  slice(1) %>%
+  glimpse()
+```
+
+    Rows: 1
+    Columns: 26
+    $ usageKey         <int> 2651707
+    $ scientificName   <chr> "Acrostichum danaeifolium Langsd. & Fisch."
+    $ canonicalName    <chr> "Acrostichum danaeifolium"
+    $ rank             <chr> "SPECIES"
+    $ status           <chr> "ACCEPTED"
+    $ confidence       <int> 100
+    $ matchType        <chr> "EXACT"
+    $ kingdom          <chr> "Plantae"
+    $ phylum           <chr> "Tracheophyta"
+    $ order            <chr> "Polypodiales"
+    $ family           <chr> "Pteridaceae"
+    $ genus            <chr> "Acrostichum"
+    $ species          <chr> "Acrostichum danaeifolium"
+    $ kingdomKey       <int> 6
+    $ phylumKey        <int> 7707728
+    $ classKey         <int> 7228684
+    $ orderKey         <int> 392
+    $ familyKey        <int> 2367
+    $ genusKey         <int> 2650221
+    $ speciesKey       <int> 2651707
+    $ synonym          <lgl> FALSE
+    $ class            <chr> "Polypodiopsida"
+    $ acceptedUsageKey <int> NA
+    $ verbatim_name    <chr> "Acrostichum danaeifolium"
+    $ verbatim_class   <chr> "Polypodiopsida"
+    $ verbatim_index   <dbl> 1
+
+Important columns to note are `verbatim_name` with the original query
+name and `species` with the accetped binomial in GBIF.
+
+Some other interesting columns are `status` and `matchType`. Let’s see
+what kind of values those include:
+
+``` r
+fern_tree_names_lookup %>% count(status)
+```
+
+    # A tibble: 3 × 2
+      status       n
+      <chr>    <int>
+    1 ACCEPTED  5480
+    2 DOUBTFUL     1
+    3 SYNONYM    100
+
+`status` includes `ACCEPTED`, `DOUBTFUL`, and `SYNONYM`. `ACCEPTED` is
+names that are the same between the query and reference (GBIF).
+`SYNONYM` are names in the query that are treated as synonyms by GBIF.
+These are what we are trying to fix. `DOUBTFUL` are names that GBIF
+thinks may be invalid.
+
+``` r
+fern_tree_names_lookup %>% count(matchType)
+```
+
+    # A tibble: 3 × 2
+      matchType      n
+      <chr>      <int>
+    1 EXACT       5545
+    2 FUZZY         28
+    3 HIGHERRANK     8
+
+`matchType` includes `EXACT`, `FUZZY`, and `HIGHERRANK`. `EXACT` are
+names that could be looked up exactly as they are. `FUZZY` means that
+the query differed slightly from the match, but the matching algorithm
+considered them close enough to be recognized as the same. (We’ll look
+into `HIGHERRANK` in a moment).
+
+Let’s see an example of a fuzzy match:
+
+``` r
+fern_tree_names_lookup %>%
+  filter(matchType == "FUZZY") %>%
+  slice(1) %>%
+  glimpse()
+```
+
+    Rows: 1
+    Columns: 26
+    $ usageKey         <int> 5275401
+    $ scientificName   <chr> "Pteris lidgatii (Baker) Christ"
+    $ canonicalName    <chr> "Pteris lidgatii"
+    $ rank             <chr> "SPECIES"
+    $ status           <chr> "ACCEPTED"
+    $ confidence       <int> 100
+    $ matchType        <chr> "FUZZY"
+    $ kingdom          <chr> "Plantae"
+    $ phylum           <chr> "Tracheophyta"
+    $ order            <chr> "Polypodiales"
+    $ family           <chr> "Pteridaceae"
+    $ genus            <chr> "Pteris"
+    $ species          <chr> "Pteris lidgatii"
+    $ kingdomKey       <int> 6
+    $ phylumKey        <int> 7707728
+    $ classKey         <int> 7228684
+    $ orderKey         <int> 392
+    $ familyKey        <int> 2367
+    $ genusKey         <int> 2651676
+    $ speciesKey       <int> 5275401
+    $ synonym          <lgl> FALSE
+    $ class            <chr> "Polypodiopsida"
+    $ acceptedUsageKey <int> NA
+    $ verbatim_name    <chr> "Pteris lydgatei"
+    $ verbatim_class   <chr> "Polypodiopsida"
+    $ verbatim_index   <dbl> 246
+
+We can see that the query name “Pteris lydgatei” is nearly the same as,
+but slightly different from, the matched name “Pteris lidgatii”. We can
+see this is likely a spelling mistake. Such slight differences are
+common between databases, hence the need for fuzzy matching. However, it
+is possible to get false positives with fuzzy matching too — sometimes
+names that differ only by one letter are indeed different! So ideally
+**you should check the whole list of fuzzy matches and make sure they
+are correct.**
+
+OK, what about `matchType` “HIGHERRANK”?
+
+``` r
+fern_tree_names_lookup %>%
+  filter(matchType == "HIGHERRANK") %>%
+  slice(1) %>%
+  glimpse()
+```
+
+    Rows: 1
+    Columns: 26
+    $ usageKey         <int> 7935155
+    $ scientificName   <chr> "Microlepia C.Presl"
+    $ canonicalName    <chr> "Microlepia"
+    $ rank             <chr> "GENUS"
+    $ status           <chr> "ACCEPTED"
+    $ confidence       <int> 100
+    $ matchType        <chr> "HIGHERRANK"
+    $ kingdom          <chr> "Plantae"
+    $ phylum           <chr> "Tracheophyta"
+    $ order            <chr> "Polypodiales"
+    $ family           <chr> "Dennstaedtiaceae"
+    $ genus            <chr> "Microlepia"
+    $ species          <chr> NA
+    $ kingdomKey       <int> 6
+    $ phylumKey        <int> 7707728
+    $ classKey         <int> 7228684
+    $ orderKey         <int> 392
+    $ familyKey        <int> 6623
+    $ genusKey         <int> 7935155
+    $ speciesKey       <int> NA
+    $ synonym          <lgl> FALSE
+    $ class            <chr> "Polypodiopsida"
+    $ acceptedUsageKey <int> NA
+    $ verbatim_name    <chr> "Davallia polypodioides"
+    $ verbatim_class   <chr> "Polypodiopsida"
+    $ verbatim_index   <dbl> 1808
+
+In this case, the query name “Davallia polypodioides” matched to a
+higher rank, ““, but not a species. We will go ahead and exclude these
+because they lack a species level match. But ideally, **you should see
+if you can manually find a match for such queries**.
+
+Now we can finally match the tree and community data.
+
+``` r
+fern_tree_to_gbif <-
+  fern_tree_names_lookup %>%
+  filter(!is.na(species)) %>%
+  transmute(
+    original_name = str_replace_all(verbatim_name, " ", "_"),
+    gbif_name = str_replace_all(species, " ", "_")
+  )
+
+fern_tree_renamed <-
+  fern_tree %>%
+  ape::keep.tip(fern_tree_to_gbif$original_name)
+
+fern_tree_to_gbif <-
+  tibble(original_name = fern_tree_renamed$tip.label) %>%
+  left_join(fern_tree_to_gbif, by = "original_name")
+
+fern_tree_renamed$tip.label <- fern_tree_to_gbif$gbif_name
+
+colnames(comm$comm_dat) <- str_replace_all(colnames(comm$comm_dat), " ", "_")
+
+species_in_both <- intersect(colnames(comm$comm_dat), fern_tree_renamed$tip.label)
+
+comm$comm_dat <- comm$comm_dat[, species_in_both]
+
+crepidomanes_tree <- ape::keep.tip(fern_tree_renamed, species_in_both)
+
+crepidomanes_tree
+```
+
+
+    Phylogenetic tree with 31 tips and 30 internal nodes.
+
+    Tip labels:
+      Crepidomanes_bipunctatum, Crepidomanes_christii, Crepidomanes_draytonianum, Crepidomanes_kurzii, Crepidomanes_africanum, Crepidomanes_clarenceanum, ...
+    Node labels:
+      100, 100, 100, 100, 100, 82, ...
+
+    Rooted; includes branch lengths.
+
+We still need to recount the species richness in the polygon data.
+
+[^1]: As of writing, GBIF includes 2,318,264,397 occurrence records!
 
 [^2]: Most of these columns are [Darwin Core
     terms](https://www.gbif.org/darwin-core), which is a standard for
@@ -341,3 +1132,6 @@ data from GBIF.
     “iNaturalist observations become candidates for Research Grade when
     they have a photo, date, and coordinates. They become ‘Research
     Grade’ when the community agrees on an identification.”
+
+[^4]: The `coordinateCleaner` help documentation mistakenly says it is
+    the reverse order

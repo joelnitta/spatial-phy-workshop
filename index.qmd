@@ -71,20 +71,7 @@ etc...
 
 ::::
 
-## GBIF <https://www.gbif.org/>
-
-![](images/gbif.png){fig-alt="screenshot of GBIF entry page" height="450"}
-
-## GBIF
-
-- GBIF is not one database; it is a portal to many databases
-
-- You should try the web interface first to familiarize yourself with it
-
-- **We can't use the occurrence records in GBIF as-is.** They may include many errors and need to be checked carefully. This will be demonstrated during the coding session.
-
 ## Types of occurrence data
-
 
 :::: {.columns}
 
@@ -105,6 +92,26 @@ Can take many forms:
 ::::
 
 We will focus on **point data** (the data available from GBIF) during the coding session
+
+## GBIF <https://www.gbif.org/>
+
+![](images/gbif.png){fig-alt="screenshot of GBIF entry page" height="450"}
+
+## GBIF
+
+- GBIF is not one database; it is a portal to many databases
+
+- You should try the web interface first to familiarize yourself with it
+
+- **We can't use the occurrence records in GBIF as-is.** They may include many errors (typos, etc.) and need to be checked carefully. More on this during the coding session.
+
+## Cleaning occurrence data
+
+- The settings for data cleaning **depend on your analysis**
+
+- Defaults are a good start, but make sure they make sense!
+
+- For example, if your grid-cell size is 1 degree x 1 degree, you don't need data to be more exact than that
 
 ## Coordinate Reference Systems
 
@@ -155,8 +162,6 @@ https://en.wikipedia.org/wiki/Mollweide_projection
 
 ::::
 
-
-
 ## From occurrences to communities
 
 :::: {.columns}
@@ -177,7 +182,6 @@ https://phys.org/news/2018-12-local-conditions.html
 :::
 
 ::::
-
 
 ## From occurrences to communities
 

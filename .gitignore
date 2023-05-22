@@ -2,3 +2,5 @@ data_raw
 *_cache
 *.pptx
 /.quarto/
+*.zip
+*_files
