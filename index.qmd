@@ -36,10 +36,20 @@ footer: <a href="https://joelnitta.github.io/spatial-phy-workshop">https://joeln
 
 ## Sources of occurrence data
 
+:::: {.columns}
+
+::: {.column width="50%"}
 - Herbaria or museums
 - Floras or checklists
 - Previous studies
 - Your own data
+:::
+
+::: {.column width="50%"}
+![](images/herb_specimen.png){fig-alt="Photo of an herbarium specimen" height="450"}
+:::
+
+::::
 
 ## Online sources of occurrence data
 
@@ -61,6 +71,10 @@ etc...
 
 ::::
 
+## GBIF <https://www.gbif.org/>
+
+![](images/gbif.png){fig-alt="screenshot of GBIF entry page" height="450"}
+
 ## GBIF
 
 - GBIF is not one database; it is a portal to many databases
@@ -71,36 +85,99 @@ etc...
 
 ## Types of occurrence data
 
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
 Can take many forms:
 
 - geometric shapes
 - points
 - checklists
 - your own surveys
+:::
 
-We will focus on point data during the coding session
+::: {.column width="50%"}
+![](https://miro.medium.com/v2/resize:fit:1284/1*TaID5vtnzOYkkKSb-VQNpg.png){fig-alt="image of points, lines, and polygons" width="550"}
+:::
+
+::::
+
+We will focus on **point data** (the data available from GBIF) during the coding session
 
 ## Coordinate Reference Systems
 
+:::: {.columns}
+
+::: {.column width="50%"}
 - The earth is round, but we project it onto flat maps
 
 - The decision of how to do this is not trivial
 
 - **There will always be some amount of distortion in area, distance, or direction**
+:::
 
-![](images/georefs.png){fig-alt="Comparison of different types of georeference systems" height="400"}
+::: {.column width="50%"}
+![](images/projections.png){fig-alt="Comparison of different types of georeference systems"}
+
+::: {.small}
+https://geoawesomeness.com/wp-content/uploads/2022/03/projections.jpg
+:::
+
+:::
+
+::::
 
 ## Coordinate Reference Systems
 
+:::: {.columns}
+
+::: {.column width="50%"}
 - You need to choose an appropriate CRS for your study (there are thousands)
 
-- If you assume that your sampling units have equal area, make sure to use an equal-area projection
+- If you assume that your sampling units have equal area, make sure to use an **equal-area projection** (e.g., Mollweide)
+:::
+
+::: {.column width="50%"}
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Mollweide_with_Tissot%27s_Indicatrices_of_Distortion.svg/2560px-Mollweide_with_Tissot%27s_Indicatrices_of_Distortion.svg.png){fig-alt="The Mollweide projection with Tissot's indicatrix of deformation"}
+
+::: {.medsmall}
+The Mollweide projection. The orange dots have the same area, but their shape is distorted as you move away from the equator.
+:::
+
+::: {.small}
+https://en.wikipedia.org/wiki/Mollweide_projection
+:::
+
+
+:::
+
+::::
+
+
 
 ## From occurrences to communities
 
+:::: {.columns}
+
+::: {.column width="50%"}
 - Raw data are often provided on a per-species basis
 
 - But we are interested in **assemblages** (communities) of species → need to group species together
+:::
+
+::: {.column width="50%"}
+![](https://scx1.b-cdn.net/csz/news/800a/2018/localconditi.jpg){fig-alt="Image of plant community"}
+
+::: {.small}
+https://phys.org/news/2018-12-local-conditions.html
+:::
+
+:::
+
+::::
+
 
 ## From occurrences to communities
 
@@ -112,26 +189,99 @@ We will focus on point data during the coding session
 
 ## Phylogenetic data
 
+:::: {.columns}
+
+::: {.column width="25%"}
 - Is there a tree available, or do you need to build it from scratch?
+:::
+
+::: {.column width="75%"}
+![](https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80){fig-alt="constuction workers"}
+:::
+
+::: {.small}
+https://images.unsplash.com/
+:::
+
+::::
+
 
 ## Sources of DNA sequence data
 
-- GenBank
+:::: {.columns}
+::: {.column width="50%"}
+- **GenBank**
 - access in R via the `rentrez` package
+:::
+
+::: {.column width="50%"}
+![](https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/_images/P3_image2.png){fig-alt="screenshot of genbank interface" width="450"}
+:::
+
+::: {.small}
+https://a-little-book-of-r-for-bioinformatics.readthedocs.io/
+:::
+
+::::
 
 ## Building a tree from scratch
 
+:::: {.columns}
+
+::: {.column width="50%"}
 We don't have time to cover this today - that is a whole topic of study unto itself!
+:::
+
+::: {.column width="50%"}
+![](https://mediacdn.nhbs.com/jackets/jackets_resizer_xlarge/17/170234.jpg){fig-alt="Phylogenetic textbook" height="450"}
+:::
+
+::: {.small}
+https://mediacdn.nhbs.com/jackets/jackets_resizer_xlarge/17/170234.jpg
+:::
+
+::::
 
 ## Sources of phylogenetic trees
 
+:::: {.columns}
+
+::: {.column width="50%"}
 - Previous publications
 - Open Tree of Life (`rotl` R package)
 - Software that places tips on the tree by taxonomy
+:::
+
+::: {.column width="50%"}
+![](https://docs.ropensci.org/rotl/logo.svg){fig-alt="rotl logo" width="350"}
+
+::: {.small}
+https://docs.ropensci.org/rotl/logo.svg
+:::
+
+:::
+
+::::
+
 
 ## What if I don't have a tree for my group?
 
-- A tree at the species level may not be necessary. Consider doing the analysis at a higher taxonomic level (genus)
+:::: {.columns}
+
+::: {.column width="50%"}
+- A tree at the species level may not be necessary. Consider doing the analysis at a higher taxonomic level (e.g., genus)
+:::
+
+::: {.column width="50%"}
+![](https://2.bp.blogspot.com/-jbCa-ZpKCgg/VcMlTfbF-WI/AAAAAAAAwZo/7beUnZPb_MI/s800/fukidashi4_doctorw.png){fig-alt="irasuto-ya scientist thinking" width="450"}
+
+::: {.small}
+https://www.irasutoya.com/
+:::
+
+:::
+
+::::
 
 ## Is it OK to use taxonomy in place of DNA?
 
@@ -147,6 +297,8 @@ In other words, to place species on the tree based on their taxonomy
 - Old names
 - Misspelled names
 - **Mismatching synonyms**
+
+![](https://github.com/joelnitta/biodigi_2022/blob/main/images/synonyms.png?raw=true){fig-alt="Comparison of synonyms for Crepidomanes minutum"}
 
 We need to **resolve names** to a standard taxonomic database
 
@@ -297,7 +449,6 @@ Nitta et al. AJB 2022 <https://doi.org/10.1002/ajb2.1848>
 
 ::::
 
-
 ## Skewed distribution of endemism 
 
 :::: {.columns}
@@ -354,7 +505,7 @@ Because of **spatial autocorrelation**
 
 ## Accounting for spatial autocorrelation
 
-Need to compare amount of observed autocorrelation to some expected value: **Moran's I**
+Need to compare amount of observed autocorrelation to some expected value: **Moran's _I_**
 
 ![](https://static.cambridge.org/binary/version/id/urn:cambridge.org:id:binary:20200421144010724-0711:9781108614528:49898fig4_1.png?pub-status=live){fig-alt="Image of different values of Moran's I" height="450"}
 
@@ -370,7 +521,7 @@ Need to compare amount of observed autocorrelation to some expected value: **Mor
 Workflow:
 
 - Conduct non-spatial analysis
-- Check degree of Moran's I in model residuals
+- Check degree of Moran's *I* in model residuals
 - If significant, re-do analysis using spatial model
 :::
 
@@ -382,7 +533,7 @@ Workflow:
 
 ## Structure of biodiversity
 
-Understanding distribution of bio-regions
+Understanding the distribution of bio-regions
 
 - Used to be done *ad-hoc*
   - Not objective

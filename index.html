@@ -361,12 +361,18 @@ Joel Nitta
 </section>
 <section id="sources-of-occurrence-data" class="slide level2">
 <h2>Sources of occurrence data</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li>Herbaria or museums</li>
 <li>Floras or checklists</li>
 <li>Previous studies</li>
 <li>Your own data</li>
 </ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="images/herb_specimen.png" alt="Photo of an herbarium specimen" height="450"></p>
+</div>
+</div>
 </section>
 <section id="online-sources-of-occurrence-data" class="slide level2">
 <h2>Online sources of occurrence data</h2>
@@ -383,6 +389,10 @@ Joel Nitta
 </div>
 </div>
 </section>
+<section id="gbif-httpswww.gbif.org" class="slide level2">
+<h2>GBIF <a href="https://www.gbif.org/" class="uri">https://www.gbif.org/</a></h2>
+<p><img data-src="images/gbif.png" alt="screenshot of GBIF entry page" height="450"></p>
+</section>
 <section id="gbif" class="slide level2">
 <h2>GBIF</h2>
 <ul>
@@ -393,6 +403,8 @@ Joel Nitta
 </section>
 <section id="types-of-occurrence-data" class="slide level2">
 <h2>Types of occurrence data</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <p>Can take many forms:</p>
 <ul>
 <li>geometric shapes</li>
@@ -400,30 +412,63 @@ Joel Nitta
 <li>checklists</li>
 <li>your own surveys</li>
 </ul>
-<p>We will focus on point data during the coding session</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://miro.medium.com/v2/resize:fit:1284/1*TaID5vtnzOYkkKSb-VQNpg.png" alt="image of points, lines, and polygons" width="550"></p>
+</div>
+</div>
+<p>We will focus on <strong>point data</strong> (the data available from GBIF) during the coding session</p>
 </section>
 <section id="coordinate-reference-systems" class="slide level2">
 <h2>Coordinate Reference Systems</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li><p>The earth is round, but we project it onto flat maps</p></li>
 <li><p>The decision of how to do this is not trivial</p></li>
 <li><p><strong>There will always be some amount of distortion in area, distance, or direction</strong></p></li>
 </ul>
-<p><img data-src="images/georefs.png" alt="Comparison of different types of georeference systems" height="400"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="images/projections.png" alt="Comparison of different types of georeference systems"></p>
+<div class="small">
+<p>https://geoawesomeness.com/wp-content/uploads/2022/03/projections.jpg</p>
+</div>
+</div>
+</div>
 </section>
 <section id="coordinate-reference-systems-1" class="slide level2">
 <h2>Coordinate Reference Systems</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li><p>You need to choose an appropriate CRS for your study (there are thousands)</p></li>
-<li><p>If you assume that your sampling units have equal area, make sure to use an equal-area projection</p></li>
+<li><p>If you assume that your sampling units have equal area, make sure to use an <strong>equal-area projection</strong> (e.g., Mollweide)</p></li>
 </ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Mollweide_with_Tissot%27s_Indicatrices_of_Distortion.svg/2560px-Mollweide_with_Tissot%27s_Indicatrices_of_Distortion.svg.png" alt="The Mollweide projection with Tissot's indicatrix of deformation"></p>
+<div class="medsmall">
+<p>The Mollweide projection. The orange dots have the same area, but their shape is distorted as you move away from the equator.</p>
+</div>
+<div class="small">
+<p>https://en.wikipedia.org/wiki/Mollweide_projection</p>
+</div>
+</div>
+</div>
 </section>
 <section id="from-occurrences-to-communities" class="slide level2">
 <h2>From occurrences to communities</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li><p>Raw data are often provided on a per-species basis</p></li>
 <li><p>But we are interested in <strong>assemblages</strong> (communities) of species → need to group species together</p></li>
 </ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://scx1.b-cdn.net/csz/news/800a/2018/localconditi.jpg" alt="Image of plant community"></p>
+<div class="small">
+<p>https://phys.org/news/2018-12-local-conditions.html</p>
+</div>
+</div>
+</div>
 </section>
 <section id="from-occurrences-to-communities-1" class="slide level2">
 <h2>From occurrences to communities</h2>
@@ -435,34 +480,76 @@ Joel Nitta
 </section>
 <section id="phylogenetic-data" class="slide level2">
 <h2>Phylogenetic data</h2>
+<div class="columns">
+<div class="column" style="width:25%;">
 <ul>
 <li>Is there a tree available, or do you need to build it from scratch?</li>
 </ul>
+</div><div class="column" style="width:75%;">
+<p><img data-src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=2670&amp;q=80" alt="constuction workers"></p>
+</div><div class="small">
+<p>https://images.unsplash.com/</p>
+</div>
+</div>
 </section>
 <section id="sources-of-dna-sequence-data" class="slide level2">
 <h2>Sources of DNA sequence data</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
-<li>GenBank</li>
+<li><strong>GenBank</strong></li>
 <li>access in R via the <code>rentrez</code> package</li>
 </ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/_images/P3_image2.png" alt="screenshot of genbank interface" width="450"></p>
+</div><div class="small">
+<p>https://a-little-book-of-r-for-bioinformatics.readthedocs.io/</p>
+</div>
+</div>
 </section>
 <section id="building-a-tree-from-scratch" class="slide level2">
 <h2>Building a tree from scratch</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <p>We don’t have time to cover this today - that is a whole topic of study unto itself!</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://mediacdn.nhbs.com/jackets/jackets_resizer_xlarge/17/170234.jpg" alt="Phylogenetic textbook" height="450"></p>
+</div><div class="small">
+<p>https://mediacdn.nhbs.com/jackets/jackets_resizer_xlarge/17/170234.jpg</p>
+</div>
+</div>
 </section>
 <section id="sources-of-phylogenetic-trees" class="slide level2">
 <h2>Sources of phylogenetic trees</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li>Previous publications</li>
 <li>Open Tree of Life (<code>rotl</code> R package)</li>
 <li>Software that places tips on the tree by taxonomy</li>
 </ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://docs.ropensci.org/rotl/logo.svg" alt="rotl logo" width="350"></p>
+<div class="small">
+<p>https://docs.ropensci.org/rotl/logo.svg</p>
+</div>
+</div>
+</div>
 </section>
 <section id="what-if-i-dont-have-a-tree-for-my-group" class="slide level2">
 <h2>What if I don’t have a tree for my group?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
-<li>A tree at the species level may not be necessary. Consider doing the analysis at a higher taxonomic level (genus)</li>
+<li>A tree at the species level may not be necessary. Consider doing the analysis at a higher taxonomic level (e.g., genus)</li>
 </ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://2.bp.blogspot.com/-jbCa-ZpKCgg/VcMlTfbF-WI/AAAAAAAAwZo/7beUnZPb_MI/s800/fukidashi4_doctorw.png" alt="irasuto-ya scientist thinking" width="450"></p>
+<div class="small">
+<p>https://www.irasutoya.com/</p>
+</div>
+</div>
+</div>
 </section>
 <section id="is-it-ok-to-use-taxonomy-in-place-of-dna" class="slide level2">
 <h2>Is it OK to use taxonomy in place of DNA?</h2>
@@ -483,7 +570,8 @@ Joel Nitta
 <li>Misspelled names</li>
 <li><strong>Mismatching synonyms</strong></li>
 </ul>
-<p>We need to <strong>resolve names</strong> to a standard taxonomic database</p>
+
+<img data-src="https://github.com/joelnitta/biodigi_2022/blob/main/images/synonyms.png?raw=true" alt="Comparison of synonyms for Crepidomanes minutum" class="r-stretch"><p>We need to <strong>resolve names</strong> to a standard taxonomic database</p>
 </section></section>
 <section>
 <section id="r-tools-for-assembling-spatial-and-genetic-data" class="title-slide slide level1 center">
@@ -696,7 +784,7 @@ Joel Nitta
 </section>
 <section id="accounting-for-spatial-autocorrelation" class="slide level2">
 <h2>Accounting for spatial autocorrelation</h2>
-<p>Need to compare amount of observed autocorrelation to some expected value: <strong>Moran’s I</strong></p>
+<p>Need to compare amount of observed autocorrelation to some expected value: <strong>Moran’s <em>I</em></strong></p>
 <p><img data-src="https://static.cambridge.org/binary/version/id/urn:cambridge.org:id:binary:20200421144010724-0711:9781108614528:49898fig4_1.png?pub-status=live" alt="Image of different values of Moran's I" height="450"></p>
 <div class="small">
 <p><a href="https://www.cambridge.org/core/books/abs/spatial-analysis-methods-and-practice/spatial-autocorrelation/F6A01B574C69076F28318445C33397E4" class="uri">https://www.cambridge.org/core/books/abs/spatial-analysis-methods-and-practice/spatial-autocorrelation/F6A01B574C69076F28318445C33397E4</a></p>
@@ -709,7 +797,7 @@ Joel Nitta
 <p>Workflow:</p>
 <ul>
 <li>Conduct non-spatial analysis</li>
-<li>Check degree of Moran’s I in model residuals</li>
+<li>Check degree of Moran’s <em>I</em> in model residuals</li>
 <li>If significant, re-do analysis using spatial model</li>
 </ul>
 </div><div class="column" style="width:50%;">
@@ -719,7 +807,7 @@ Joel Nitta
 </section>
 <section id="structure-of-biodiversity" class="slide level2">
 <h2>Structure of biodiversity</h2>
-<p>Understanding distribution of bio-regions</p>
+<p>Understanding the distribution of bio-regions</p>
 <ul>
 <li>Used to be done <em>ad-hoc</em>
 <ul>
