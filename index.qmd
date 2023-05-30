@@ -209,7 +209,6 @@ https://images.unsplash.com/
 
 ::::
 
-
 ## Sources of DNA sequence data
 
 :::: {.columns}
@@ -252,8 +251,9 @@ https://mediacdn.nhbs.com/jackets/jackets_resizer_xlarge/17/170234.jpg
 
 ::: {.column width="50%"}
 - Previous publications
+- R packages that provide trees (`ftolr` for ferns)
 - Open Tree of Life (`rotl` R package)
-- Software that places tips on the tree by taxonomy
+- Software that places tips on the tree by taxonomy (**caution!**)
 :::
 
 ::: {.column width="50%"}
@@ -319,23 +319,52 @@ We need to **resolve names** to a standard taxonomic database
 A typical workflow involves the following steps:
 
 1. Download occurrence records (`rgbif`)
-2. Clean occurrence records (`CoordinateCleaner`, `bdc`)
-3. Standardize species names (`taxonDB`, `bdc`)
+2. Clean occurrence records (`CoordinateCleaner`)
+3. Standardize species names (`rgbif`)
 4. Convert points to assemblages (`phyloregion`)
 5. Join assemblage data to phylogeny during spatial phylogenetic analysis (`canaper`)
 
-## Other packages {.smaller}
+## What is not covered today
+
+- We don't have time for demonstrating how to download sequences, assemble them, and conduct phylogenetic analysis (phylogenetic pipelines).
+
+- We will be using a pre-built tree
+
+## Other packages: taxonomy
 
 - [taxastand](https://github.com/joelnitta/taxastand)
   - Standardize names to a custom database
-- [RBIEN](https://github.com/bmaitner/RBIEN)
-  - Interface to [BIEN](https://bien.nceas.ucsb.edu/bien/) database of plant occurrences and traits
-- [rentrez](https://github.com/ropensci/rentrez)
-  - Interface to [Entrez](https://www.ncbi.nlm.nih.gov/search/) databases (including [GenBank](https://www.ncbi.nlm.nih.gov/genbank/))
-- [U.PhyloMaker](https://github.com/jinyizju/U.PhyloMaker)
-  - Assemble phylogenies by grafting species names onto a backbone (**this approach is not recommended**)
+- [RTNRS](https://github.com/EnquistLab/RTNRS)
+  - Standardize names using TNRS (Taxonomic Name Resolution Service)
+- [taxadb](https://github.com/ropensci/taxadb)
+  - Standardize names using local databases
+
+## Other packages: occurrences
+
 - [occCite](https://github.com/ropensci/occCite)
   - Download occurrence data from GBIF and BIEN, and generate references for all databases that contributed
+- [RBIEN](https://github.com/bmaitner/RBIEN)
+  - Interface to [BIEN](https://bien.nceas.ucsb.edu/bien/) database of plant occurrences and traits
+
+## Other packages: phylogenetic pipelines
+
+- [rentrez](https://github.com/ropensci/rentrez)
+  - Interface to [Entrez](https://www.ncbi.nlm.nih.gov/search/) databases (including [GenBank](https://www.ncbi.nlm.nih.gov/genbank/))
+- [phruta](https://github.com/ropensci/phruta/)
+  - Pipeline to download sequences, align them, and build a phylogenetic tree
+- [phylotaR](https://github.com/ropensci/phylotaR)
+  - Pipeline to download and cluster sequences 
+
+## Other packages: pre-built phylogenies
+
+- [ftolr](https://github.com/fernphy/ftolr)
+  - Global fern phylogeny
+- [fishtree](https://github.com/jonchang/fishtree)
+  - Global fish phylogeny
+- [rotl](https://github.com/ropensci/rotl)
+  - R interface to the Open Tree of Life
+- [U.PhyloMaker](https://github.com/jinyizju/U.PhyloMaker)
+  - Assemble phylogenies by grafting species names onto a backbone (**this approach is not recommended**)
 
 # Applications of Spatial Phylogenetics
 
