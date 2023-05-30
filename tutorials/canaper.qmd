@@ -204,7 +204,52 @@ select(biod_example_canape, endem_type)
 
 Let's count these to see how many times the different endemism types were observed:
 
-
 ```{r}
 count(biod_example_canape, endem_type)
 ```
+
+## Plot results
+
+The final step is to plot the endemism categories.
+
+When working with your own data, the geographic information may be one of various formats.
+
+For this example dataset, information about the location of each site is embedded in the site name.
+
+```{r}
+biod_example_canape %>%
+  select(site)
+```
+
+The number before the colon is position of the center of the site (its "centroid") on the x-axis and the number after is position on the y-axis. This data happens to use a projection that is designed specifically for Australia, and the numbers are in units of meters. Each site is 50 x 50 km.
+
+So, in order to plot this, we need to split the x and y positions into separate columns:
+
+```{r}
+biod_example_canape_geo <-
+  biod_example_canape %>%
+  separate(site, c("long", "lat"), sep = ":") %>%
+  mutate(across(c(long, lat), parse_number))
+
+select(biod_example_canape_geo, long, lat)
+```
+
+Now we can plot the data.
+
+```{r}
+ggplot(biod_example_canape_geo) +
+  geom_tile(aes(x = long, y = lat, fill = endem_type)) +
+  scale_fill_manual(values = mishler_endem_cols)
+```
+
+`canaper` comes with palettes for endemism colors. Here, we have used the color scheme that appeared in the original publication of CANAPE, Mishler et al. 2014 (`mishler_endem_cols`). However, these colors may not be distinguishable to people with color vision deficiency. The `cpr_endem_cols` palette has been designed to take this into account.
+
+```{r}
+ggplot(biod_example_canape_geo) +
+  geom_tile(aes(x = long, y = lat, fill = endem_type)) +
+  scale_fill_manual(values = cpr_endem_cols)
+```
+
+In fact, there are several alternative color schemes available, `cpr_endem_cols_2` through `cpr_endem_cols_4`. You can try out different palettes to see which one works best for you.
+
+Note that we used `geom_tile` because the sites are located in a regularly spaced grid. This may not be the case with your own data. You may need to use other `geom_()` functions as needed.
