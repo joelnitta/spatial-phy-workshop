@@ -129,6 +129,20 @@ zip_files <- list.files(here::here(), "zip")
 fs::file_move(here::here(zip_files), here::here("tutorials", zip_files))
 ```
 
+Note that the output of `occ_download()` includes a DOI for this dataset:
+
+```{r}
+gbif_download
+```
+
+You should visit the DOI to see what your raw dataset looks like in GBIF: <`r paste0("https://doi.org/", attr(gbif_download, "doi"))`>.
+
+You should always **be sure to cite the DOI if you publish your study**.
+If you filter the data, you may need to cite a "derived" dataset.
+For more information, see [this documentation from rOpenSci](https://docs.ropensci.org/rgbif/articles/gbif_citations.html).
+
+[GBIF has a policy](https://www.gbif.org/faq?question=for-how-long-will-does-gbif-store-downloads) of retaining datasets registered with a DOI for 6 months initially, and as long as possible once published.
+
 ### Inspect the dataset
 
 Let's take a look at the dataset.

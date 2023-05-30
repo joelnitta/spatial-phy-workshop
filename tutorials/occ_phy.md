@@ -107,7 +107,50 @@ crep_records_raw <- occ_download_import(crep_records_path)
 
     Download file size: 1.44 MB
 
-    On disk at ./0265951-230224095556074.zip
+    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0265951-230224095556074.zip
+
+Note that the output of `occ_download()` includes a DOI for this
+dataset:
+
+``` r
+gbif_download
+```
+
+    <<gbif download>>
+      Your download is being processed by GBIF:
+      https://www.gbif.org/occurrence/download/0265951-230224095556074
+      Most downloads finish within 15 min.
+      Check status with
+      occ_download_wait('0265951-230224095556074')
+      After it finishes, use
+      d <- occ_download_get('0265951-230224095556074') %>%
+        occ_download_import()
+      to retrieve your download.
+    Download Info:
+      Username: joelnitta
+      E-mail: joelnitta@gmail.com
+      Format: SIMPLE_CSV
+      Download key: 0265951-230224095556074
+      Created: 2023-05-30T06:45:00.126+00:00
+    Citation Info:  
+      Please always cite the download DOI when using this data.
+      https://www.gbif.org/citation-guidelines
+      DOI: 10.15468/dl.eretm7
+      Citation:
+      GBIF Occurrence Download https://doi.org/10.15468/dl.eretm7 Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-05-30
+
+You should visit the DOI to see what your raw dataset looks like in
+GBIF: <https://doi.org/10.15468/dl.eretm7>.
+
+You should always **be sure to cite the DOI if you publish your study**.
+If you filter the data, you may need to cite a “derived” dataset. For
+more information, see [this documentation from
+rOpenSci](https://docs.ropensci.org/rgbif/articles/gbif_citations.html).
+
+[GBIF has a
+policy](https://www.gbif.org/faq?question=for-how-long-will-does-gbif-store-downloads)
+of retaining datasets registered with a DOI for 6 months initially, and
+as long as possible once published.
 
 ### Inspect the dataset
 
@@ -345,7 +388,7 @@ ggplot()+
 
     Warning: Removed 10492 rows containing missing values (`geom_point()`).
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-12-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-13-1.png"
 width="672" />
 
 There are too many colors to distinguish all the species so I’m not
@@ -513,7 +556,7 @@ ggplot() +
   )
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-19-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-20-1.png"
 width="672" />
 
 See a pattern? All (or at least the vast majority) of points that got
@@ -543,7 +586,7 @@ ggplot(st_as_sf(buffland)) +
   geom_sf(fill = "grey70")
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-21-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-22-1.png"
 width="672" />
 
 As you can see, by using this map as a cutoff, we be sure that we are
@@ -586,7 +629,7 @@ ggplot() +
   )
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-23-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-24-1.png"
 width="672" />
 
 This looks better, but you may want to zoom in to individual points, for
@@ -717,7 +760,7 @@ ggplot() +
   )
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-26-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-27-1.png"
 width="672" />
 
 Finally, let’s trim the occurrence records down to just the clean data
@@ -1159,7 +1202,7 @@ ggplot() +
   scale_fill_viridis_c(trans = "log10")
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-46-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-47-1.png"
 width="672" />
 
 We can see that there is highest richness in SE Asia. Cool!
@@ -1192,7 +1235,7 @@ ggplot() +
   scale_fill_viridis_c(trans = "log10")
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-48-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-49-1.png"
 width="672" />
 
 As expected, it looks very similar to species richness. We will get more
@@ -1205,7 +1248,7 @@ ggplot(poly_shp_sf) +
   )
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-49-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-50-1.png"
 width="672" />
 
 [^1]: As of writing, GBIF includes 2,324,778,311 occurrence records!
