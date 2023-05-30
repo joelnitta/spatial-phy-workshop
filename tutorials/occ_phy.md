@@ -1,5 +1,4 @@
-Obtaining occurrence and phylogeny data in R
-================
+# Obtaining occurrence and phylogeny data in R
 
 This tutorial demonstrates how to obtain occurrence records and
 phylogenies to use for spatial phylogenetics in R. As an example, we
@@ -62,14 +61,14 @@ crep_records$data[1:6, 1:6]
 ```
 
     # A tibble: 6 × 6
-      key        scientificName                                     decimalLatitude decimalLongitude issues      datasetKey                          
-      <chr>      <chr>                                                        <dbl>            <dbl> <chr>       <chr>                               
-    1 4011676253 Crepidomanes minutum (Blume) K.Iwats.                         25.0            122.  cdc,cdround 50c9509d-22c7-4a22-a47d-8c48425ef4a7
-    2 4015019122 Crepidomanes minutum (Blume) K.Iwats.                         23.9            122.  cdc,cdround 50c9509d-22c7-4a22-a47d-8c48425ef4a7
-    3 4046492607 Crepidomanes intricatum (Farrar) Ebihara & Weakley            39.5            -82.6 cdc,cdround 50c9509d-22c7-4a22-a47d-8c48425ef4a7
-    4 4018578880 Crepidomanes latealatum (Bosch) Copel.                        24.1            121.  cdc         50c9509d-22c7-4a22-a47d-8c48425ef4a7
-    5 4018244292 Crepidomanes minutum (Blume) K.Iwats.                         23.3            121.  cdc,cdround 50c9509d-22c7-4a22-a47d-8c48425ef4a7
-    6 4018594500 Crepidomanes minutum (Blume) K.Iwats.                         23.3            121.  cdc,cdround 50c9509d-22c7-4a22-a47d-8c48425ef4a7
+      key        scientificName   decimalLatitude decimalLongitude issues datasetKey
+      <chr>      <chr>                      <dbl>            <dbl> <chr>  <chr>     
+    1 4011676253 Crepidomanes mi…            25.0            122.  cdc,c… 50c9509d-…
+    2 4015019122 Crepidomanes mi…            23.9            122.  cdc,c… 50c9509d-…
+    3 4046492607 Crepidomanes in…            39.5            -82.6 cdc,c… 50c9509d-…
+    4 4018578880 Crepidomanes la…            24.1            121.  cdc    50c9509d-…
+    5 4018244292 Crepidomanes mi…            23.3            121.  cdc,c… 50c9509d-…
+    6 4018594500 Crepidomanes mi…            23.3            121.  cdc,c… 50c9509d-…
 
 ``` r
 # There are a *lot* of columns: 162!
@@ -106,9 +105,9 @@ crep_records_path <- occ_download_get(gbif_download, "data_raw")
 crep_records_raw <- occ_download_import(crep_records_path)
 ```
 
-    Download file size: 1.42 MB
+    Download file size: 1.44 MB
 
-    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0256768-230224095556074.zip
+    On disk at ./0265951-230224095556074.zip
 
 ### Inspect the dataset
 
@@ -118,23 +117,26 @@ Let’s take a look at the dataset.
 crep_records_raw
 ```
 
-    # A tibble: 20,101 × 50
-          gbifID datasetKey       occurrenceID kingdom phylum class order family genus species infraspecificEpithet taxonRank scientificName verbatimScientificName verbatimScientificNa…¹ countryCode locality stateProvince occurrenceStatus individualCount publishingOrgKey decimalLatitude decimalLongitude
-     *   <int64> <chr>            <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr> <chr>   <chr>                <chr>     <chr>          <chr>                  <chr>                  <chr>       <chr>    <chr>         <chr>                      <int> <chr>                      <dbl>            <dbl>
-     1 991749096 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes late-ala… ""                     TH          "Doi Su… Chiang Mai    PRESENT                       NA 98e934b0-5f31-1…           18.8              98.9
-     2 991749040 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          "Khao B… Phatthalung   PRESENT                       NA 98e934b0-5f31-1…            7.25            100. 
-     3 991748916 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          "Than P… Satun         PRESENT                       NA 98e934b0-5f31-1…            7.11             99.8
-     4 991748915 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          "Huay Y… Prachuap Khi… PRESENT                       NA 98e934b0-5f31-1…           11.7              99.6
-     5 991748307 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          "Thale … Satun         PRESENT                       NA 98e934b0-5f31-1…            6.71            100. 
-     6 991747993 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes late-ala… ""                     TH          ""       Chiang Mai    PRESENT                       NA 98e934b0-5f31-1…           NA                NA  
-     7 991747797 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          "Khao L… Nakhon Si Th… PRESENT                       NA 98e934b0-5f31-1…            8.72             99.7
-     8 991747708 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes latemarg… ""                     TH          "Kaeng … Phetchaburi   PRESENT                       NA 98e934b0-5f31-1…           12.2              99.6
-     9 991747526 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes minutum … ""                     TH          "Along … Yala          PRESENT                       NA 98e934b0-5f31-1…            6.85            102. 
-    10 991747268 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes minutum … ""                     TH          "Namtok… Prachuap Khi… PRESENT                       NA 98e934b0-5f31-1…           11.6              99.6
-    # ℹ 20,091 more rows
-    # ℹ abbreviated name: ¹​verbatimScientificNameAuthorship
-    # ℹ 27 more variables: coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, elevation <dbl>, elevationAccuracy <dbl>, depth <dbl>, depthAccuracy <lgl>, eventDate <dttm>, day <int>, month <int>, year <int>, taxonKey <int>, speciesKey <int>, basisOfRecord <chr>, institutionCode <chr>,
-    #   collectionCode <chr>, catalogNumber <chr>, recordNumber <chr>, identifiedBy <chr>, dateIdentified <dttm>, license <chr>, rightsHolder <chr>, recordedBy <chr>, typeStatus <chr>, establishmentMeans <chr>, lastInterpreted <dttm>, mediaType <chr>, issue <chr>
+    # A tibble: 20,299 × 50
+          gbifID datasetKey     occurrenceID kingdom phylum class order family genus
+     *   <int64> <chr>          <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
+     1 991749096 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     2 991749040 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     3 991748916 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     4 991748915 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     5 991748307 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     6 991747993 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     7 991747797 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     8 991747708 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     9 991747526 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+    10 991747268 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+    # ℹ 20,289 more rows
+    # ℹ 41 more variables: species <chr>, infraspecificEpithet <chr>,
+    #   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
+    #   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
+    #   stateProvince <chr>, occurrenceStatus <chr>, individualCount <int>,
+    #   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
+    #   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
 
 The dataset is so large it is difficult to print out to the screen. This
 output type (`"SIMPLE_CSV"`) includes 50 columns, which is less than
@@ -151,7 +153,7 @@ glimpse(crep_records_raw[1, ])
     Columns: 50
     $ gbifID                           <int64> 991749096
     $ datasetKey                       <chr> "bf2a4bf0-5f31-11de-b67e-b8a03c50a862"
-    $ occurrenceID                     <chr> "http://data.rbge.org.uk/herb/E00688142"
+    $ occurrenceID                     <chr> "http://data.rbge.org.uk/herb/E0068…
     $ kingdom                          <chr> "Plantae"
     $ phylum                           <chr> "Tracheophyta"
     $ class                            <chr> "Polypodiopsida"
@@ -161,11 +163,11 @@ glimpse(crep_records_raw[1, ])
     $ species                          <chr> "Crepidomanes latealatum"
     $ infraspecificEpithet             <chr> ""
     $ taxonRank                        <chr> "SPECIES"
-    $ scientificName                   <chr> "Crepidomanes latealatum (Bosch) Copel."
-    $ verbatimScientificName           <chr> "Crepidomanes late-alatum (v.d.B.) Copel"
+    $ scientificName                   <chr> "Crepidomanes latealatum (Bosch) Cope…
+    $ verbatimScientificName           <chr> "Crepidomanes late-alatum (v.d.B.) Co…
     $ verbatimScientificNameAuthorship <chr> ""
     $ countryCode                      <chr> "TH"
-    $ locality                         <chr> "Doi Sutep-Doi Pui National Park. San Gou on way to Doi Pui."
+    $ locality                         <chr> "Doi Sutep-Doi Pui National Park. San…
     $ stateProvince                    <chr> "Chiang Mai"
     $ occurrenceStatus                 <chr> "PRESENT"
     $ individualCount                  <int> NA
@@ -193,12 +195,12 @@ glimpse(crep_records_raw[1, ])
     $ dateIdentified                   <dttm> NA
     $ license                          <chr> "CC_BY_NC_4_0"
     $ rightsHolder                     <chr> ""
-    $ recordedBy                       <chr> "Middleton, David J.; Karaket, P.; Triboun, P.; Kawatkul, U.; Meeboonya, R."
+    $ recordedBy                       <chr> "Middleton, David J.; Karaket, P.; Tr…
     $ typeStatus                       <chr> ""
     $ establishmentMeans               <chr> ""
-    $ lastInterpreted                  <dttm> 2023-05-01 13:39:15
+    $ lastInterpreted                  <dttm> 2023-05-29 16:49:31
     $ mediaType                        <chr> ""
-    $ issue                            <chr> "GEODETIC_DATUM_ASSUMED_WGS84;CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_FUZZY;INSTITUTION_MATCH_FUZZY;COLLECTION_MATCH_FUZZY"
+    $ issue                            <chr> "GEODETIC_DATUM_ASSUMED_WGS84;CONTINE…
 
 That’s better.
 
@@ -231,14 +233,14 @@ crep_records_raw %>%
     # A tibble: 8 × 2
       basisOfRecord           n
       <chr>               <int>
-    1 HUMAN_OBSERVATION     715
+    1 HUMAN_OBSERVATION     721
     2 LIVING_SPECIMEN         4
     3 MACHINE_OBSERVATION     6
     4 MATERIAL_CITATION       5
     5 MATERIAL_SAMPLE       199
     6 OBSERVATION             1
-    7 OCCURRENCE            294
-    8 PRESERVED_SPECIMEN  18878
+    7 OCCURRENCE            365
+    8 PRESERVED_SPECIMEN  18998
 
 We see that the majority of these are `PRESERVED_SPECIMEN`; in the case
 of plants, those are almost certainly herbarium specimens. You can treat
@@ -281,7 +283,7 @@ crep_records_raw %>%
     4 MATERIAL_CITATION       1
     5 MATERIAL_SAMPLE        28
     6 OBSERVATION             1
-    7 OCCURRENCE             19
+    7 OCCURRENCE             25
     8 PRESERVED_SPECIMEN     56
 
 Most of them are preserved specimens, as expected.
@@ -309,8 +311,8 @@ crep_records_raw %>%
     5 Crepidomanes rupicola        1
     6 Crepidomanes walleri         1
 
-These are the sorts of things you need to consider when working with
-data from GBIF.
+For now we will leave them in, but these are the sorts of things you
+need to consider when working with data from GBIF.
 
 ## Cleaning spatial data with CoordinateCleaner
 
@@ -341,7 +343,7 @@ ggplot()+
   theme(legend.position = "none")
 ```
 
-    Warning: Removed 10459 rows containing missing values (`geom_point()`).
+    Warning: Removed 10492 rows containing missing values (`geom_point()`).
 
 <img src="occ_phy_files/figure-commonmark/unnamed-chunk-12-1.png"
 width="672" />
@@ -355,7 +357,7 @@ errors?
 
 ### Remove missing values
 
-Did you notice the warning message when we ran `ggplot()`? It said 10459
+Did you notice the warning message when we ran `ggplot()`? It said 10492
 rows containing missing values had been removed rom the plot. Clearly we
 can’t use data that lack GPS points! The first step of cleaning the data
 is to remove these values.
@@ -374,23 +376,26 @@ crep_records_no_missing <-
 crep_records_no_missing
 ```
 
-    # A tibble: 9,410 × 50
-          gbifID datasetKey       occurrenceID kingdom phylum class order family genus species infraspecificEpithet taxonRank scientificName verbatimScientificName verbatimScientificNa…¹ countryCode locality stateProvince occurrenceStatus individualCount publishingOrgKey decimalLatitude decimalLongitude
-         <int64> <chr>            <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr> <chr>   <chr>                <chr>     <chr>          <chr>                  <chr>                  <chr>       <chr>    <chr>         <chr>                      <int> <chr>                      <dbl>            <dbl>
-     1 991749096 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes late-ala… ""                     TH          Doi Sut… Chiang Mai    PRESENT                       NA 98e934b0-5f31-1…           18.8              98.9
-     2 991749040 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Khao Ba… Phatthalung   PRESENT                       NA 98e934b0-5f31-1…            7.25            100. 
-     3 991748916 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Than Pl… Satun         PRESENT                       NA 98e934b0-5f31-1…            7.11             99.8
-     4 991748915 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Huay Ya… Prachuap Khi… PRESENT                       NA 98e934b0-5f31-1…           11.7              99.6
-     5 991748307 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Thale B… Satun         PRESENT                       NA 98e934b0-5f31-1…            6.71            100. 
-     6 991747797 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes bipuncta… ""                     TH          Khao Lu… Nakhon Si Th… PRESENT                       NA 98e934b0-5f31-1…            8.72             99.7
-     7 991747708 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes latemarg… ""                     TH          Kaeng K… Phetchaburi   PRESENT                       NA 98e934b0-5f31-1…           12.2              99.6
-     8 991747526 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes minutum … ""                     TH          Along T… Yala          PRESENT                       NA 98e934b0-5f31-1…            6.85            102. 
-     9 991747268 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes minutum … ""                     TH          Namtok … Prachuap Khi… PRESENT                       NA 98e934b0-5f31-1…           11.6              99.6
-    10 991746718 bf2a4bf0-5f31-1… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep… Crepid… ""                   SPECIES   Crepidomanes … Crepidomanes minutum … ""                     TH          Khao Ba… Phatthalung   PRESENT                       NA 98e934b0-5f31-1…            7.25            100. 
-    # ℹ 9,400 more rows
-    # ℹ abbreviated name: ¹​verbatimScientificNameAuthorship
-    # ℹ 27 more variables: coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, elevation <dbl>, elevationAccuracy <dbl>, depth <dbl>, depthAccuracy <lgl>, eventDate <dttm>, day <int>, month <int>, year <int>, taxonKey <int>, speciesKey <int>, basisOfRecord <chr>, institutionCode <chr>,
-    #   collectionCode <chr>, catalogNumber <chr>, recordNumber <chr>, identifiedBy <chr>, dateIdentified <dttm>, license <chr>, rightsHolder <chr>, recordedBy <chr>, typeStatus <chr>, establishmentMeans <chr>, lastInterpreted <dttm>, mediaType <chr>, issue <chr>
+    # A tibble: 9,573 × 50
+          gbifID datasetKey     occurrenceID kingdom phylum class order family genus
+         <int64> <chr>          <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
+     1 991749096 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     2 991749040 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     3 991748916 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     4 991748915 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     5 991748307 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     6 991747797 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     7 991747708 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     8 991747526 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+     9 991747268 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+    10 991746718 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
+    # ℹ 9,563 more rows
+    # ℹ 41 more variables: species <chr>, infraspecificEpithet <chr>,
+    #   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
+    #   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
+    #   stateProvince <chr>, occurrenceStatus <chr>, individualCount <int>,
+    #   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
+    #   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
 
 That alone decreased our number of records by nearly half.
 
@@ -413,7 +418,18 @@ progressively lower resolution[^4]).
 
 ``` r
 library(CoordinateCleaner)
+```
 
+    rgeos version: 0.6-3, (SVN revision 696)
+     GEOS runtime version: 3.11.0-CAPI-1.17.0 
+     Please note that rgeos will be retired during October 2023,
+    plan transition to sf or terra functions using GEOS at your earliest convenience.
+    See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
+     GEOS using OverlayNG
+     Linking to sp version: 1.6-0 
+     Polygon checking: TRUE 
+
+``` r
 crep_records_sea_flagged <- 
   cc_sea(
     crep_records_no_missing,
@@ -426,7 +442,7 @@ crep_records_sea_flagged <-
 
     Testing sea coordinates
 
-    Flagged 555 records.
+    Flagged 571 records.
 
 The output here is a logical vector of occurrence records that passed
 the test: `TRUE` are those that passed, and `FALSE` are those that
@@ -458,7 +474,7 @@ and then zoom in there.
 count(crep_records_sea, countryCode, sort = TRUE)
 ```
 
-    # A tibble: 29 × 2
+    # A tibble: 30 × 2
        countryCode     n
        <chr>       <int>
      1 JP            222
@@ -468,14 +484,17 @@ count(crep_records_sea, countryCode, sort = TRUE)
      5 ID             36
      6 PH             20
      7 US             18
-     8 PF             12
-     9 CK             10
-    10 WS             10
-    # ℹ 19 more rows
+     8 ZA             14
+     9 PF             12
+    10 CK             10
+    # ℹ 20 more rows
 
 It looks like Japan (`JP`) had by far the most. OK, let’s plot those.
 
 ``` r
+# Load package needed for hi-res maps
+library(rnaturalearthhires)
+
 # Filter flagged records to just Japan
 crep_records_sea_jp <- 
   crep_records_sea %>%
@@ -616,7 +635,7 @@ crep_records_flagged <-
 
     Testing equal lat/lon
 
-    Flagged 63 records.
+    Flagged 65 records.
 
     Testing zero coordinates
 
@@ -626,7 +645,7 @@ crep_records_flagged <-
 
     Testing country capitals
 
-    Flagged 156 records.
+    Flagged 157 records.
 
     Testing country centroids
 
@@ -643,13 +662,14 @@ crep_records_flagged <-
 
     Downloading urban areas via rnaturalearth
 
-    Flagged 905 records.
+    Flagged 910 records.
 
     Testing geographic outliers
 
-    Warning in cc_outl(otl_test, lon = lon, lat = lat, species = species, method = outliers_method, : Species with fewer than 7 unique records will not be tested.
+    Warning in cc_outl(otl_test, lon = lon, lat = lat, species = species, method =
+    outliers_method, : Species with fewer than 7 unique records will not be tested.
 
-    Flagged 578 records.
+    Flagged 579 records.
 
     Testing GBIF headquarters, flagging records around Copenhagen
 
@@ -661,9 +681,9 @@ crep_records_flagged <-
 
     Testing duplicates
 
-    Flagged 2532 records.
+    Flagged 2596 records.
 
-    Flagged 3587 of 9410 records, EQ = 0.38.
+    Flagged 3664 of 9573 records, EQ = 0.38.
 
 The output is our original dataframe with one column added for each
 test, as well as an overall column called `.summary`.
@@ -674,8 +694,10 @@ Let’s get a summary of the results.
 summary(crep_records_flagged)
 ```
 
-        .val     .equ     .zer     .cap     .cen     .sea     .urb     .otl     .gbf    .inst     .dpl .summary 
-           0       63       63      156      188        5      905      410        0        1     2532     3587 
+        .val     .equ     .zer     .cap     .cen     .sea     .urb     .otl 
+           0       65       63      157      188        5      910      413 
+        .gbf    .inst     .dpl .summary 
+           0        1     2596     3664 
 
 Unfortunately the output is a bit cryptic because `CoordinateCleaner`
 uses very short abbreviations for column names, but we can see that
@@ -709,110 +731,6 @@ crep_records_clean <-
   as_tibble()
 ```
 
-## Aggregating points to communities
-
-The next step before conducting spatial phylogenetic analysis is to
-aggregate the occurrence points into grid-cells. For this, we will use
-the `points2comm()` function of the `phyloregion` package.
-
-``` r
-library(phyloregion)
-
-comm <-
-  points2comm(
-    dat = select(
-      crep_records_clean, species,
-      decimallongitude = decimalLongitude,
-      decimallatitude = decimalLatitude),
-    res = 1
-  )
-```
-
-`res` is the resolution to use for the grid-cells: here, we have
-selected 1 degree per side. Note that the default settings are to split
-up the entire earth into grid-cells, so if you set `res` to a small
-number (e.g., 0.01), you will end up with an extremely large
-(memory-intensive) data object, and R might even crash. In that case,
-you should use the `mask` argument to select a smaller area before
-generating grid-cells.
-
-In fact, the setting for `res` also deserves careful consideration
-because it represents your hypothesis about what defines a community:
-you are saying that you consider species occurring within each grid-cell
-to be capable of interacting. If `res` is too large, the grid-cells may
-include many different habitat types that do not actually have anything
-to do with each other; if it is too small you may not have sufficient
-sampling for each grid-cell and they will mostly be empty.
-
-The output of `points2comm` is a list including two items:
-
-``` r
-names(comm)
-```
-
-    [1] "comm_dat" "poly_shp"
-
-`comm_dat` is the community matrix (here only showing the first six rows
-and columns):
-
-``` r
-comm$comm_dat[1:6, 1:6]
-```
-
-    6 x 6 sparse Matrix of class "dgCMatrix"
-           Crepidomanes africanum Crepidomanes aphlebioides Crepidomanes assimilis Crepidomanes barnardianum Crepidomanes bilabiatum Crepidomanes bipunctatum
-    v15947                      .                         .                      .                         .                       .                        .
-    v15948                      .                         .                      .                         .                       .                        .
-    v16308                      .                         .                      .                         .                       .                        .
-    v16516                      .                         .                      .                         .                       .                        .
-    v16667                      .                         .                      .                         .                       .                        .
-    v16872                      .                         .                      .                         .                       .                        .
-
-`poly_shp` is the GIS layer data: the shapes of the grid-cells.
-
-``` r
-comm$poly_shp
-```
-
-    class       : SpatialPolygonsDataFrame 
-    features    : 697 
-    extent      : -180, 179, -39, 46  (xmin, xmax, ymin, ymax)
-    crs         : NA 
-    variables   : 3
-    names       :  grids, abundance, richness 
-    min values  : v15947,         1,        1 
-    max values  : v46407,       258,       13 
-
-`phyloregion` stores the GIS data as an R object called a
-`SpatialPolygonsDataFrame`, or class `sp`. Recently, a newer data format
-called “Simple features”, or class `sf`, has become popular and is
-gradually replacing `sp`. `sf` is the format that we have been using for
-plotting so far. We don’t have time to go into details about these, but
-just know that you can convert from `sp` to `sf` with the function
-`st_as_sf()`. We do this below so we can plot the grid-cells on the
-world map. Note that we also need to deal with the Coordinate Reference
-System (CRS).
-
-``` r
-# Set the CRS to match between the background map and points
-poly_shp_sf <- st_as_sf(comm$poly_shp)
-st_crs(poly_shp_sf) <- st_crs(world_map)
-
-ggplot() +
-  geom_sf(data = world_map) +
-  geom_sf(
-    data = poly_shp_sf,
-    aes(fill = richness)
-  ) +
-  # Use a log scale because richness is highly skewed
-  scale_fill_viridis_c(trans = "log10")
-```
-
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-32-1.png"
-width="672" />
-
-We can see that there is highest richness in SE Asia. Cool!
-
 ## Obtaining a phylogeny
 
 As mentioned in the lecture, there are various sources of phylogenies,
@@ -841,12 +759,12 @@ fern_tree
 ```
 
 
-    Phylogenetic tree with 5581 tips and 5580 internal nodes.
+    Phylogenetic tree with 5703 tips and 5702 internal nodes.
 
     Tip labels:
       Acrostichum_danaeifolium, Acrostichum_speciosum, Acrostichum_aureum, Ceratopteris_richardii, Ceratopteris_cornuta, Ceratopteris_pteridoides, ...
     Node labels:
-      Root, 100, 100, 100, 100, 100, ...
+      99/100, 100/100, 100, 100/100, 100/100, 100/100, ...
 
     Rooted; includes branch lengths.
 
@@ -863,19 +781,19 @@ with. Notice that the tree uses underscores in the species names, so we
 need to account for that.
 
 ``` r
-common_species <- intersect(fern_tree$tip.label, str_replace_all(colnames(comm$comm_dat), " ", "_"))
+common_species <- intersect(fern_tree$tip.label, str_replace_all(crep_records_clean$species, " ", "_"))
 length(common_species)
 ```
 
     [1] 30
 
 ``` r
-ncol(comm$comm_dat)
+n_distinct(crep_records_clean$species)
 ```
 
     [1] 49
 
-Of the 49 species in the community data matrix, 30 are in the tree.
+Of the 49 species in the cleaned occurrence data, 30 are in the tree.
 
 Are the missing species truly missing, or are they just differences in
 taxonomy (different synonyms)?
@@ -900,14 +818,17 @@ names_query <- tibble(
 )
 ```
 
-Next, run the query. This may take a few minutes.
+Next, run the query using `name_backbone_checklist()`. This may take a
+few minutes. Note that it is actually preferrable to query full
+scientific names with authors, but we are skipping that because of time
+restrictions.
 
 ``` r
 fern_tree_names_lookup <- name_backbone_checklist(names_query)
 dim(fern_tree_names_lookup)
 ```
 
-    [1] 5581   26
+    [1] 5703   26
 
 As so often, the results are a large dataframe. Let’s just peak at the
 first row to see what’s going on.
@@ -948,7 +869,7 @@ fern_tree_names_lookup %>%
     $ verbatim_index   <dbl> 1
 
 Important columns to note are `verbatim_name` with the original query
-name and `species` with the accetped binomial in GBIF.
+name and `species` with the accepted binomial in GBIF.
 
 Some other interesting columns are `status` and `matchType`. Let’s see
 what kind of values those include:
@@ -960,9 +881,9 @@ fern_tree_names_lookup %>% count(status)
     # A tibble: 3 × 2
       status       n
       <chr>    <int>
-    1 ACCEPTED  5480
-    2 DOUBTFUL     1
-    3 SYNONYM    100
+    1 ACCEPTED  5605
+    2 DOUBTFUL     4
+    3 SYNONYM     94
 
 `status` includes `ACCEPTED`, `DOUBTFUL`, and `SYNONYM`. `ACCEPTED` is
 names that are the same between the query and reference (GBIF).
@@ -977,9 +898,9 @@ fern_tree_names_lookup %>% count(matchType)
     # A tibble: 3 × 2
       matchType      n
       <chr>      <int>
-    1 EXACT       5545
-    2 FUZZY         28
-    3 HIGHERRANK     8
+    1 EXACT       5661
+    2 FUZZY         23
+    3 HIGHERRANK    19
 
 `matchType` includes `EXACT`, `FUZZY`, and `HIGHERRANK`. `EXACT` are
 names that could be looked up exactly as they are. `FUZZY` means that
@@ -1023,16 +944,16 @@ fern_tree_names_lookup %>%
     $ acceptedUsageKey <int> NA
     $ verbatim_name    <chr> "Pteris lydgatei"
     $ verbatim_class   <chr> "Polypodiopsida"
-    $ verbatim_index   <dbl> 246
+    $ verbatim_index   <dbl> 265
 
 We can see that the query name “Pteris lydgatei” is nearly the same as,
 but slightly different from, the matched name “Pteris lidgatii”. We can
 see this is likely a spelling mistake. Such slight differences are
 common between databases, hence the need for fuzzy matching. However, it
-is possible to get false positives with fuzzy matching too — sometimes
-names that differ only by one letter are indeed different! So ideally
-**you should check the whole list of fuzzy matches and make sure they
-are correct.**
+is possible to get **false positives** with fuzzy matching too —
+sometimes names that differ only by one letter are indeed different! So
+ideally **you should check the whole list of fuzzy matches and make sure
+they are correct.**
 
 OK, what about `matchType` “HIGHERRANK”?
 
@@ -1045,83 +966,249 @@ fern_tree_names_lookup %>%
 
     Rows: 1
     Columns: 26
-    $ usageKey         <int> 7935155
-    $ scientificName   <chr> "Microlepia C.Presl"
-    $ canonicalName    <chr> "Microlepia"
+    $ usageKey         <int> 2651585
+    $ scientificName   <chr> "Ceratopteris Brongn."
+    $ canonicalName    <chr> "Ceratopteris"
     $ rank             <chr> "GENUS"
     $ status           <chr> "ACCEPTED"
-    $ confidence       <int> 100
+    $ confidence       <int> 98
     $ matchType        <chr> "HIGHERRANK"
     $ kingdom          <chr> "Plantae"
     $ phylum           <chr> "Tracheophyta"
     $ order            <chr> "Polypodiales"
-    $ family           <chr> "Dennstaedtiaceae"
-    $ genus            <chr> "Microlepia"
+    $ family           <chr> "Pteridaceae"
+    $ genus            <chr> "Ceratopteris"
     $ species          <chr> NA
     $ kingdomKey       <int> 6
     $ phylumKey        <int> 7707728
     $ classKey         <int> 7228684
     $ orderKey         <int> 392
-    $ familyKey        <int> 6623
-    $ genusKey         <int> 7935155
+    $ familyKey        <int> 2367
+    $ genusKey         <int> 2651585
     $ speciesKey       <int> NA
     $ synonym          <lgl> FALSE
     $ class            <chr> "Polypodiopsida"
     $ acceptedUsageKey <int> NA
-    $ verbatim_name    <chr> "Davallia polypodioides"
+    $ verbatim_name    <chr> "Ceratopteris chingii"
     $ verbatim_class   <chr> "Polypodiopsida"
-    $ verbatim_index   <dbl> 1808
+    $ verbatim_index   <dbl> 9
 
-In this case, the query name “Davallia polypodioides” matched to a
-higher rank, ““, but not a species. We will go ahead and exclude these
-because they lack a species level match. But ideally, **you should see
-if you can manually find a match for such queries**.
+In this case, the query name “Ceratopteris chingii” matched to a higher
+rank, “Ceratopteris”, but not a species. We will go ahead and exclude
+these because we know that all of our queries were at the species level
+and should have a species-level match. But ideally, **you should see if
+you can manually find a match for such queries**.
 
-Now we can finally match the tree and community data.
+Now we adjust the names in the tree to match the GBIF reference
+taxonomy.
 
 ``` r
 fern_tree_to_gbif <-
   fern_tree_names_lookup %>%
+  # Drop names that could not be match to species
   filter(!is.na(species)) %>%
+  # Make a lookup table: match the original name to the gbif name
   transmute(
     original_name = str_replace_all(verbatim_name, " ", "_"),
     gbif_name = str_replace_all(species, " ", "_")
   )
 
-fern_tree_renamed <-
-  fern_tree %>%
-  ape::keep.tip(fern_tree_to_gbif$original_name)
+# Trim the tree to only names that have matches
+fern_tree_renamed <- ape::keep.tip(fern_tree, fern_tree_to_gbif$original_name)
 
+# Rearrange the look up table to be the same order as the tips in the tree
 fern_tree_to_gbif <-
   tibble(original_name = fern_tree_renamed$tip.label) %>%
   left_join(fern_tree_to_gbif, by = "original_name")
 
+# Rename the tree tips
 fern_tree_renamed$tip.label <- fern_tree_to_gbif$gbif_name
-
-colnames(comm$comm_dat) <- str_replace_all(colnames(comm$comm_dat), " ", "_")
-
-species_in_both <- intersect(colnames(comm$comm_dat), fern_tree_renamed$tip.label)
-
-comm$comm_dat <- comm$comm_dat[, species_in_both]
-
-crepidomanes_tree <- ape::keep.tip(fern_tree_renamed, species_in_both)
-
-crepidomanes_tree
 ```
 
+And finally match the tree and occurrence records by species name. Note
+that we are dropping any species that don’t occur in both the tree and
+the occurrence data.
 
-    Phylogenetic tree with 31 tips and 30 internal nodes.
+``` r
+# Find the species in common between the tree and the occurrence data
+species_in_both <- intersect(
+  str_replace_all(crep_records_clean$species, " ", "_"),
+  fern_tree_renamed$tip.label)
 
-    Tip labels:
-      Crepidomanes_bipunctatum, Crepidomanes_christii, Crepidomanes_draytonianum, Crepidomanes_kurzii, Crepidomanes_africanum, Crepidomanes_clarenceanum, ...
-    Node labels:
-      100, 100, 100, 100, 100, 82, ...
+# Subset tree to only species in occurrence data
+crepidomanes_tree <- ape::keep.tip(fern_tree_renamed, species_in_both)
 
-    Rooted; includes branch lengths.
+# Subset occurrence data to only species in tree
+crep_records_trim_to_tree <-
+  crep_records_clean %>%
+  # Convert spaces in species names to underscores, to match tree
+  mutate(species = str_replace_all(species, " ", "_")) %>%
+  filter(species %in% crepidomanes_tree$tip.label)
+```
 
-We still need to recount the species richness in the polygon data.
+## Aggregating points to communities
 
-[^1]: As of writing, GBIF includes 2,318,264,397 occurrence records!
+The final step before conducting spatial phylogenetic analysis is to
+aggregate the occurrence points into grid-cells. For this, we will use
+the `points2comm()` function of the `phyloregion` package.
+
+``` r
+library(phyloregion)
+
+comm <-
+  points2comm(
+    dat = select(
+      crep_records_trim_to_tree, species,
+      decimallongitude = decimalLongitude,
+      decimallatitude = decimalLatitude),
+    res = 1
+  )
+```
+
+`res` is the resolution to use for the grid-cells: here, we have
+selected 1 degree per side. Note that the default settings are to split
+up the entire earth into grid-cells, so if you set `res` to a small
+number (e.g., 0.01), you will end up with an extremely large
+(memory-intensive) data object, and R might even crash. In that case,
+you should use the `mask` argument to select a smaller area before
+generating grid-cells.
+
+In fact, the setting for `res` also deserves careful consideration
+because it represents your hypothesis about what defines a community:
+you are saying that you consider species occurring within each grid-cell
+to be capable of interacting. If `res` is too large, the grid-cells may
+include many different habitat types that do not actually have anything
+to do with each other; if it is too small you may not have sufficient
+sampling for each grid-cell and they will mostly be empty.
+
+The output of `points2comm` is a list including two items:
+
+``` r
+names(comm)
+```
+
+    [1] "comm_dat" "poly_shp"
+
+`comm_dat` is the community matrix (here only showing the first six rows
+and columns):
+
+``` r
+comm$comm_dat[1:6, 1:6]
+```
+
+    6 x 6 sparse Matrix of class "dgCMatrix"
+           Crepidomanes_africanum Crepidomanes_aphlebioides
+    v15947                      .                         .
+    v15948                      .                         .
+    v16308                      .                         .
+    v16516                      .                         .
+    v16667                      .                         .
+    v16872                      .                         .
+           Crepidomanes_bipunctatum Crepidomanes_bonapartei Crepidomanes_chevalieri
+    v15947                        .                       .                       .
+    v15948                        .                       .                       .
+    v16308                        .                       .                       .
+    v16516                        .                       .                       .
+    v16667                        .                       .                       .
+    v16872                        .                       .                       .
+           Crepidomanes_christii
+    v15947                     .
+    v15948                     .
+    v16308                     .
+    v16516                     .
+    v16667                     .
+    v16872                     .
+
+`poly_shp` is the GIS layer data: the shapes of the grid-cells.
+
+``` r
+comm$poly_shp
+```
+
+    class       : SpatialPolygonsDataFrame 
+    features    : 705 
+    extent      : -180, 179, -39, 46  (xmin, xmax, ymin, ymax)
+    crs         : NA 
+    variables   : 3
+    names       :  grids, abundance, richness 
+    min values  : v15947,         1,        1 
+    max values  : v46407,       203,       11 
+
+`phyloregion` stores the GIS data as an R object called a
+`SpatialPolygonsDataFrame`, or class `sp`. Recently, a newer data format
+called “Simple features”, or class `sf`, has become popular and is
+gradually replacing `sp`. `sf` is the format that we have been using for
+plotting so far. We don’t have time to go into details about these, but
+just know that you can convert from `sp` to `sf` with the function
+`st_as_sf()`. We do this below so we can plot the grid-cells on the
+world map. Note that we also need to deal with the Coordinate Reference
+System (CRS).
+
+``` r
+# Set the CRS to match between the background map and points
+poly_shp_sf <- st_as_sf(comm$poly_shp)
+st_crs(poly_shp_sf) <- st_crs(world_map)
+
+ggplot() +
+  geom_sf(data = world_map) +
+  geom_sf(
+    data = poly_shp_sf,
+    aes(fill = richness)
+  ) +
+  # Use a log scale because richness is highly skewed
+  scale_fill_viridis_c(trans = "log10")
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-46-1.png"
+width="672" />
+
+We can see that there is highest richness in SE Asia. Cool!
+
+Since we have come this far, let’s go ahead and do one more analysis
+that actually uses the phylogeny and community dataset together: we will
+calculate raw PD.
+
+``` r
+# PD is available in the phyloregion package
+pd_crep <- PD(comm$comm_dat, crepidomanes_tree)
+head(pd_crep)
+```
+
+      v15947   v15948   v16308   v16516   v16667   v16872 
+    164.7879 164.7879 164.7879 164.7879 164.7879 199.7074 
+
+``` r
+poly_shp_sf <-
+  poly_shp_sf %>%
+  mutate(pd = pd_crep)
+
+ggplot() +
+  geom_sf(data = world_map) +
+  geom_sf(
+    data = poly_shp_sf,
+    aes(fill = pd)
+  ) +
+  # Use a log scale because richness is highly skewed
+  scale_fill_viridis_c(trans = "log10")
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-48-1.png"
+width="672" />
+
+As expected, it looks very similar to species richness. We will get more
+into methods that account for this expected relationship tomorrow!
+
+``` r
+ggplot(poly_shp_sf) +
+  geom_point(
+    aes(x = richness, y = pd)
+  )
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-49-1.png"
+width="672" />
+
+[^1]: As of writing, GBIF includes 2,324,778,311 occurrence records!
 
 [^2]: Most of these columns are [Darwin Core
     terms](https://www.gbif.org/darwin-core), which is a standard for

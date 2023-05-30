@@ -201,7 +201,7 @@ crep_records_raw %>%
   count(species)
 ```
 
-These are the sorts of things you need to consider when working with data from GBIF.
+For now we will leave them in, but these are the sorts of things you need to consider when working with data from GBIF.
 
 ## Cleaning spatial data with CoordinateCleaner
 
@@ -307,6 +307,9 @@ count(crep_records_sea, countryCode, sort = TRUE)
 It looks like Japan (`JP`) had by far the most. OK, let's plot those.
 
 ```{r}
+# Load package needed for hi-res maps
+library(rnaturalearthhires)
+
 # Filter flagged records to just Japan
 crep_records_sea_jp <- 
   crep_records_sea %>%
@@ -434,9 +437,179 @@ crep_records_clean <-
   as_tibble()
 ```
 
+## Obtaining a phylogeny
+
+As mentioned in the lecture, there are various sources of phylogenies, but unfortunately no "one size fits all" solution.
+
+Since this example is for ferns, we will download a fern phylogeny that is conveniently available via the `ftolr` package.
+
+You will need to install it first using devtools since it isn't on CRAN:
+
+```{r}
+#| eval: false
+library(devtools)
+
+install_github("joelnitta/ftolr")
+```
+
+Once it's installed, we can obtain the tree with the `ft_tree()` function.
+
+```{r}
+library(ftolr)
+
+fern_tree <- ft_tree()
+
+fern_tree
+```
+
+## Matching names
+
+There's not much to say about the phylogeny, since that will be highly particular to your study.
+
+But a much more frequently encountered problem is matching names between the phylogeny and the community data. How can we do that?
+
+First let's see how many species are in common between the two to begin with. Notice that the tree uses underscores in the species names, so we need to account for that.
+
+```{r}
+common_species <- intersect(fern_tree$tip.label, str_replace_all(crep_records_clean$species, " ", "_"))
+length(common_species)
+n_distinct(crep_records_clean$species)
+```
+
+Of the `r n_distinct(crep_records_clean$species)` species in the cleaned occurrence data, `r length(common_species)` are in the tree.
+
+Are the missing species truly missing, or are they just differences in taxonomy (different synonyms)?
+
+The names from the GBIF data are already standardized to the GBIF taxonomy.
+
+However, the names in the tree may not conform to the GBIF taxonomy. We can query the names in the tree against the GBIF taxonomy using the `name_backbone_checklist()` function of the `rgbif` package.
+
+The first step is to format the query. `rgbif` expects this to be in the form of a dataframe. Since we are only interested in ferns, we will set the `class` column to "Polypodiopsida". You could similarly set other taxonomic ranks like `phylum`, `order`, `family`, etc.
+
+```{r}
+# Set up query
+names_query <- tibble(
+  name = str_replace_all(fern_tree$tip.label, "_", " "),
+  class = "Polypodiopsida"
+)
+```
+
+Next, run the query using `name_backbone_checklist()`. This may take a few minutes. Note that it is actually preferrable to query full scientific names with authors, but we are skipping that because of time restrictions.
+
+```{r}
+fern_tree_names_lookup <- name_backbone_checklist(names_query)
+dim(fern_tree_names_lookup)
+```
+
+As so often, the results are a large dataframe. Let's just peak at the first row to see what's going on.
+
+```{r}
+fern_tree_names_lookup %>%
+  slice(1) %>%
+  glimpse()
+```
+
+Important columns to note are `verbatim_name` with the original query name and `species` with the accepted binomial in GBIF.
+
+Some other interesting columns are `status` and `matchType`. Let's see what kind of values those include:
+
+```{r}
+fern_tree_names_lookup %>% count(status)
+```
+
+`status` includes `ACCEPTED`, `DOUBTFUL`, and `SYNONYM`. `ACCEPTED` is names that are the same between the query and reference (GBIF). `SYNONYM` are names in the query that are treated as synonyms by GBIF. These are what we are trying to fix. `DOUBTFUL` are names that GBIF thinks may be invalid.
+
+```{r}
+fern_tree_names_lookup %>% count(matchType)
+```
+
+`matchType` includes `EXACT`, `FUZZY`, and `HIGHERRANK`. `EXACT` are names that could be looked up exactly as they are. `FUZZY` means that the query differed slightly from the match, but the matching algorithm considered them close enough to be recognized as the same. (We'll look into `HIGHERRANK` in a moment).
+
+Let's see an example of a fuzzy match:
+
+```{r}
+fern_tree_names_lookup %>%
+  filter(matchType == "FUZZY") %>%
+  slice(1) %>%
+  glimpse()
+```
+
+```{r}
+#| echo: false
+fuzzy_ex <-
+  fern_tree_names_lookup %>%
+  filter(matchType == "FUZZY") %>%
+  slice(1)
+```
+
+We can see that the query name "`r fuzzy_ex$verbatim_name`" is nearly the same as, but slightly different from, the matched name "`r fuzzy_ex$species`". We can see this is likely a spelling mistake. Such slight differences are common between databases, hence the need for fuzzy matching. However, it is possible to get **false positives** with fuzzy matching too --- sometimes names that differ only by one letter are indeed different! So ideally **you should check the whole list of fuzzy matches and make sure they are correct.**
+
+OK, what about `matchType` "HIGHERRANK"?
+
+```{r}
+fern_tree_names_lookup %>%
+  filter(matchType == "HIGHERRANK") %>%
+  slice(1) %>%
+  glimpse()
+```
+
+```{r}
+#| echo: false
+hirank_ex <-
+  fern_tree_names_lookup %>%
+  filter(matchType == "HIGHERRANK") %>%
+  slice(1)
+```
+
+In this case, the query name "`r hirank_ex$verbatim_name`" matched to a higher rank, "`r hirank_ex$genus`", but not a species. We will go ahead and exclude these because we know that all of our queries were at the species level and should have a species-level match. But ideally, **you should see if you can manually find a match for such queries**.
+
+Now we adjust the names in the tree to match the GBIF reference taxonomy.
+
+```{r}
+fern_tree_to_gbif <-
+  fern_tree_names_lookup %>%
+  # Drop names that could not be match to species
+  filter(!is.na(species)) %>%
+  # Make a lookup table: match the original name to the gbif name
+  transmute(
+    original_name = str_replace_all(verbatim_name, " ", "_"),
+    gbif_name = str_replace_all(species, " ", "_")
+  )
+
+# Trim the tree to only names that have matches
+fern_tree_renamed <- ape::keep.tip(fern_tree, fern_tree_to_gbif$original_name)
+
+# Rearrange the look up table to be the same order as the tips in the tree
+fern_tree_to_gbif <-
+  tibble(original_name = fern_tree_renamed$tip.label) %>%
+  left_join(fern_tree_to_gbif, by = "original_name")
+
+# Rename the tree tips
+fern_tree_renamed$tip.label <- fern_tree_to_gbif$gbif_name
+```
+
+And finally match the tree and occurrence records by species name. Note that we are dropping any species that don't occur in both the tree and the occurrence data.
+
+```{r}
+# Find the species in common between the tree and the occurrence data
+species_in_both <- intersect(
+  str_replace_all(crep_records_clean$species, " ", "_"),
+  fern_tree_renamed$tip.label)
+
+# Subset tree to only species in occurrence data
+crepidomanes_tree <- ape::keep.tip(fern_tree_renamed, species_in_both)
+
+# Subset occurrence data to only species in tree
+crep_records_trim_to_tree <-
+  crep_records_clean %>%
+  # Convert spaces in species names to underscores, to match tree
+  mutate(species = str_replace_all(species, " ", "_")) %>%
+  filter(species %in% crepidomanes_tree$tip.label)
+```
+
 ## Aggregating points to communities
 
-The next step before conducting spatial phylogenetic analysis is to aggregate the occurrence points into grid-cells. For this, we will use the `points2comm()` function of the `phyloregion` package.
+The final step before conducting spatial phylogenetic analysis is to aggregate the occurrence points into grid-cells. For this, we will use the `points2comm()` function of the `phyloregion` package.
 
 ```{r}
 library(phyloregion)
@@ -444,7 +617,7 @@ library(phyloregion)
 comm <-
   points2comm(
     dat = select(
-      crep_records_clean, species,
+      crep_records_trim_to_tree, species,
       decimallongitude = decimalLongitude,
       decimallatitude = decimalLatitude),
     res = 1
@@ -492,162 +665,34 @@ ggplot() +
 
 We can see that there is highest richness in SE Asia. Cool!
 
-## Obtaining a phylogeny
-
-As mentioned in the lecture, there are various sources of phylogenies, but unfortunately no "one size fits all" solution.
-
-Since this example is for ferns, we will download a fern phylogeny that is conveniently available via the `ftolr` package.
-
-You will need to install it first using devtools since it isn't on CRAN:
+Since we have come this far, let's go ahead and do one more analysis that actually uses the phylogeny and community dataset together: we will calculate raw PD.
 
 ```{r}
-#| eval: false
-library(devtools)
-
-install_github("joelnitta/ftolr")
-```
-
-Once it's installed, we can obtain the tree with the `ft_tree()` function.
-
-```{r}
-library(ftolr)
-
-fern_tree <- ft_tree()
-
-fern_tree
-```
-
-## Matching names
-
-There's not much to say about the phylogeny, since that will be highly particular to your study.
-
-But a much more frequently encountered problem is matching names between the phylogeny and the community data. How can we do that?
-
-First let's see how many species are in common between the two to begin with. Notice that the tree uses underscores in the species names, so we need to account for that.
-
-```{r}
-common_species <- intersect(fern_tree$tip.label, str_replace_all(colnames(comm$comm_dat), " ", "_"))
-length(common_species)
-ncol(comm$comm_dat)
-```
-
-Of the `r ncol(comm$comm_dat)` species in the community data matrix, `r length(common_species)` are in the tree.
-
-Are the missing species truly missing, or are they just differences in taxonomy (different synonyms)?
-
-The names from the GBIF data are already standardized to the GBIF taxonomy.
-
-However, the names in the tree may not conform to the GBIF taxonomy. We can query the names in the tree against the GBIF taxonomy using the `name_backbone_checklist()` function of the `rgbif` package.
-
-The first step is to format the query. `rgbif` expects this to be in the form of a dataframe. Since we are only interested in ferns, we will set the `class` column to "Polypodiopsida". You could similarly set other taxonomic ranks like `phylum`, `order`, `family`, etc.
-
-```{r}
-# Set up query
-names_query <- tibble(
-  name = str_replace_all(fern_tree$tip.label, "_", " "),
-  class = "Polypodiopsida"
-)
-```
-
-Next, run the query. This may take a few minutes.
-
-```{r}
-fern_tree_names_lookup <- name_backbone_checklist(names_query)
-dim(fern_tree_names_lookup)
-```
-
-As so often, the results are a large dataframe. Let's just peak at the first row to see what's going on.
-
-```{r}
-fern_tree_names_lookup %>%
-  slice(1) %>%
-  glimpse()
-```
-
-Important columns to note are `verbatim_name` with the original query name and `species` with the accetped binomial in GBIF.
-
-Some other interesting columns are `status` and `matchType`. Let's see what kind of values those include:
-
-```{r}
-fern_tree_names_lookup %>% count(status)
-```
-
-`status` includes `ACCEPTED`, `DOUBTFUL`, and `SYNONYM`. `ACCEPTED` is names that are the same between the query and reference (GBIF). `SYNONYM` are names in the query that are treated as synonyms by GBIF. These are what we are trying to fix. `DOUBTFUL` are names that GBIF thinks may be invalid.
-
-```{r}
-fern_tree_names_lookup %>% count(matchType)
-```
-
-`matchType` includes `EXACT`, `FUZZY`, and `HIGHERRANK`. `EXACT` are names that could be looked up exactly as they are. `FUZZY` means that the query differed slightly from the match, but the matching algorithm considered them close enough to be recognized as the same. (We'll look into `HIGHERRANK` in a moment).
-
-Let's see an example of a fuzzy match:
-
-```{r}
-fern_tree_names_lookup %>%
-  filter(matchType == "FUZZY") %>%
-  slice(1) %>%
-  glimpse()
+# PD is available in the phyloregion package
+pd_crep <- PD(comm$comm_dat, crepidomanes_tree)
+head(pd_crep)
 ```
 
 ```{r}
-#| echo: false
-fuzzy_ex <-
-  fern_tree_names_lookup %>%
-  filter(matchType == "FUZZY") %>%
-  slice(1)
+poly_shp_sf <-
+  poly_shp_sf %>%
+  mutate(pd = pd_crep)
+
+ggplot() +
+  geom_sf(data = world_map) +
+  geom_sf(
+    data = poly_shp_sf,
+    aes(fill = pd)
+  ) +
+  # Use a log scale because richness is highly skewed
+  scale_fill_viridis_c(trans = "log10")
 ```
 
-We can see that the query name "`r fuzzy_ex$verbatim_name`" is nearly the same as, but slightly different from, the matched name "`r fuzzy_ex$species`". We can see this is likely a spelling mistake. Such slight differences are common between databases, hence the need for fuzzy matching. However, it is possible to get false positives with fuzzy matching too --- sometimes names that differ only by one letter are indeed different! So ideally **you should check the whole list of fuzzy matches and make sure they are correct.**
-
-OK, what about `matchType` "HIGHERRANK"?
+As expected, it looks very similar to species richness. We will get more into methods that account for this expected relationship tomorrow!
 
 ```{r}
-fern_tree_names_lookup %>%
-  filter(matchType == "HIGHERRANK") %>%
-  slice(1) %>%
-  glimpse()
-```
-
-```{r}
-#| echo: false
-hirank_ex <-
-  fern_tree_names_lookup %>%
-  filter(matchType == "HIGHERRANK") %>%
-  slice(1)
-```
-
-In this case, the query name "`r hirank_ex$verbatim_name`" matched to a higher rank, "`r hirank_ex$Microlepia`", but not a species. We will go ahead and exclude these because they lack a species level match. But ideally, **you should see if you can manually find a match for such queries**.
-
-Now we can finally match the tree and community data.
-
-```{r}
-fern_tree_to_gbif <-
-  fern_tree_names_lookup %>%
-  filter(!is.na(species)) %>%
-  transmute(
-    original_name = str_replace_all(verbatim_name, " ", "_"),
-    gbif_name = str_replace_all(species, " ", "_")
+ggplot(poly_shp_sf) +
+  geom_point(
+    aes(x = richness, y = pd)
   )
-
-fern_tree_renamed <-
-  fern_tree %>%
-  ape::keep.tip(fern_tree_to_gbif$original_name)
-
-fern_tree_to_gbif <-
-  tibble(original_name = fern_tree_renamed$tip.label) %>%
-  left_join(fern_tree_to_gbif, by = "original_name")
-
-fern_tree_renamed$tip.label <- fern_tree_to_gbif$gbif_name
-
-colnames(comm$comm_dat) <- str_replace_all(colnames(comm$comm_dat), " ", "_")
-
-species_in_both <- intersect(colnames(comm$comm_dat), fern_tree_renamed$tip.label)
-
-comm$comm_dat <- comm$comm_dat[, species_in_both]
-
-crepidomanes_tree <- ape::keep.tip(fern_tree_renamed, species_in_both)
-
-crepidomanes_tree
 ```
-
-We still need to recount the species richness in the polygon data.
