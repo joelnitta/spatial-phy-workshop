@@ -1,0 +1,8 @@
+data_raw
+images
+index_files
+renv
+tutorials
+.Rprofile
+index.*
+styles.css
