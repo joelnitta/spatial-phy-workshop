@@ -15,45 +15,10 @@ for spatial phylogenetics.
 interfaces with the GBIF [API](https://en.wikipedia.org/wiki/API),
 allowing you to query and download GBIF data from R.
 
-### Setup: storing login credentials
-
-To do anything beyond simple queries with rgbif, you will need a GBIF
-account.
-
-If you don’t have one yet, create it now by going to
-<https://www.gbif.org>, clicking on “Login” in the upper-right, then
-clicking on “Register”.
-
-To make authentication easier, we will store login credentials in a
-special file called `.Renviron` outside of your project using the
-`usethis` package.
-
-**IMPORTANT NOTE**: Only do this if you are using your own computer!
-**Skip this step if you are running the code in the cloud**, i.e., [in a
-binder](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org).
-In that case, enter your credentials directly into the `occ_download()`
-function.
-
-``` r
-usethis::edit_r_environ("user")
-```
-
-This will open the `.Renviron` file in your editor.
-
-Fill in your credentials like this (replacing the dummy values like
-‘myname’ with you real data):
-
-    GBIF_USER=myname
-    GBIF_PWD=secretpassword
-    GBIF_EMAIL=me@myemail.com
-
-Save it and restart R. Now you will be able to use `rgbif` download
-functionality without having to enter your login credentials every time.
-
 ### Quick searches
 
-`occ_search()` is a quick way to get data into R (and does not require
-logging in), but is limited to 100,000 records per query.
+`occ_search()` is a quick way to get GBIF data into R (and does not
+require logging in), but is limited to 100,000 records per query.
 
 ``` r
 library(rgbif)
@@ -83,11 +48,51 @@ dim(crep_records$data)
 
     [1] 500 160
 
+### Store login credentials for bigger searches
+
+**IMPORTANT NOTE**: Only do this if you are using your own computer!
+**[Skip this step](#downloading-a-complete-dataset) if you are running
+the code in the cloud**, i.e., [in a
+binder](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org).
+In that case, enter your credentials directly into the `occ_download()`
+function.
+
+To do anything beyond simple queries with rgbif, you will need a GBIF
+account.
+
+If you don’t have one yet, create it now by going to
+<https://www.gbif.org>, clicking on “Login” in the upper-right, then
+clicking on “Register”.
+
+To make authentication easier, we will store login credentials in a
+special file called `.Renviron` outside of your project using the
+`usethis` package.
+
+``` r
+usethis::edit_r_environ("user")
+```
+
+This will open the `.Renviron` file in your editor.
+
+Fill in your credentials like this (replacing the dummy values like
+‘myname’ with you real data):
+
+    GBIF_USER=myname
+    GBIF_PWD=secretpassword
+    GBIF_EMAIL=me@myemail.com
+
+Save it and restart R. Now you will be able to use `rgbif` download
+functionality without having to enter your login credentials every time.
+
 ### Downloading a complete dataset
 
 To download a complete dataset, use `occ_download()`. This requires you
-provide login credentials, but since we already set them up using the
-`.Renviron` file, you won’t have to type them in.
+provide login credentials. If you set them up using the `.Renviron` file
+[as described above](#store-login-credentials-for-bigger-searches), you
+won’t have to type them in. Otherwise, you can enter them directly into
+the `occ_download()` function using the arguments `user`, `pwd`, and
+`email` (NEVER save these directly to an R file that could become
+public!).
 
 I assume that you are working in a project folder than includes a
 subdirectory called “data_raw”. If not, set this up now.
@@ -113,7 +118,7 @@ crep_records_raw <- occ_download_import(crep_records_path)
 
     Download file size: 1.44 MB
 
-    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0003240-230530130749713.zip
+    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0003916-230530130749713.zip
 
 Note that the output of `occ_download()` includes a DOI for this
 dataset:
@@ -124,29 +129,29 @@ gbif_download
 
     <<gbif download>>
       Your download is being processed by GBIF:
-      https://www.gbif.org/occurrence/download/0003240-230530130749713
+      https://www.gbif.org/occurrence/download/0003916-230530130749713
       Most downloads finish within 15 min.
       Check status with
-      occ_download_wait('0003240-230530130749713')
+      occ_download_wait('0003916-230530130749713')
       After it finishes, use
-      d <- occ_download_get('0003240-230530130749713') %>%
+      d <- occ_download_get('0003916-230530130749713') %>%
         occ_download_import()
       to retrieve your download.
     Download Info:
       Username: joelnitta
       E-mail: joelnitta@gmail.com
       Format: SIMPLE_CSV
-      Download key: 0003240-230530130749713
-      Created: 2023-06-01T12:03:52.247+00:00
+      Download key: 0003916-230530130749713
+      Created: 2023-06-01T21:15:44.843+00:00
     Citation Info:  
       Please always cite the download DOI when using this data.
       https://www.gbif.org/citation-guidelines
-      DOI: 10.15468/dl.dcghbs
+      DOI: 10.15468/dl.we5uvj
       Citation:
-      GBIF Occurrence Download https://doi.org/10.15468/dl.dcghbs Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-06-01
+      GBIF Occurrence Download https://doi.org/10.15468/dl.we5uvj Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-06-01
 
 You should visit the DOI to see what your raw dataset looks like in
-GBIF: <https://doi.org/10.15468/dl.dcghbs>.
+GBIF: <https://doi.org/10.15468/dl.we5uvj>.
 
 You should always **be sure to cite the DOI if you publish your study**.
 If you filter the data, you may need to cite a “derived” dataset. For

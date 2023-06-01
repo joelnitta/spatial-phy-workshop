@@ -24,7 +24,7 @@ All materials by [Joel Nitta](https://www.joelnitta.com)
 
 If you don't want to install anything locally or are unable to install some of the required software, you can run the code in your browser.
 
-**NOTE**: If you use this method, [do not save any sensitive information](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org) in the RStudio session (passwords, etc.).
+**NOTE**: If you use this method, [do not save any sensitive information](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org) in the RStudio session (passwords, etc.). The binder is a public, open system and you should not consider it a secure place to store private data.
 
 Click the "launch binder" button below:
 

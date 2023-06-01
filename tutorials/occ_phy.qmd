@@ -32,37 +32,9 @@ gbif_n_rec <- scales::number(occ_count(), big.mark = ",")
 
 [`rgbif`](https://docs.ropensci.org/rgbif/) is an R package that interfaces with the GBIF [API](https://en.wikipedia.org/wiki/API), allowing you to query and download GBIF data from R.
 
-### Setup: storing login credentials
-
-To do anything beyond simple queries with rgbif, you will need a GBIF account.
-
-If you don't have one yet, create it now by going to <https://www.gbif.org>, clicking on "Login" in the upper-right, then clicking on "Register".
-
-To make authentication easier, we will store login credentials in a special file called `.Renviron` outside of your project using the `usethis` package.
-
-**IMPORTANT NOTE**: Only do this if you are using your own computer! **Skip this step if you are running the code in the cloud**, i.e., [in a binder](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org). In that case, enter your credentials directly into the `occ_download()` function.
-
-```{r}
-#| label: setup-cred
-#| eval: false
-usethis::edit_r_environ("user")
-```
-
-This will open the `.Renviron` file in your editor.
-
-Fill in your credentials like this (replacing the dummy values like 'myname' with you real data):
-
-```
-GBIF_USER=myname
-GBIF_PWD=secretpassword
-GBIF_EMAIL=me@myemail.com
-```
-
-Save it and restart R. Now you will be able to use `rgbif` download functionality without having to enter your login credentials every time.
-
 ### Quick searches
 
-`occ_search()` is a quick way to get data into R (and does not require logging in), but is limited to 100,000 records per query.
+`occ_search()` is a quick way to get GBIF data into R (and does not require logging in), but is limited to 100,000 records per query.
 
 ```{r}
 #| label: rgbif-search
@@ -82,9 +54,37 @@ crep_records$data[1:6, 1:6]
 dim(crep_records$data)
 ```
 
+### Store login credentials for bigger searches
+
+**IMPORTANT NOTE**: Only do this if you are using your own computer! **[Skip this step](#downloading-a-complete-dataset) if you are running the code in the cloud**, i.e., [in a binder](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org). In that case, enter your credentials directly into the `occ_download()` function.
+
+To do anything beyond simple queries with rgbif, you will need a GBIF account.
+
+If you don't have one yet, create it now by going to <https://www.gbif.org>, clicking on "Login" in the upper-right, then clicking on "Register".
+
+To make authentication easier, we will store login credentials in a special file called `.Renviron` outside of your project using the `usethis` package.
+
+```{r}
+#| label: setup-cred
+#| eval: false
+usethis::edit_r_environ("user")
+```
+
+This will open the `.Renviron` file in your editor.
+
+Fill in your credentials like this (replacing the dummy values like 'myname' with you real data):
+
+```
+GBIF_USER=myname
+GBIF_PWD=secretpassword
+GBIF_EMAIL=me@myemail.com
+```
+
+Save it and restart R. Now you will be able to use `rgbif` download functionality without having to enter your login credentials every time.
+
 ### Downloading a complete dataset
 
-To download a complete dataset, use `occ_download()`. This requires you provide login credentials, but since we already set them up using the `.Renviron` file, you won't have to type them in.
+To download a complete dataset, use `occ_download()`. This requires you provide login credentials. If you set them up using the `.Renviron` file [as described above](#store-login-credentials-for-bigger-searches), you won't have to type them in. Otherwise, you can enter them directly into the `occ_download()` function using the arguments `user`, `pwd`, and `email` (NEVER save these directly to an R file that could become public!).
 
 I assume that you are working in a project folder than includes a subdirectory called "data_raw". If not, set this up now.
 
