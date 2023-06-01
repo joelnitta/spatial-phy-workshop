@@ -450,7 +450,7 @@ Photos A. Ebihara
 :::
 
 ::: {.column width="40%"}
-![](https://joelnitta.github.io/botany2020/images/ja_example_ferns.png){fig-alt="alt-text" height="650"}
+![](https://joelnitta.github.io/botany2020/images/ja_example_ferns.png){fig-alt="alt-text" height="500"}
 :::
 
 ::::
@@ -459,11 +459,11 @@ Photos A. Ebihara
 
 :::: {.columns}
 
-::: {.column width="35%"}
+::: {.column width="40%"}
 
-- Wide variation in climate from north (subarctic) to south (subtropical)
+- Variation in climate from N (subarctic) to S (subtropical)
 
-- Wide variation in elevation
+- Variation in elevation
 
 - Main islands continental, southern islands oceanic
 
@@ -473,11 +473,8 @@ Nitta et al. AJB 2022 <https://doi.org/10.1002/ajb2.1848>
 
 :::
 
-::: {.column width="5%"}
-:::
-
 ::: {.column width="60%"}
-![](https://joelnitta.github.io/botany2020/images/japan_intro.png){fig-alt="alt-text" height="650"}
+![](https://joelnitta.github.io/botany2020/images/japan_intro.png){fig-alt="alt-text" height="550"}
 :::
 
 ::::
@@ -538,9 +535,9 @@ Because of **spatial autocorrelation**
 
 ## Accounting for spatial autocorrelation
 
-Need to compare amount of observed autocorrelation to some expected value: **Moran's _I_**
+Compare amount of observed autocorrelation to some expected value: **Moran's _I_**
 
-![](https://static.cambridge.org/binary/version/id/urn:cambridge.org:id:binary:20200421144010724-0711:9781108614528:49898fig4_1.png?pub-status=live){fig-alt="Image of different values of Moran's I" height="450"}
+![](https://static.cambridge.org/binary/version/id/urn:cambridge.org:id:binary:20200421144010724-0711:9781108614528:49898fig4_1.png?pub-status=live){fig-alt="Image of different values of Moran's I" height="400"}
 
 ::: {.small}
 <https://www.cambridge.org/core/books/abs/spatial-analysis-methods-and-practice/spatial-autocorrelation/F6A01B574C69076F28318445C33397E4>
@@ -575,7 +572,7 @@ Understanding the distribution of bio-regions
 
 ## 3-4 regions in ferns of Japan
 
-![](images/japan_region.png){fig-alt="Figure showing bioregions of ferns of Japan" height="500"}
+![](images/japan_region.png){fig-alt="Figure showing bioregions of ferns of Japan" height="450"}
 
 High rates of endemism on remote islands cause difference in taxonomic and phylogenetic bioregions
 
