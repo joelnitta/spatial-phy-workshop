@@ -457,13 +457,17 @@ As mentioned in the lecture, there are various sources of phylogenies, but unfor
 
 Since this example is for ferns, we will download a fern phylogeny that is conveniently available via the `ftolr` package.
 
-You will need to install it first using devtools since it isn't on CRAN:
+It isn't on CRAN, so you need to use a slightly different command to install it:
 
 ```{r}
 #| eval: false
-library(devtools)
-
-install_github("joelnitta/ftolr")
+install.packages(
+  "ftolr",
+  repos = c(
+    "https://joelnitta.r-universe.dev/",
+    "https://cran.rstudio.com/"
+  ),
+  dep = TRUE)
 ```
 
 Once it's installed, we can obtain the tree with the `ft_tree()` function.
@@ -623,6 +627,8 @@ crep_records_trim_to_tree <-
 
 ## Aggregating points to communities
 
+### points2comm()
+
 The final step before conducting spatial phylogenetic analysis is to aggregate the occurrence points into grid-cells. For this, we will use the `points2comm()` function of the `phyloregion` package.
 
 ```{r}
@@ -634,13 +640,9 @@ comm <-
       crep_records_trim_to_tree, species,
       decimallongitude = decimalLongitude,
       decimallatitude = decimalLatitude),
-    res = 1
+    res = 2
   )
 ```
-
-`res` is the resolution to use for the grid-cells: here, we have selected 1 degree per side. Note that the default settings are to split up the entire earth into grid-cells, so if you set `res` to a small number (e.g., 0.01), you will end up with an extremely large (memory-intensive) data object, and R might even crash. In that case, you should use the `mask` argument to select a smaller area before generating grid-cells.
-
-In fact, the setting for `res` also deserves careful consideration because it represents your hypothesis about what defines a community: you are saying that you consider species occurring within each grid-cell to be capable of interacting. If `res` is too large, the grid-cells may include many different habitat types that do not actually have anything to do with each other; if it is too small you may not have sufficient sampling for each grid-cell and they will mostly be empty.
 
 The output of `points2comm` is a list including two items:
 
@@ -659,6 +661,38 @@ comm$comm_dat[1:6, 1:6]
 ```{r}
 comm$poly_shp
 ```
+
+### Resolution and redundancy
+
+Before continuing, let's take a closer look at one of the arguments used in `points2comm`, `res`. `res` is the resolution to use for the grid-cells: here, we have selected 2 degrees per side. Note that the default settings are to split up the entire earth into grid-cells, so if you set `res` to a small number (e.g., 0.01), you will end up with an extremely large (memory-intensive) data object, and R might even crash. In that case, you should use the `mask` argument to select a smaller area before generating grid-cells.
+
+The setting for `res` also deserves careful consideration because it represents your hypothesis about what defines a community: you are saying that you consider species occurring within each grid-cell to be capable of interacting. If `res` is too large, the grid-cells may include many different habitat types that do not actually have anything to do with each other; if it is too small you may not have sufficient sampling for each grid-cell and they will mostly be empty.
+
+One statistic we can use to help assess if our resolution is set appropriately is called "redundancy," which is one minus the ratio of number of species to the number of samples (total abundance) in each grid-cell (Garcillán, P. P., et al. 2003. J. Veg. Sci. 14: 475–486). If each species has been sampled many times, redundancy will be high, near its maximum value of 1. If each species has been sampled only a few times, redundancy will be low. If each species has only been sampled once, redundancy will be zero.
+
+Calculating redundancy is straightforward with the output from `points2comm()`.
+
+```{r}
+redundancy_res_2 <-
+  comm$poly_shp %>%
+    as_tibble() %>%
+    mutate(redundancy = 1 - richness/abundance)
+```
+
+We could then plot a histogram or bar chart to take a closer look:
+
+```{r}
+#| warning: false
+#| message: false
+ggplot(redundancy_res_2, aes(x = redundancy)) +
+  geom_histogram()
+```
+
+What does this histogram tell you?
+
+We don't have time to investigate the effects of different resolutions for this dataset, but that is something you should be sure to look into for your own analysis.
+
+### Plotting
 
 `phyloregion` stores the GIS data as an R object called a `SpatialPolygonsDataFrame`, or class `sp`. Recently, a newer data format called "Simple features", or class `sf`, has become popular and is gradually replacing `sp`. `sf` is the format that we have been using for plotting so far. We don't have time to go into details about these, but just know that you can convert from `sp` to `sf` with the function `st_as_sf()`. We do this below so we can plot the grid-cells on the world map. Note that we also need to deal with the Coordinate Reference System (CRS).
 

@@ -107,7 +107,7 @@ crep_records_raw <- occ_download_import(crep_records_path)
 
     Download file size: 1.44 MB
 
-    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0265951-230224095556074.zip
+    On disk at ./0002768-230530130749713.zip
 
 Note that the output of `occ_download()` includes a DOI for this
 dataset:
@@ -118,29 +118,29 @@ gbif_download
 
     <<gbif download>>
       Your download is being processed by GBIF:
-      https://www.gbif.org/occurrence/download/0265951-230224095556074
+      https://www.gbif.org/occurrence/download/0002768-230530130749713
       Most downloads finish within 15 min.
       Check status with
-      occ_download_wait('0265951-230224095556074')
+      occ_download_wait('0002768-230530130749713')
       After it finishes, use
-      d <- occ_download_get('0265951-230224095556074') %>%
+      d <- occ_download_get('0002768-230530130749713') %>%
         occ_download_import()
       to retrieve your download.
     Download Info:
       Username: joelnitta
       E-mail: joelnitta@gmail.com
       Format: SIMPLE_CSV
-      Download key: 0265951-230224095556074
-      Created: 2023-05-30T06:45:00.126+00:00
+      Download key: 0002768-230530130749713
+      Created: 2023-06-01T06:48:50.248+00:00
     Citation Info:  
       Please always cite the download DOI when using this data.
       https://www.gbif.org/citation-guidelines
-      DOI: 10.15468/dl.eretm7
+      DOI: 10.15468/dl.8nbmxb
       Citation:
-      GBIF Occurrence Download https://doi.org/10.15468/dl.eretm7 Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-05-30
+      GBIF Occurrence Download https://doi.org/10.15468/dl.8nbmxb Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-06-01
 
 You should visit the DOI to see what your raw dataset looks like in
-GBIF: <https://doi.org/10.15468/dl.eretm7>.
+GBIF: <https://doi.org/10.15468/dl.8nbmxb>.
 
 You should always **be sure to cite the DOI if you publish your study**.
 If you filter the data, you may need to cite a “derived” dataset. For
@@ -282,8 +282,8 @@ crep_records_raw %>%
     4 MATERIAL_CITATION       5
     5 MATERIAL_SAMPLE       199
     6 OBSERVATION             1
-    7 OCCURRENCE            365
-    8 PRESERVED_SPECIMEN  18998
+    7 OCCURRENCE            416
+    8 PRESERVED_SPECIMEN  18947
 
 We see that the majority of these are `PRESERVED_SPECIMEN`; in the case
 of plants, those are almost certainly herbarium specimens. You can treat
@@ -782,12 +782,17 @@ but unfortunately no “one size fits all” solution.
 Since this example is for ferns, we will download a fern phylogeny that
 is conveniently available via the `ftolr` package.
 
-You will need to install it first using devtools since it isn’t on CRAN:
+It isn’t on CRAN, so you need to use a slightly different command to
+install it:
 
 ``` r
-library(devtools)
-
-install_github("joelnitta/ftolr")
+install.packages(
+  "ftolr",
+  repos = c(
+    "https://joelnitta.r-universe.dev/",
+    "https://cran.rstudio.com/"
+  ),
+  dep = TRUE)
 ```
 
 Once it’s installed, we can obtain the tree with the `ft_tree()`
@@ -1091,6 +1096,8 @@ crep_records_trim_to_tree <-
 
 ## Aggregating points to communities
 
+### points2comm()
+
 The final step before conducting spatial phylogenetic analysis is to
 aggregate the occurrence points into grid-cells. For this, we will use
 the `points2comm()` function of the `phyloregion` package.
@@ -1104,25 +1111,9 @@ comm <-
       crep_records_trim_to_tree, species,
       decimallongitude = decimalLongitude,
       decimallatitude = decimalLatitude),
-    res = 1
+    res = 2
   )
 ```
-
-`res` is the resolution to use for the grid-cells: here, we have
-selected 1 degree per side. Note that the default settings are to split
-up the entire earth into grid-cells, so if you set `res` to a small
-number (e.g., 0.01), you will end up with an extremely large
-(memory-intensive) data object, and R might even crash. In that case,
-you should use the `mask` argument to select a smaller area before
-generating grid-cells.
-
-In fact, the setting for `res` also deserves careful consideration
-because it represents your hypothesis about what defines a community:
-you are saying that you consider species occurring within each grid-cell
-to be capable of interacting. If `res` is too large, the grid-cells may
-include many different habitat types that do not actually have anything
-to do with each other; if it is too small you may not have sufficient
-sampling for each grid-cell and they will mostly be empty.
 
 The output of `points2comm` is a list including two items:
 
@@ -1141,26 +1132,26 @@ comm$comm_dat[1:6, 1:6]
 
     6 x 6 sparse Matrix of class "dgCMatrix"
            Crepidomanes_africanum Crepidomanes_aphlebioides
-    v15947                      .                         .
-    v15948                      .                         .
-    v16308                      .                         .
-    v16516                      .                         .
-    v16667                      .                         .
-    v16872                      .                         .
+    v10014                      .                         .
+    v10018                      .                         .
+    v10019                      .                         .
+    v10065                      .                         .
+    v10073                      .                         .
+    v10074                      .                         .
            Crepidomanes_bipunctatum Crepidomanes_bonapartei Crepidomanes_chevalieri
-    v15947                        .                       .                       .
-    v15948                        .                       .                       .
-    v16308                        .                       .                       .
-    v16516                        .                       .                       .
-    v16667                        .                       .                       .
-    v16872                        .                       .                       .
+    v10014                        .                       2                       .
+    v10018                       39                       1                       .
+    v10019                        2                       .                       .
+    v10065                       19                       .                       .
+    v10073                        9                       .                       .
+    v10074                        2                       .                       .
            Crepidomanes_christii
-    v15947                     .
-    v15948                     .
-    v16308                     .
-    v16516                     .
-    v16667                     .
-    v16872                     .
+    v10014                     .
+    v10018                     .
+    v10019                     .
+    v10065                     .
+    v10073                     .
+    v10074                     .
 
 `poly_shp` is the GIS layer data: the shapes of the grid-cells.
 
@@ -1169,13 +1160,69 @@ comm$poly_shp
 ```
 
     class       : SpatialPolygonsDataFrame 
-    features    : 705 
-    extent      : -180, 179, -39, 46  (xmin, xmax, ymin, ymax)
+    features    : 413 
+    extent      : -180, 180, -40, 46  (xmin, xmax, ymin, ymax)
     crs         : NA 
     variables   : 3
     names       :  grids, abundance, richness 
-    min values  : v15947,         1,        1 
-    max values  : v46407,       203,       11 
+    min values  : v10014,         1,        1 
+    max values  :  v9903,       347,       12 
+
+### Resolution and redundancy
+
+Before continuing, let’s take a closer look at one of the arguments used
+in `points2comm`, `res`. `res` is the resolution to use for the
+grid-cells: here, we have selected 2 degrees per side. Note that the
+default settings are to split up the entire earth into grid-cells, so if
+you set `res` to a small number (e.g., 0.01), you will end up with an
+extremely large (memory-intensive) data object, and R might even crash.
+In that case, you should use the `mask` argument to select a smaller
+area before generating grid-cells.
+
+The setting for `res` also deserves careful consideration because it
+represents your hypothesis about what defines a community: you are
+saying that you consider species occurring within each grid-cell to be
+capable of interacting. If `res` is too large, the grid-cells may
+include many different habitat types that do not actually have anything
+to do with each other; if it is too small you may not have sufficient
+sampling for each grid-cell and they will mostly be empty.
+
+One statistic we can use to help assess if our resolution is set
+appropriately is called “redundancy,” which is one minus the ratio of
+number of species to the number of samples (total abundance) in each
+grid-cell (Garcillán, P. P., et al. 2003. J. Veg. Sci. 14: 475–486). If
+each species has been sampled many times, redundancy will be high, near
+its maximum value of 1. If each species has been sampled only a few
+times, redundancy will be low. If each species has only been sampled
+once, redundancy will be zero.
+
+Calculating redundancy is straightforward with the output from
+`points2comm()`.
+
+``` r
+redundancy_res_2 <-
+  comm$poly_shp %>%
+    as_tibble() %>%
+    mutate(redundancy = 1 - richness/abundance)
+```
+
+We could then plot a histogram or bar chart to take a closer look:
+
+``` r
+ggplot(redundancy_res_2, aes(x = redundancy)) +
+  geom_histogram()
+```
+
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-48-1.png"
+width="672" />
+
+What does this histogram tell you?
+
+We don’t have time to investigate the effects of different resolutions
+for this dataset, but that is something you should be sure to look into
+for your own analysis.
+
+### Plotting
 
 `phyloregion` stores the GIS data as an R object called a
 `SpatialPolygonsDataFrame`, or class `sp`. Recently, a newer data format
@@ -1202,7 +1249,7 @@ ggplot() +
   scale_fill_viridis_c(trans = "log10")
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-47-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-49-1.png"
 width="672" />
 
 We can see that there is highest richness in SE Asia. Cool!
@@ -1217,8 +1264,8 @@ pd_crep <- PD(comm$comm_dat, crepidomanes_tree)
 head(pd_crep)
 ```
 
-      v15947   v15948   v16308   v16516   v16667   v16872 
-    164.7879 164.7879 164.7879 164.7879 164.7879 199.7074 
+      v10014   v10018   v10019   v10065   v10073   v10074 
+    354.2282 395.7698 267.3109 288.6313 325.7328 279.1450 
 
 ``` r
 poly_shp_sf <-
@@ -1235,7 +1282,7 @@ ggplot() +
   scale_fill_viridis_c(trans = "log10")
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-49-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-51-1.png"
 width="672" />
 
 As expected, it looks very similar to species richness. We will get more
@@ -1248,7 +1295,7 @@ ggplot(poly_shp_sf) +
   )
 ```
 
-<img src="occ_phy_files/figure-commonmark/unnamed-chunk-50-1.png"
+<img src="occ_phy_files/figure-commonmark/unnamed-chunk-52-1.png"
 width="672" />
 
 [^1]: As of writing, GBIF includes 2,324,778,311 occurrence records!
