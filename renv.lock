@@ -771,11 +771,9 @@
     "ftolr": {
       "Package": "ftolr",
       "Version": "1.4.0",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "ftolr",
-      "RemoteUsername": "fernphy",
+      "Source": "Repository",
+      "Repository": "https://joelnitta.r-universe.dev",
+      "RemoteUrl": "https://github.com/fernphy/ftolr",
       "RemoteRef": "HEAD",
       "RemoteSha": "c34e2459f8f791827dc248188cd3e490ad1357a8",
       "Requirements": [
@@ -783,7 +781,7 @@
         "ape",
         "assertthat"
       ],
-      "Hash": "a651832b68a1c07df15473a13e819dee"
+      "Hash": "0b9ce0943a77d3f3fa512eb72807860f"
     },
     "future": {
       "Package": "future",
@@ -1875,18 +1873,16 @@
     "rnaturalearthhires": {
       "Package": "rnaturalearthhires",
       "Version": "0.2.1",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteUsername": "ropensci",
-      "RemoteRepo": "rnaturalearthhires",
+      "Source": "Repository",
+      "Repository": "https://ropensci.r-universe.dev",
+      "RemoteUrl": "https://github.com/ropensci/rnaturalearthhires",
       "RemoteRef": "master",
       "RemoteSha": "c3785a8c44738de6ae8f797080c0a337ebed929d",
       "Requirements": [
         "R",
         "sp"
       ],
-      "Hash": "4155ba306bfbf56962a271eb88e21fa8"
+      "Hash": "39390d437457f31c4231c4126cb868bb"
     },
     "rprojroot": {
       "Package": "rprojroot",
