@@ -24,6 +24,8 @@ All materials by [Joel Nitta](https://www.joelnitta.com)
 
 If you don't want to install anything locally or are unable to install some of the required software, you can run the code in your browser.
 
+**NOTE**: If you use this method, [do not save any sensitive information](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org) in the RStudio session (passwords, etc.).
+2.0
 Click the "launch binder" button below:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/joelnitta/spatial-phy-binder/HEAD?urlpath=rstudio)

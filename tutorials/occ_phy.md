@@ -26,7 +26,13 @@ clicking on “Register”.
 
 To make authentication easier, we will store login credentials in a
 special file called `.Renviron` outside of your project using the
-`usethis` package:
+`usethis` package.
+
+**IMPORTANT NOTE**: Only do this if you are using your own computer!
+**Skip this step if you are running the code in the cloud**, i.e., [in a
+binder](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org).
+In that case, enter your credentials directly into the `occ_download()`
+function.
 
 ``` r
 usethis::edit_r_environ("user")
@@ -107,7 +113,7 @@ crep_records_raw <- occ_download_import(crep_records_path)
 
     Download file size: 1.44 MB
 
-    On disk at ./0002768-230530130749713.zip
+    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0003240-230530130749713.zip
 
 Note that the output of `occ_download()` includes a DOI for this
 dataset:
@@ -118,29 +124,29 @@ gbif_download
 
     <<gbif download>>
       Your download is being processed by GBIF:
-      https://www.gbif.org/occurrence/download/0002768-230530130749713
+      https://www.gbif.org/occurrence/download/0003240-230530130749713
       Most downloads finish within 15 min.
       Check status with
-      occ_download_wait('0002768-230530130749713')
+      occ_download_wait('0003240-230530130749713')
       After it finishes, use
-      d <- occ_download_get('0002768-230530130749713') %>%
+      d <- occ_download_get('0003240-230530130749713') %>%
         occ_download_import()
       to retrieve your download.
     Download Info:
       Username: joelnitta
       E-mail: joelnitta@gmail.com
       Format: SIMPLE_CSV
-      Download key: 0002768-230530130749713
-      Created: 2023-06-01T06:48:50.248+00:00
+      Download key: 0003240-230530130749713
+      Created: 2023-06-01T12:03:52.247+00:00
     Citation Info:  
       Please always cite the download DOI when using this data.
       https://www.gbif.org/citation-guidelines
-      DOI: 10.15468/dl.8nbmxb
+      DOI: 10.15468/dl.dcghbs
       Citation:
-      GBIF Occurrence Download https://doi.org/10.15468/dl.8nbmxb Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-06-01
+      GBIF Occurrence Download https://doi.org/10.15468/dl.dcghbs Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-06-01
 
 You should visit the DOI to see what your raw dataset looks like in
-GBIF: <https://doi.org/10.15468/dl.8nbmxb>.
+GBIF: <https://doi.org/10.15468/dl.dcghbs>.
 
 You should always **be sure to cite the DOI if you publish your study**.
 If you filter the data, you may need to cite a “derived” dataset. For
@@ -1270,7 +1276,13 @@ head(pd_crep)
 ``` r
 poly_shp_sf <-
   poly_shp_sf %>%
-  mutate(pd = pd_crep)
+  left_join(
+    tibble(
+      grids = names(pd_crep),
+      pd = pd_crep
+    ),
+    by = "grids"
+  )
 
 ggplot() +
   geom_sf(data = world_map) +
