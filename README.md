@@ -16,6 +16,38 @@ All materials by [Joel Nitta](https://www.joelnitta.com)
 
 [Day 2: Spatial phylogenetics in R with canaper](https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/canaper.md)
 
+## Installation
+
+This workshop requires installation of R, RStudio, and several R packages.
+
+You can install the required packages by running the following code in R:
+
+```r
+install.packages(
+  c(
+    "canaper",
+    "CoordinateCleaner",
+    "phyloregion",
+    "rgbif",
+    "rnaturalearth",
+    "sf",
+    "tidyverse")
+  )
+
+install.packages(
+  "rnaturalearthhires",
+  repos = "https://ropensci.r-universe.dev",
+  type = "source")
+
+install.packages(
+  "ftolr",
+  repos = c(
+    "https://joelnitta.r-universe.dev/",
+    "https://cran.rstudio.com/"
+  ),
+  dep = TRUE)
+```
+
 ## License
 
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
