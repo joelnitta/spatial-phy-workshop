@@ -1,6 +1,6 @@
 ## spatial-phy-workshop
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/joelnitta/spatial-phy-binder/HEAD?urlpath=rstudio)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/joelnitta/spatial-phy-workshop/HEAD?urlpath=rstudio)
 
 This repo includes materials for the [Workshop on Spatial Phylogenetics](https://www.forbio.uio.no/events/courses/2023/Workshop%20in%20Spatial%20Phylogenetics) held from June 5--7 2023 at the ForBio Research School in Biosystematics, Oslo, Norway
 
@@ -24,7 +24,7 @@ All materials by [Joel Nitta](https://www.joelnitta.com)
 
 If you don't want to install anything locally or are unable to install some of the required software, you can run the code in your browser.
 
-Click the button below:
+Click the "launch binder" button below:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/joelnitta/spatial-phy-workshop/HEAD?urlpath=rstudio)
 
