@@ -1,5 +1,7 @@
 ## spatial-phy-workshop
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/joelnitta/spatial-phy-binder/HEAD?urlpath=rstudio)
+
 This repo includes materials for the [Workshop on Spatial Phylogenetics](https://www.forbio.uio.no/events/courses/2023/Workshop%20in%20Spatial%20Phylogenetics) held from June 5--7 2023 at the ForBio Research School in Biosystematics, Oslo, Norway
 
 All materials by [Joel Nitta](https://www.joelnitta.com)
@@ -16,9 +18,19 @@ All materials by [Joel Nitta](https://www.joelnitta.com)
 
 [Day 2: Spatial phylogenetics in R with canaper](https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/canaper.md)
 
-## Installation
+## Software requirements
 
-This workshop requires installation of R, RStudio, and several R packages.
+### Cloud 
+
+If you don't want to install anything locally or are unable to install some of the required software, you can run the code in your browser.
+
+Click the button below:
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/joelnitta/spatial-phy-workshop/HEAD?urlpath=rstudio)
+
+### Local install
+
+This workshop requires installation of [R](https://cran.r-project.org/), [RStudio](https://posit.co/download/rstudio-desktop/), and several R packages.
 
 You can install the required packages by running the following code in R:
 
@@ -46,6 +58,14 @@ install.packages(
     "https://cran.rstudio.com/"
   ),
   dep = TRUE)
+```
+
+Or, you can clone this repository, open this folder in RStudio, and use `renv` to install the packages at the versions used when creating the workshop materials:
+
+```r
+# Install renv first if necessary
+install.packages("renv")
+renv::restore()
 ```
 
 ## License
