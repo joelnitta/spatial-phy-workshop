@@ -1,5 +1,4 @@
-Spatial phylogenetics in R with canaper
-================
+# Spatial phylogenetics in R with canaper
 
 This tutorial demonstrates how to use
 [`canaper`](https://github.com/ropensci/canaper) to conduct spatial
@@ -97,15 +96,24 @@ dim(acacia$comm)
 acacia$comm[1:8, 1:8]
 ```
 
-                      abbreviata acanthaster acanthoclada acinacea aciphylla acoma acradenia acrionastes
-    -1025000:-1825000          0           0            0        0         0     0         0           0
-    -1025000:-1875000          0           0            0        0         0     0         0           0
-    -1025000:-1925000          0           0            0        0         0     0         0           0
-    -1025000:-1975000          0           0            0        0         0     0         0           0
-    -1025000:-2025000          0           0            0        0         0     0         0           0
-    -1025000:-2075000          0           0            0        0         0     0         0           0
-    -1025000:-2125000          0           0            0        0         0     0         0           0
-    -1025000:-2225000          0           0            0        0         0     0         0           0
+                      abbreviata acanthaster acanthoclada acinacea aciphylla acoma
+    -1025000:-1825000          0           0            0        0         0     0
+    -1025000:-1875000          0           0            0        0         0     0
+    -1025000:-1925000          0           0            0        0         0     0
+    -1025000:-1975000          0           0            0        0         0     0
+    -1025000:-2025000          0           0            0        0         0     0
+    -1025000:-2075000          0           0            0        0         0     0
+    -1025000:-2125000          0           0            0        0         0     0
+    -1025000:-2225000          0           0            0        0         0     0
+                      acradenia acrionastes
+    -1025000:-1825000         0           0
+    -1025000:-1875000         0           0
+    -1025000:-1925000         0           0
+    -1025000:-1975000         0           0
+    -1025000:-2025000         0           0
+    -1025000:-2075000         0           0
+    -1025000:-2125000         0           0
+    -1025000:-2225000         0           0
 
 ## About randomizations
 
@@ -186,16 +194,16 @@ biod_iter_sim_res
     # A tibble: 1,000 × 2
        iteration similarity
            <int>      <dbl>
-     1        10      0.990
-     2        20      0.980
-     3        30      0.973
-     4        40      0.970
-     5        50      0.963
-     6        60      0.958
-     7        70      0.950
-     8        80      0.944
-     9        90      0.938
-    10       100      0.933
+     1        10      0.994
+     2        20      0.985
+     3        30      0.978
+     4        40      0.969
+     5        50      0.961
+     6        60      0.956
+     7        70      0.952
+     8        80      0.945
+     9        90      0.941
+    10       100      0.937
     # ℹ 990 more rows
 
 The output is simple: just two columns. But its hard to gain much
@@ -328,29 +336,33 @@ biod_example_rand_res <- cpr_rand_test(
 )
 ```
 
-    Warning: Abundance data detected. Results will be the same as if using presence/absence data (no abundance weighting is used).
+    Warning: Abundance data detected. Results will be the same as if using
+    presence/absence data (no abundance weighting is used).
 
 ``` r
 biod_example_rand_res
 ```
 
     # A tibble: 127 × 55
-       site      pd_obs pd_rand_mean pd_rand_sd pd_obs_z pd_obs_c_upper pd_obs_c_lower pd_obs_q pd_obs_p_upper pd_obs_p_lower pd_alt_obs pd_alt_rand_mean pd_alt_rand_sd pd_alt_obs_z pd_alt_obs_c_upper pd_alt_obs_c_lower pd_alt_obs_q pd_alt_obs_p_upper pd_alt_obs_p_lower rpd_obs rpd_rand_mean rpd_rand_sd
-       <chr>      <dbl>        <dbl>      <dbl>    <dbl>          <dbl>          <dbl>    <dbl>          <dbl>          <dbl>      <dbl>            <dbl>          <dbl>        <dbl>              <dbl>              <dbl>        <dbl>              <dbl>              <dbl>   <dbl>         <dbl>       <dbl>
-     1 1950000:… 0.0469       0.0469   3.28e-18    2.12             777              0     1000          0.777          0         0.0690            0.162         0.0380       -2.44                  11                947         1000              0.011              0.947   0.680         0.317      0.140 
-     2 1950000:… 0.0469       0.0469   3.23e-18    2.15             784              0     1000          0.784          0         0.0690            0.162         0.0374       -2.49                   9                953         1000              0.009              0.953   0.680         0.316      0.154 
-     3 2050000:… 0.0931       0.0870   7.11e- 3    0.850            708            269     1000          0.708          0.269     0.172             0.231         0.0327       -1.79                  27                951         1000              0.027              0.951   0.540         0.385      0.0663
-     4 2050000:… 0.0469       0.0469   3.34e-18    2.08             769              0     1000          0.769          0         0.0690            0.162         0.0376       -2.48                  12                955         1000              0.012              0.955   0.680         0.318      0.172 
-     5 2150000:… 0.0469       0.0469   3.09e-18    0                  0            198     1000          0              0.198     0.155             0.160         0.0375       -0.132                232                452         1000              0.232              0.452   0.302         0.320      0.152 
-     6 2150000:… 0.0683       0.0866   7.26e- 3   -2.52              12            977     1000          0.012          0.977     0.172             0.230         0.0337       -1.72                  29                939         1000              0.029              0.939   0.396         0.384      0.0691
-     7 2150000:… 0.0931       0.0872   6.76e- 3    0.870            723            265     1000          0.723          0.265     0.172             0.232         0.0329       -1.80                  29                951         1000              0.029              0.951   0.540         0.384      0.0664
-     8 2250000:… 0.0469       0.0469   3.24e-18    0                  0            218     1000          0              0.218     0.155             0.160         0.0385       -0.125                235                457         1000              0.235              0.457   0.302         0.324      0.171 
-     9 2250000:… 0.0931       0.0869   7.30e- 3    0.850            720            257     1000          0.72           0.257     0.172             0.231         0.0326       -1.80                  30                941         1000              0.03               0.941   0.540         0.384      0.0694
-    10 2250000:… 0.182        0.197    1.44e- 2   -1.07             129            869     1000          0.129          0.869     0.276             0.372         0.0377       -2.56                   0                994         1000              0                  0.994   0.659         0.533      0.0518
+       site    pd_obs pd_rand_mean pd_rand_sd pd_obs_z pd_obs_c_upper pd_obs_c_lower
+       <chr>    <dbl>        <dbl>      <dbl>    <dbl>          <dbl>          <dbl>
+     1 195000… 0.0469       0.0469   5.04e-18    1.38             491              0
+     2 195000… 0.0469       0.0469   5.01e-18    1.38             491              0
+     3 205000… 0.0931       0.0870   6.83e- 3    0.893            759            220
+     4 205000… 0.0469       0.0469   4.92e-18    0                458              0
+     5 215000… 0.0469       0.0469   4.95e-18   -1.40              11            525
+     6 215000… 0.0683       0.0869   6.95e- 3   -2.67               7            986
+     7 215000… 0.0931       0.0873   6.74e- 3    0.854            751            231
+     8 225000… 0.0469       0.0469   4.96e-18   -1.40              11            522
+     9 225000… 0.0931       0.0871   6.97e- 3    0.855            721            267
+    10 225000… 0.182        0.196    1.41e- 2   -1.00             162            838
     # ℹ 117 more rows
-    # ℹ 33 more variables: rpd_obs_z <dbl>, rpd_obs_c_upper <dbl>, rpd_obs_c_lower <dbl>, rpd_obs_q <dbl>, rpd_obs_p_upper <dbl>, rpd_obs_p_lower <dbl>, pe_obs <dbl>, pe_rand_mean <dbl>, pe_rand_sd <dbl>, pe_obs_z <dbl>, pe_obs_c_upper <dbl>, pe_obs_c_lower <dbl>, pe_obs_q <dbl>, pe_obs_p_upper <dbl>,
-    #   pe_obs_p_lower <dbl>, pe_alt_obs <dbl>, pe_alt_rand_mean <dbl>, pe_alt_rand_sd <dbl>, pe_alt_obs_z <dbl>, pe_alt_obs_c_upper <dbl>, pe_alt_obs_c_lower <dbl>, pe_alt_obs_q <dbl>, pe_alt_obs_p_upper <dbl>, pe_alt_obs_p_lower <dbl>, rpe_obs <dbl>, rpe_rand_mean <dbl>, rpe_rand_sd <dbl>,
-    #   rpe_obs_z <dbl>, rpe_obs_c_upper <dbl>, rpe_obs_c_lower <dbl>, rpe_obs_q <dbl>, rpe_obs_p_upper <dbl>, rpe_obs_p_lower <dbl>
+    # ℹ 48 more variables: pd_obs_q <dbl>, pd_obs_p_upper <dbl>,
+    #   pd_obs_p_lower <dbl>, pd_alt_obs <dbl>, pd_alt_rand_mean <dbl>,
+    #   pd_alt_rand_sd <dbl>, pd_alt_obs_z <dbl>, pd_alt_obs_c_upper <dbl>,
+    #   pd_alt_obs_c_lower <dbl>, pd_alt_obs_q <dbl>, pd_alt_obs_p_upper <dbl>,
+    #   pd_alt_obs_p_lower <dbl>, rpd_obs <dbl>, rpd_rand_mean <dbl>,
+    #   rpd_rand_sd <dbl>, rpd_obs_z <dbl>, rpd_obs_c_upper <dbl>, …
 
 There are a lot of columns. We can decipher what they mean though by
 using a few keywords: columns starting with `pd` are values of
@@ -403,8 +415,8 @@ count(biod_example_canape, endem_type)
     # A tibble: 3 × 2
       endem_type          n
       <chr>           <int>
-    1 mixed               5
-    2 not significant   120
+    1 mixed               7
+    2 not significant   118
     3 paleo               2
 
 ## Plot results
