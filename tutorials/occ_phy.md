@@ -118,7 +118,7 @@ crep_records_raw <- occ_download_import(crep_records_path)
 
     Download file size: 1.44 MB
 
-    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0003916-230530130749713.zip
+    On disk at /Users/joelnitta/repos/spatial-phy-workshop/tutorials/0010097-230530130749713.zip
 
 Note that the output of `occ_download()` includes a DOI for this
 dataset:
@@ -129,29 +129,29 @@ gbif_download
 
     <<gbif download>>
       Your download is being processed by GBIF:
-      https://www.gbif.org/occurrence/download/0003916-230530130749713
+      https://www.gbif.org/occurrence/download/0010097-230530130749713
       Most downloads finish within 15 min.
       Check status with
-      occ_download_wait('0003916-230530130749713')
+      occ_download_wait('0010097-230530130749713')
       After it finishes, use
-      d <- occ_download_get('0003916-230530130749713') %>%
+      d <- occ_download_get('0010097-230530130749713') %>%
         occ_download_import()
       to retrieve your download.
     Download Info:
       Username: joelnitta
       E-mail: joelnitta@gmail.com
       Format: SIMPLE_CSV
-      Download key: 0003916-230530130749713
-      Created: 2023-06-01T21:15:44.843+00:00
+      Download key: 0010097-230530130749713
+      Created: 2023-06-05T07:38:28.125+00:00
     Citation Info:  
       Please always cite the download DOI when using this data.
       https://www.gbif.org/citation-guidelines
-      DOI: 10.15468/dl.we5uvj
+      DOI: 10.15468/dl.efajva
       Citation:
-      GBIF Occurrence Download https://doi.org/10.15468/dl.we5uvj Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-06-01
+      GBIF Occurrence Download https://doi.org/10.15468/dl.efajva Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2023-06-05
 
 You should visit the DOI to see what your raw dataset looks like in
-GBIF: <https://doi.org/10.15468/dl.we5uvj>.
+GBIF: <https://doi.org/10.15468/dl.efajva>.
 
 You should always **be sure to cite the DOI if you publish your study**.
 If you filter the data, you may need to cite a “derived” dataset. For
@@ -293,8 +293,8 @@ crep_records_raw %>%
     4 MATERIAL_CITATION       5
     5 MATERIAL_SAMPLE       199
     6 OBSERVATION             1
-    7 OCCURRENCE            416
-    8 PRESERVED_SPECIMEN  18947
+    7 OCCURRENCE            389
+    8 PRESERVED_SPECIMEN  18974
 
 We see that the majority of these are `PRESERVED_SPECIMEN`; in the case
 of plants, those are almost certainly herbarium specimens. You can treat
@@ -397,7 +397,7 @@ ggplot()+
   theme(legend.position = "none")
 ```
 
-    Warning: Removed 10492 rows containing missing values (`geom_point()`).
+    Warning: Removed 10493 rows containing missing values (`geom_point()`).
 
 <img src="occ_phy_files/figure-commonmark/unnamed-chunk-13-1.png"
 width="672" />
@@ -411,7 +411,7 @@ errors?
 
 ### Remove missing values
 
-Did you notice the warning message when we ran `ggplot()`? It said 10492
+Did you notice the warning message when we ran `ggplot()`? It said 10493
 rows containing missing values had been removed rom the plot. Clearly we
 can’t use data that lack GPS points! The first step of cleaning the data
 is to remove these values.
@@ -430,7 +430,7 @@ crep_records_no_missing <-
 crep_records_no_missing
 ```
 
-    # A tibble: 9,573 × 50
+    # A tibble: 9,572 × 50
           gbifID datasetKey     occurrenceID kingdom phylum class order family genus
          <int64> <chr>          <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
      1 991749096 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
@@ -443,7 +443,7 @@ crep_records_no_missing
      8 991747526 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
      9 991747268 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
     10 991746718 bf2a4bf0-5f31… http://data… Plantae Trach… Poly… Hyme… Hymen… Crep…
-    # ℹ 9,563 more rows
+    # ℹ 9,562 more rows
     # ℹ 41 more variables: species <chr>, infraspecificEpithet <chr>,
     #   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
     #   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
@@ -737,7 +737,7 @@ crep_records_flagged <-
 
     Flagged 2596 records.
 
-    Flagged 3664 of 9573 records, EQ = 0.38.
+    Flagged 3664 of 9572 records, EQ = 0.38.
 
 The output is our original dataframe with one column added for each
 test, as well as an overall column called `.summary`.
@@ -833,7 +833,7 @@ There’s not much to say about the phylogeny, since that will be highly
 particular to your study.
 
 But a much more frequently encountered problem is matching names between
-the phylogeny and the community data. How can we do that?
+the phylogeny and the grid-cell data. How can we do that?
 
 First let’s see how many species are in common between the two to begin
 with. Notice that the tree uses underscores in the species names, so we
@@ -1105,7 +1105,7 @@ crep_records_trim_to_tree <-
   filter(species %in% crepidomanes_tree$tip.label)
 ```
 
-## Aggregating points to communities
+## Aggregating points to grid-cells
 
 ### points2comm()
 
@@ -1134,7 +1134,7 @@ names(comm)
 
     [1] "comm_dat" "poly_shp"
 
-`comm_dat` is the community matrix (here only showing the first six rows
+`comm_dat` is the grid-cell matrix (here only showing the first six rows
 and columns):
 
 ``` r
@@ -1191,12 +1191,10 @@ In that case, you should use the `mask` argument to select a smaller
 area before generating grid-cells.
 
 The setting for `res` also deserves careful consideration because it
-represents your hypothesis about what defines a community: you are
-saying that you consider species occurring within each grid-cell to be
-capable of interacting. If `res` is too large, the grid-cells may
-include many different habitat types that do not actually have anything
-to do with each other; if it is too small you may not have sufficient
-sampling for each grid-cell and they will mostly be empty.
+defines the resolution of your investigation, and hence what you are
+able to discover. If `res` is too large, any patterns you see may very
+coarse; if `res` is too small, you may lack sufficient sampling for each
+grid-cell.
 
 One statistic we can use to help assess if our resolution is set
 appropriately is called “redundancy,” which is one minus the ratio of
@@ -1266,7 +1264,7 @@ width="672" />
 We can see that there is highest richness in SE Asia. Cool!
 
 Since we have come this far, let’s go ahead and do one more analysis
-that actually uses the phylogeny and community dataset together: we will
+that actually uses the phylogeny and grid-cell data together: we will
 calculate raw PD.
 
 ``` r

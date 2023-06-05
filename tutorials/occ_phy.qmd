@@ -486,7 +486,7 @@ fern_tree
 
 There's not much to say about the phylogeny, since that will be highly particular to your study.
 
-But a much more frequently encountered problem is matching names between the phylogeny and the community data. How can we do that?
+But a much more frequently encountered problem is matching names between the phylogeny and the grid-cell data. How can we do that?
 
 First let's see how many species are in common between the two to begin with. Notice that the tree uses underscores in the species names, so we need to account for that.
 
@@ -627,7 +627,7 @@ crep_records_trim_to_tree <-
   filter(species %in% crepidomanes_tree$tip.label)
 ```
 
-## Aggregating points to communities
+## Aggregating points to grid-cells
 
 ### points2comm()
 
@@ -652,7 +652,7 @@ The output of `points2comm` is a list including two items:
 names(comm)
 ```
 
-`comm_dat` is the community matrix (here only showing the first six rows and columns):
+`comm_dat` is the grid-cell matrix (here only showing the first six rows and columns):
 
 ```{r}
 comm$comm_dat[1:6, 1:6]
@@ -668,7 +668,7 @@ comm$poly_shp
 
 Before continuing, let's take a closer look at one of the arguments used in `points2comm`, `res`. `res` is the resolution to use for the grid-cells: here, we have selected 2 degrees per side. Note that the default settings are to split up the entire earth into grid-cells, so if you set `res` to a small number (e.g., 0.01), you will end up with an extremely large (memory-intensive) data object, and R might even crash. In that case, you should use the `mask` argument to select a smaller area before generating grid-cells.
 
-The setting for `res` also deserves careful consideration because it represents your hypothesis about what defines a community: you are saying that you consider species occurring within each grid-cell to be capable of interacting. If `res` is too large, the grid-cells may include many different habitat types that do not actually have anything to do with each other; if it is too small you may not have sufficient sampling for each grid-cell and they will mostly be empty.
+The setting for `res` also deserves careful consideration because it defines the resolution of your investigation, and hence what you are able to discover. If `res` is too large, any patterns you see may very coarse; if `res` is too small, you may lack sufficient sampling for each grid-cell.
 
 One statistic we can use to help assess if our resolution is set appropriately is called "redundancy," which is one minus the ratio of number of species to the number of samples (total abundance) in each grid-cell (Garcillán, P. P., et al. 2003. J. Veg. Sci. 14: 475–486). If each species has been sampled many times, redundancy will be high, near its maximum value of 1. If each species has been sampled only a few times, redundancy will be low. If each species has only been sampled once, redundancy will be zero.
 
@@ -715,7 +715,7 @@ ggplot() +
 
 We can see that there is highest richness in SE Asia. Cool!
 
-Since we have come this far, let's go ahead and do one more analysis that actually uses the phylogeny and community dataset together: we will calculate raw PD.
+Since we have come this far, let's go ahead and do one more analysis that actually uses the phylogeny and grid-cell data together: we will calculate raw PD.
 
 ```{r}
 # PD is available in the phyloregion package

@@ -7,7 +7,7 @@ phylogenetic analysis in R.
 ## Load data
 
 Normally you would probably load data into R using a function like
-`read.csv()` for community data and `ape::read.tree()` for the
+`read.csv()` for grid-cell data and `ape::read.tree()` for the
 phylogeny. However, `canaper` comes pre-loaded with some example data,
 so we will use that for the tutorial. The data files are available after
 you have loaded `canaper`. We will also load the `tidyverse` set of
@@ -59,12 +59,12 @@ acacia$phy
 
     Rooted; includes branch lengths.
 
-The second, `comm`, is a community dataframe with species as columns and
-rows as sites. The row names (sites) correspond to grid-cell centroids.
-For `biod_example` they are just made up; for `acacia` they are of 50 x
-50 km grid cells covering Australia. The community matrix is too large
-to print out in its entirety, so we will just take a look at the first 8
-rows and columns[^1]:
+The second, `comm`, is a dataframe with OTUs as columns and rows as
+sites. The row names (sites) correspond to grid-cell centroids. For
+`biod_example` they are just made up; for `acacia` they are of 50 x 50
+km grid cells covering Australia. The dataframe is too large to print
+out in its entirety, so we will just take a look at the first 8 rows and
+columns[^1]:
 
 ``` r
 dim(biod_example$comm)
@@ -142,19 +142,19 @@ determine settings to use.
 `cpr_rand_test()` includes two settings, `n_reps` and `n_iterations`.
 These sound similar but refer to two very different things.
 
-`n_reps` is the number of random communities to simulate. For example,
-if `n_reps` is 100, will we be comparing each observed value (e.g.,
+`n_reps` is the number of random grid-cells to simulate. For example, if
+`n_reps` is 100, will we be comparing each observed value (e.g.,
 phylogenetic diversity, `pd_obs`), with 100 random replicates of
 `pd_obs`. If `n_reps` is too low, we will lack sufficiently statistical
 power to detect patterns in the data.
 
 `n_iterations` is only used by some randomization algorithms, the
-“sequential” algorithms. Sequential algorithms randomize a community
-matrix by exchanging values between existing cells (“swapping”). As you
-might guess, the `swap` algorithm is a sequential algorithm. One such
-swap is a single “iteration”. If the total number of iterations,
-`n_iterations`, is too low, the randomized matrix won’t be sufficiently
-randomized, and will still resemble the original matrix[^2].
+“sequential” algorithms. Sequential algorithms randomize a matrix by
+exchanging values between existing cells (“swapping”). As you might
+guess, the `swap` algorithm is a sequential algorithm. One such swap is
+a single “iteration”. If the total number of iterations, `n_iterations`,
+is too low, the randomized matrix won’t be sufficiently randomized, and
+will still resemble the original matrix[^2].
 
 If either `n_reps` or `n_iterations` are set too high, it will take
 overly long to finish the calculations. So our goal is to set them
@@ -166,7 +166,7 @@ sufficiently high to achieve proper randomization, but not so high
 `canaper` includes a function to help determine the appropriate number
 of iterations, `cpr_iter_sim()`. It starts with the raw data, then
 shuffles it up to a maximum number of times (`n_iterations`). Each time
-it shuffles the community, it calculates the similarity between the
+it shuffles the matrix, it calculates the similarity between the
 original data and the shuffled version. We expect to see the similarity
 decrease with each iteration until further shuffling ceases to have an
 effect. You can think of this like shuffling a deck of cards; after many
@@ -217,10 +217,10 @@ ggplot2::ggplot(biod_iter_sim_res, aes(x = iteration, y = similarity)) +
 
 ![](canaper_files/figure-commonmark/iter-sim-biod_plot-1.png)
 
-From this, we can see that the original community and the randomized
-community reach a maximum dissimilarity at ca. 1,000 iterations. After
-that, the randomized community doesn’t become any more different with
-additional “mixing”.
+From this, we can see that the original matrix and the randomized matrix
+reach a maximum dissimilarity at ca. 1,000 iterations. After that, the
+randomized matrix doesn’t become any more different with additional
+“mixing”.
 
 How does this compare to the *Acacia* dataset? We will need to greatly
 increase the number of iterations since the dataset is much larger.
@@ -263,7 +263,7 @@ The code below compares the percentile of observed phylogenetic
 diversity relative to random (`pd_obs_p_upper`, [one of the values used
 for calculating endemism
 type](https://docs.ropensci.org/canaper/articles/canape.html#classify-endemism))
-between pairs of random communities each generated with the same number
+between pairs of random grid-cells each generated with the same number
 of replicates[^3].
 
 We are only running this on the `biod_example` data because the `acacia`

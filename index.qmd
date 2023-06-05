@@ -162,14 +162,14 @@ https://en.wikipedia.org/wiki/Mollweide_projection
 
 ::::
 
-## From occurrences to communities
+## From occurrences to grid-cells
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 - Raw data are often provided on a per-species basis
 
-- But we are interested in **assemblages** (communities) of species → need to group species together
+- But we are interested in **assemblages** (grid-cells) of species → need to group species together
 :::
 
 ::: {.column width="50%"}
@@ -183,13 +183,13 @@ https://phys.org/news/2018-12-local-conditions.html
 
 ::::
 
-## From occurrences to communities
+## From occurrences to grid-cells
 
 - For point data, a typical method is to divide the study area into equal size grid-cells, then count the species occurring in each grid-cell
 
 - For shape data, you would overlay the shapes
 
-- For checklist data, the communities may not be equal sized. You could simply use the sampling units in the checklist (e.g., counties, countries, etc.)
+- For checklist data, the areas may not be equal sized. You could simply use the sampling units in the checklist (e.g., counties, countries, etc.)
 
 ## Phylogenetic data
 
@@ -588,7 +588,7 @@ High rates of endemism on remote islands cause difference in taxonomic and phylo
 
 A typical workflow involves the following steps:
 
-1. Load phylogeny and community data
+1. Load phylogeny and grid-cell data
 2. Determine appropriate null model
 3. Conduct randomization test
 4. Categorize results
