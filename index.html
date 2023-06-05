@@ -506,7 +506,10 @@ Joel Nitta
 <div class="column" style="width:50%;">
 <ul>
 <li><strong>GenBank</strong></li>
-<li>access in R via the <code>rentrez</code> package</li>
+<li>access in R via the <code>rentrez</code> package
+<ul>
+<li>(or <code>restez</code> package for larger datasets)</li>
+</ul></li>
 </ul>
 </div><div class="column" style="width:50%;">
 <p><img data-src="https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/_images/P3_image2.png" alt="screenshot of genbank interface" width="450"></p>
@@ -534,7 +537,7 @@ Joel Nitta
 <ul>
 <li>Previous publications</li>
 <li>R packages that provide trees (<code>ftolr</code> for ferns)</li>
-<li>Open Tree of Life (<code>rotl</code> R package)</li>
+<li>Open Tree of Life (<code>rotl</code> R package) (<strong>caution!</strong>)</li>
 <li>Software that places tips on the tree by taxonomy (<strong>caution!</strong>)</li>
 </ul>
 </div><div class="column" style="width:50%;">
@@ -642,13 +645,22 @@ Joel Nitta
 </ul></li>
 </ul>
 </section>
-<section id="other-packages-phylogenetic-pipelines" class="slide level2">
-<h2>Other packages: phylogenetic pipelines</h2>
+<section id="other-packages-genbank-data" class="slide level2">
+<h2>Other packages: GenBank data</h2>
 <ul>
 <li><a href="https://github.com/ropensci/rentrez">rentrez</a>
 <ul>
 <li>Interface to <a href="https://www.ncbi.nlm.nih.gov/search/">Entrez</a> databases (including <a href="https://www.ncbi.nlm.nih.gov/genbank/">GenBank</a>)</li>
 </ul></li>
+<li><a href="https://github.com/ropensci/restez">restez</a>
+<ul>
+<li>Make a local copy of a portion of GenBank (good for building large trees)</li>
+</ul></li>
+</ul>
+</section>
+<section id="other-packages-phylogenetic-pipelines" class="slide level2">
+<h2>Other packages: phylogenetic pipelines</h2>
+<ul>
 <li><a href="https://github.com/ropensci/phruta/">phruta</a>
 <ul>
 <li>Pipeline to download sequences, align them, and build a phylogenetic tree</li>
@@ -672,11 +684,11 @@ Joel Nitta
 </ul></li>
 <li><a href="https://github.com/ropensci/rotl">rotl</a>
 <ul>
-<li>R interface to the Open Tree of Life</li>
+<li>R interface to the Open Tree of Life (<strong>use with caution</strong>)</li>
 </ul></li>
 <li><a href="https://github.com/jinyizju/U.PhyloMaker">U.PhyloMaker</a>
 <ul>
-<li>Assemble phylogenies by grafting species names onto a backbone (<strong>this approach is not recommended</strong>)</li>
+<li>Assemble phylogenies by grafting species names onto a backbone (<strong>not recommended</strong>)</li>
 </ul></li>
 </ul>
 </section></section>

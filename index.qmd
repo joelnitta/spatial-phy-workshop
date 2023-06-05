@@ -215,6 +215,7 @@ https://images.unsplash.com/
 ::: {.column width="50%"}
 - **GenBank**
 - access in R via the `rentrez` package
+  - (or `restez` package for larger datasets)
 :::
 
 ::: {.column width="50%"}
@@ -252,7 +253,7 @@ https://mediacdn.nhbs.com/jackets/jackets_resizer_xlarge/17/170234.jpg
 ::: {.column width="50%"}
 - Previous publications
 - R packages that provide trees (`ftolr` for ferns)
-- Open Tree of Life (`rotl` R package)
+- Open Tree of Life (`rotl` R package) (**caution!**)
 - Software that places tips on the tree by taxonomy (**caution!**)
 :::
 
@@ -346,10 +347,15 @@ A typical workflow involves the following steps:
 - [RBIEN](https://github.com/bmaitner/RBIEN)
   - Interface to [BIEN](https://bien.nceas.ucsb.edu/bien/) database of plant occurrences and traits
 
-## Other packages: phylogenetic pipelines
+## Other packages: GenBank data
 
 - [rentrez](https://github.com/ropensci/rentrez)
   - Interface to [Entrez](https://www.ncbi.nlm.nih.gov/search/) databases (including [GenBank](https://www.ncbi.nlm.nih.gov/genbank/))
+- [restez](https://github.com/ropensci/restez)
+  - Make a local copy of a portion of GenBank (good for building large trees)
+
+## Other packages: phylogenetic pipelines
+
 - [phruta](https://github.com/ropensci/phruta/)
   - Pipeline to download sequences, align them, and build a phylogenetic tree
 - [phylotaR](https://github.com/ropensci/phylotaR)
@@ -362,9 +368,9 @@ A typical workflow involves the following steps:
 - [fishtree](https://github.com/jonchang/fishtree)
   - Global fish phylogeny
 - [rotl](https://github.com/ropensci/rotl)
-  - R interface to the Open Tree of Life
+  - R interface to the Open Tree of Life (**use with caution**)
 - [U.PhyloMaker](https://github.com/jinyizju/U.PhyloMaker)
-  - Assemble phylogenies by grafting species names onto a backbone (**this approach is not recommended**)
+  - Assemble phylogenies by grafting species names onto a backbone (**not recommended**)
 
 # Applications of Spatial Phylogenetics
 
