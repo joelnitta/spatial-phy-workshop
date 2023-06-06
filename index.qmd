@@ -381,14 +381,16 @@ A typical workflow involves the following steps:
 
 - We will be using a pre-built tree
 
-## Other packages: taxonomy
+## Other packages: taxonomy{.smaller}
 
-- [taxastand](https://github.com/joelnitta/taxastand)
-  - Standardize names to a custom database
 - [RTNRS](https://github.com/EnquistLab/RTNRS)
-  - Standardize names using TNRS (Taxonomic Name Resolution Service)
+  - Standardize names using TNRS ([Taxonomic Name Resolution Service](https://tnrs.biendata.org/))
+- [rWCVP](https://github.com/matildabrown/rWCVP/)
+  - Standardize names to WCVP ([World Checklist of Vascular Plants](https://powo.science.kew.org/about-wcvp))
 - [taxadb](https://github.com/ropensci/taxadb)
   - Standardize names using local databases
+- [taxastand](https://github.com/joelnitta/taxastand)
+  - Standardize names to a custom database
 
 ## Other packages: occurrences
 
