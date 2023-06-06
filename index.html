@@ -426,8 +426,47 @@ Joel Nitta
 <li><p>For example, if your grid-cell size is 1 degree x 1 degree, you don’t need data to be more exact than that</p></li>
 </ul>
 </section>
-<section id="coordinate-reference-systems" class="slide level2">
-<h2>Coordinate Reference Systems</h2>
+<section id="coordinate-reference-systems-crs" class="slide level2 smaller">
+<h2>Coordinate Reference Systems (CRS)</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Geographic Coordinate System (<strong>GCS</strong>)</p>
+<ul>
+<li><em>Where</em> the data are located</li>
+<li>Round (like the earth)</li>
+<li>Usually in degrees</li>
+</ul>
+<p>Projected Coordinate System (<strong>PCS</strong>)</p>
+<ul>
+<li><em>How</em> to draw a map of the data</li>
+<li>Flat (like a piece of paper)</li>
+<li>Usually in meters</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://www.esri.com/arcgis-blog/wp-content/uploads/2022/02/grid2.png"></p>
+</div>
+</div>
+</section>
+<section id="geographic-coordinate-system-gcs" class="slide level2">
+<h2>Geographic Coordinate System (GCS)</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li><p>Latitude and longitude alone are not enough</p></li>
+<li><p>The earth is not a perfect sphere</p></li>
+<li><p>GCS defines <strong>how to model the earth</strong> (e.g., WGS84)</p></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="https://www.esri.com/arcgis-blog/wp-content/uploads/2020/02/4.png"></p>
+<p>Hiker’s coordinates at 134.577°E, 24.006°S. But where is she (A or B)?</p>
+</div>
+</div>
+<div class="medsmall">
+<p>https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/gcs_vs_pcs/</p>
+</div>
+</section>
+<section id="projected-coordinate-system-pcs" class="slide level2">
+<h2>Projected Coordinate System (PCS)</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <ul>
@@ -443,7 +482,7 @@ Joel Nitta
 </div>
 </div>
 </section>
-<section id="coordinate-reference-systems-1" class="slide level2">
+<section id="coordinate-reference-systems" class="slide level2">
 <h2>Coordinate Reference Systems</h2>
 <div class="columns">
 <div class="column" style="width:50%;">

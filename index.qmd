@@ -113,7 +113,57 @@ We will focus on **point data** (the data available from GBIF) during the coding
 
 - For example, if your grid-cell size is 1 degree x 1 degree, you don't need data to be more exact than that
 
-## Coordinate Reference Systems
+## Coordinate Reference Systems (CRS) {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Geographic Coordinate System (**GCS**)
+
+- *Where* the data are located
+- Round (like the earth)
+- Usually in degrees
+
+Projected Coordinate System (**PCS**)
+
+- *How* to draw a map of the data
+- Flat (like a piece of paper)
+- Usually in meters
+:::
+
+::: {.column width="50%"}
+![](https://www.esri.com/arcgis-blog/wp-content/uploads/2022/02/grid2.png)
+:::
+
+::::
+
+## Geographic Coordinate System (GCS)
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Latitude and longitude alone are not enough
+
+- The earth is not a perfect sphere
+
+- GCS defines **how to model the earth** (e.g., WGS84)
+:::
+
+::: {.column width="50%"}
+
+![](https://www.esri.com/arcgis-blog/wp-content/uploads/2020/02/4.png)
+
+Hiker's coordinates at 134.577°E, 24.006°S. But where is she (A or B)?
+
+:::
+
+::::
+
+::: {.medsmall}
+https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/gcs_vs_pcs/
+:::
+
+## Projected Coordinate System (PCS)
 
 :::: {.columns}
 
