@@ -361,7 +361,7 @@ We need to **resolve names** to a standard taxonomic database
 
 ## Live coding
 
-- Live coding session demonstrating how to use `rgbif`, `CoordinateCleaner`, `taxonDB`, and `rotl` to obtain data
+- Live coding session demonstrating how to use `rgbif`, `CoordinateCleaner`, and `phyloregion` to obtain data
 
 - Code is available here: <https://github.com/joelnitta/spatial-phy-workshop/blob/main/tutorials/occ_phy.md>
 

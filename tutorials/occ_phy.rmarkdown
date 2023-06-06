@@ -16,9 +16,11 @@ library(rgbif)
 library(tidyverse)
 ```
 
+
 This tutorial demonstrates how to obtain occurrence records and phylogenies to use for spatial phylogenetics in R. As an example, we will obtain occurrence records and a phylogeny for the fern genus *Crepidomanes*.
 
 ## Obtaining occurrence data with rgbif
+
 
 ```{r}
 #| label: current-num-records
@@ -28,6 +30,7 @@ This tutorial demonstrates how to obtain occurrence records and phylogenies to u
 gbif_n_rec <- scales::number(occ_count(), big.mark = ",")
 ```
 
+
 [GBIF](https://www.gbif.org/) is the largest platform for accessing biodiveristy data^[As of writing, GBIF includes `r gbif_n_rec` occurrence records!], making it an excellent source of occurrence data for spatial phylogenetics.
 
 [`rgbif`](https://docs.ropensci.org/rgbif/) is an R package that interfaces with the GBIF [API](https://en.wikipedia.org/wiki/API), allowing you to query and download GBIF data from R.
@@ -35,6 +38,7 @@ gbif_n_rec <- scales::number(occ_count(), big.mark = ",")
 ### Quick searches
 
 `occ_search()` is a quick way to get GBIF data into R (and does not require logging in), but is limited to 100,000 records per query.
+
 
 ```{r}
 #| label: rgbif-search
@@ -54,6 +58,7 @@ crep_records$data[1:6, 1:6]
 dim(crep_records$data)
 ```
 
+
 ### Store login credentials for bigger searches
 
 **IMPORTANT NOTE**: Only do this if you are using your own computer! **[Skip this step](#downloading-a-complete-dataset) if you are running the code in the cloud**, i.e., [in a binder](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#how-secure-is-mybinder-org). In that case, enter your credentials directly into the `occ_download()` function.
@@ -64,11 +69,13 @@ If you don't have one yet, create it now by going to <https://www.gbif.org>, cli
 
 To make authentication easier, we will store login credentials in a special file called `.Renviron` outside of your project using the `usethis` package.
 
+
 ```{r}
 #| label: setup-cred
 #| eval: false
 usethis::edit_r_environ("user")
 ```
+
 
 This will open the `.Renviron` file in your editor.
 
@@ -87,6 +94,7 @@ Save it and restart R. Now you will be able to use `rgbif` download functionalit
 To download a complete dataset, use `occ_download()`. This requires you provide login credentials. If you set them up using the `.Renviron` file [as described above](#store-login-credentials-for-bigger-searches), you won't have to type them in. Otherwise, you can enter them directly into the `occ_download()` function using the arguments `user`, `pwd`, and `email` (NEVER save these directly to an R file that could become public!).
 
 I assume that you are working in a project folder than includes a subdirectory called "data_raw". If not, set this up now.
+
 
 ```{r}
 #| label: rgbif-download-show
@@ -131,11 +139,14 @@ zip_files <- list.files(here::here(), "zip")
 fs::file_move(here::here(zip_files), here::here("tutorials", zip_files))
 ```
 
+
 Note that the output of `occ_download()` includes a DOI for this dataset:
+
 
 ```{r}
 gbif_download
 ```
+
 
 You should visit the DOI to see what your raw dataset looks like in GBIF: <`r paste0("https://doi.org/", attr(gbif_download, "doi"))`>.
 
@@ -149,21 +160,25 @@ For more information, see [this documentation from rOpenSci](https://docs.ropens
 
 Let's take a look at the dataset.
 
+
 ```{r}
 #| label: inspect-gbif-data-1
 #| cache: true
 crep_records_raw
 ```
 
+
 The dataset is so large it is difficult to print out to the screen. This output type (`"SIMPLE_CSV"`) includes 50 columns, which is less than when we used `occ_search()`, but it's still a lot.
 
 The `dplyr::glimpse()` function is useful when there are lots of columns to get an idea of what each column holds.
+
 
 ```{r}
 #| label: inspect-gbif-data-2
 #| cache: true
 glimpse(crep_records_raw[1, ])
 ```
+
 
 That's better.
 
@@ -180,11 +195,13 @@ There are number of columns that bear mentioning^[Most of these columns are [Dar
 
 What is the deal with `basisOfRecord`? Let's see what values are included in this dataset:
 
+
 ```{r}
 #| label: basis
 crep_records_raw %>%
   count(basisOfRecord)
 ```
+
 
 We see that the majority of these are `PRESERVED_SPECIMEN`; in the case of plants, those are almost certainly herbarium specimens.
 You can treat such occurrence records as high-quality because they have a voucher specimen to back them up; if you really wanted to, you could theoretically track down the specimen for any of these occurrence records and inspect it.
@@ -195,6 +212,7 @@ Another common type of `basisOfRecord` that comes up is `FOSSIL_SPECIMEN`, which
 
 Let's see how many species there for each type of `basisOfRecord`:
 
+
 ```{r}
 #| label: count-species-by-obs-type
 crep_records_raw %>%
@@ -204,9 +222,11 @@ crep_records_raw %>%
   )
 ```
 
+
 Most of them are preserved specimens, as expected.
 
 How many species are only represented by `HUMAN_OBSERVATION` records? In other words, if we were to drop all `HUMAN_OBSERVATION` records, how many species would we lose?
+
 
 ```{r}
 #| label: count-hum-obs-only
@@ -217,6 +237,7 @@ crep_records_raw %>%
   count(species)
 ```
 
+
 For now we will leave them in, but these are the sorts of things you need to consider when working with data from GBIF.
 
 ## Cleaning spatial data with CoordinateCleaner
@@ -226,6 +247,7 @@ As mentioned in the lecture this morning, we cannot treat GBIF data at face-valu
 ### Visualize the raw data
 
 Before we clean the raw data, let's visualize it (always a good idea, regardless of what kind of data you are working with). Here we will use the `ggplot2` package included in `tidyverse`.
+
 
 ```{r}
 # Download world map data
@@ -242,11 +264,13 @@ ggplot()+
   theme(legend.position = "none")
 ```
 
+
 There are too many colors to distinguish all the species so I'm not showing their names, but its still interesting to see their overall distribution patterns.
 
 Looking at this map, are there any points that you think might be errors?
 
 ### Remove missing values
+
 
 ```{r}
 #| echo: false
@@ -259,7 +283,9 @@ n_missing <-
   pull(n_missing)
 ```
 
+
 Did you notice the warning message when we ran `ggplot()`? It said `r n_missing` rows containing missing values had been removed rom the plot. Clearly we can't use data that lack GPS points! The first step of cleaning the data is to remove these values.
+
 
 ```{r}
 crep_records_no_missing <-
@@ -275,6 +301,7 @@ crep_records_no_missing <-
 crep_records_no_missing
 ```
 
+
 That alone decreased our number of records by nearly half.
 
 ### Example CoordinateCleaner cleaning function: `cc_sea()`
@@ -284,6 +311,7 @@ So we have removed obviously unusable data points. Great! But we need to be care
 To demonstrate how this works, let's start with an example: data points in the ocean. Our study species is a terrestrial fern, so if any occurrence records show up in the middle of the ocean, they should be removed.
 
 Here, "scale" tells `CoordinateCleaner` to use the most detailed scale possible, `10` (you could choose `50` or `110` also, but these are progressively lower resolution^[The `coordinateCleaner` help documentation mistakenly says it is the reverse order]).
+
 
 ```{r}
 library(CoordinateCleaner)
@@ -298,15 +326,19 @@ crep_records_sea_flagged <-
   )
 ```
 
+
 The output here is a logical vector of occurrence records that passed the test: `TRUE` are those that passed, and `FALSE` are those that failed.
+
 
 ```{r}
 head(crep_records_sea_flagged)
 ```
 
+
 However, we should not accept the results of `CoordinateCleaner` blindly. Let's dig in to these in a bit more detail.
 
 First, filter the original records to only those that got flagged as being in the ocean:
+
 
 ```{r}
 crep_records_sea <-
@@ -314,13 +346,17 @@ crep_records_sea <-
   filter(!crep_records_sea_flagged)
 ```
 
+
 We'd like to plot these, but there are too many to look at them in detail on a global scale. Instead, let's see what country had the most and then zoom in there.
+
 
 ```{r}
 count(crep_records_sea, countryCode, sort = TRUE)
 ```
 
+
 It looks like Japan (`JP`) had by far the most. OK, let's plot those.
+
 
 ```{r}
 # Load package needed for hi-res maps
@@ -344,13 +380,17 @@ ggplot() +
   )
 ```
 
+
 See a pattern? All (or at least the vast majority) of points that got flagged occur along coastlines or nearby small islands. So these are probably perfectly useable points, but they are close enough to the coast that they got mistakenly flagged. That is because the default `CoordinateCleaner` maps of coastlines expect very high accuracy of the GPS points. However, there is an alternate setting, a map with buffers around the coasts called "buffland". Load it with `data("buffland")`.
+
 
 ```{r}
 data("buffland")
 ```
 
+
 This is what it looks like when we plot it. Any points **outside** the grey area will be flagged as being in the ocean.
+
 
 ```{r}
 # We need to load the sf package for this (more on that in a bit)
@@ -360,7 +400,9 @@ ggplot(st_as_sf(buffland)) +
   geom_sf(fill = "grey70")
 ```
 
+
 As you can see, by using this map as a cutoff, we be sure that we are only excluding points in the open ocean, far from any coasts. Let's try that.
+
 
 ```{r}
 crep_records_sea_flagged_buff <- 
@@ -373,9 +415,11 @@ crep_records_sea_flagged_buff <-
   )
 ```
 
+
 Many fewer records were flagged this time.
 
 We can plot them:
+
 
 ```{r}
 crep_records_sea_buff <-
@@ -391,11 +435,13 @@ ggplot() +
   )
 ```
 
+
 This looks better, but you may want to zoom in to individual points, for example by querying their latitude and longitude on Google Maps.
 
 ### Full CoordinateCleaner cleaning function: `clean_coordinates()`
 
 There are many functions starting with `cc_` that do other checks, such as `cc_dupl()` that checks for duplicates, `cc_urb()` that checks for species in urban areas, etc. You could pass your data through these individually. However, there is also a single function that can run them all at once, `clean_coordinates()`. The `tests` argument tells it which tests to conduct. Note that there is a long list of settings for the various tests. Here we are using mostly default settings, but **you should always check to make sure the settings make sense for your data**.
+
 
 ```{r}
 crep_records_flagged <-
@@ -422,17 +468,21 @@ crep_records_flagged <-
   )
 ```
 
+
 The output is our original dataframe with one column added for each test, as well as an overall column called `.summary`.
 
 Let's get a summary of the results.
+
 
 ```{r}
 summary(crep_records_flagged)
 ```
 
+
 Unfortunately the output is a bit cryptic because `CoordinateCleaner` uses very short abbreviations for column names, but we can see that duplicates (`.dpl`) account for the largest share of flagged records. This is because GBIF is an **aggregator** of databases, so it is quite possible that the same specimen shows up multiple times. Good thing we spotted these!
 
 Let's plot the cleaned and flagged data together:
+
 
 ```{r}
 ggplot() +
@@ -443,7 +493,9 @@ ggplot() +
   )
 ```
 
+
 Finally, let's trim the occurrence records down to just the clean data points.
+
 
 ```{r}
 crep_records_clean <-
@@ -453,6 +505,7 @@ crep_records_clean <-
   as_tibble()
 ```
 
+
 ## Obtaining a phylogeny
 
 As mentioned in the lecture, there are various sources of phylogenies, but unfortunately no "one size fits all" solution.
@@ -460,6 +513,7 @@ As mentioned in the lecture, there are various sources of phylogenies, but unfor
 Since this example is for ferns, we will download a fern phylogeny that is conveniently available via the `ftolr` package.
 
 It isn't on CRAN, so you need to use a slightly different command to install it:
+
 
 ```{r}
 #| eval: false
@@ -472,7 +526,9 @@ install.packages(
   dep = TRUE)
 ```
 
+
 Once it's installed, we can obtain the tree with the `ft_tree()` function.
+
 
 ```{r}
 library(ftolr)
@@ -482,6 +538,7 @@ fern_tree <- ft_tree()
 fern_tree
 ```
 
+
 ## Matching names
 
 There's not much to say about the phylogeny, since that will be highly particular to your study.
@@ -490,11 +547,13 @@ But a much more frequently encountered problem is matching names between the phy
 
 First let's see how many species are in common between the two to begin with. Notice that the tree uses underscores in the species names, so we need to account for that.
 
+
 ```{r}
 common_species <- intersect(fern_tree$tip.label, str_replace_all(crep_records_clean$species, " ", "_"))
 length(common_species)
 n_distinct(crep_records_clean$species)
 ```
+
 
 Of the `r n_distinct(crep_records_clean$species)` species in the cleaned occurrence data, `r length(common_species)` are in the tree.
 
@@ -506,6 +565,7 @@ However, the names in the tree may not conform to the GBIF taxonomy. We can quer
 
 The first step is to format the query. `rgbif` expects this to be in the form of a dataframe. Since we are only interested in ferns, we will set the `class` column to "Polypodiopsida". You could similarly set other taxonomic ranks like `phylum`, `order`, `family`, etc.
 
+
 ```{r}
 # Set up query
 names_query <- tibble(
@@ -514,14 +574,18 @@ names_query <- tibble(
 )
 ```
 
+
 Next, run the query using `name_backbone_checklist()`. This may take a few minutes. Note that it is actually preferrable to query full scientific names with authors, but we are skipping that because of time restrictions.
+
 
 ```{r}
 fern_tree_names_lookup <- name_backbone_checklist(names_query)
 dim(fern_tree_names_lookup)
 ```
 
+
 As so often, the results are a large dataframe. Let's just peak at the first row to see what's going on.
+
 
 ```{r}
 fern_tree_names_lookup %>%
@@ -529,23 +593,29 @@ fern_tree_names_lookup %>%
   glimpse()
 ```
 
+
 Important columns to note are `verbatim_name` with the original query name and `species` with the accepted binomial in GBIF.
 
 Some other interesting columns are `status` and `matchType`. Let's see what kind of values those include:
+
 
 ```{r}
 fern_tree_names_lookup %>% count(status)
 ```
 
+
 `status` includes `ACCEPTED`, `DOUBTFUL`, and `SYNONYM`. `ACCEPTED` is names that are the same between the query and reference (GBIF). `SYNONYM` are names in the query that are treated as synonyms by GBIF. These are what we are trying to fix. `DOUBTFUL` are names that GBIF thinks may be invalid.
+
 
 ```{r}
 fern_tree_names_lookup %>% count(matchType)
 ```
 
+
 `matchType` includes `EXACT`, `FUZZY`, and `HIGHERRANK`. `EXACT` are names that could be looked up exactly as they are. `FUZZY` means that the query differed slightly from the match, but the matching algorithm considered them close enough to be recognized as the same. (We'll look into `HIGHERRANK` in a moment).
 
 Let's see an example of a fuzzy match:
+
 
 ```{r}
 fern_tree_names_lookup %>%
@@ -562,9 +632,11 @@ fuzzy_ex <-
   slice(1)
 ```
 
+
 We can see that the query name "`r fuzzy_ex$verbatim_name`" is nearly the same as, but slightly different from, the matched name "`r fuzzy_ex$species`". We can see this is likely a spelling mistake. Such slight differences are common between databases, hence the need for fuzzy matching. However, it is possible to get **false positives** with fuzzy matching too --- sometimes names that differ only by one letter are indeed different! So ideally **you should check the whole list of fuzzy matches and make sure they are correct.**
 
 OK, what about `matchType` "HIGHERRANK"?
+
 
 ```{r}
 fern_tree_names_lookup %>%
@@ -581,9 +653,11 @@ hirank_ex <-
   slice(1)
 ```
 
+
 In this case, the query name "`r hirank_ex$verbatim_name`" matched to a higher rank, "`r hirank_ex$genus`", but not a species. We will go ahead and exclude these because we know that all of our queries were at the species level and should have a species-level match. But ideally, **you should see if you can manually find a match for such queries**.
 
 Now we adjust the names in the tree to match the GBIF reference taxonomy.
+
 
 ```{r}
 fern_tree_to_gbif <-
@@ -608,7 +682,9 @@ fern_tree_to_gbif <-
 fern_tree_renamed$tip.label <- fern_tree_to_gbif$gbif_name
 ```
 
+
 And finally match the tree and occurrence records by species name. Note that we are dropping any species that don't occur in both the tree and the occurrence data.
+
 
 ```{r}
 # Find the species in common between the tree and the occurrence data
@@ -627,11 +703,13 @@ crep_records_trim_to_tree <-
   filter(species %in% crepidomanes_tree$tip.label)
 ```
 
+
 ## Aggregating points to grid-cells
 
 ### points2comm()
 
 The final step before conducting spatial phylogenetic analysis is to aggregate the occurrence points into grid-cells. For this, we will use the `points2comm()` function of the `phyloregion` package.
+
 
 ```{r}
 library(phyloregion)
@@ -646,23 +724,30 @@ comm <-
   )
 ```
 
+
 The output of `points2comm` is a list including two items:
+
 
 ```{r}
 names(comm)
 ```
 
+
 `comm_dat` is the grid-cell matrix (here only showing the first six rows and columns):
+
 
 ```{r}
 comm$comm_dat[1:6, 1:6]
 ```
 
+
 `poly_shp` is the GIS layer data: the shapes of the grid-cells.
+
 
 ```{r}
 comm$poly_shp
 ```
+
 
 ### Resolution and redundancy
 
@@ -674,6 +759,7 @@ One statistic we can use to help assess if our resolution is set appropriately i
 
 Calculating redundancy is straightforward with the output from `points2comm()`.
 
+
 ```{r}
 redundancy_res_2 <-
   comm$poly_shp %>%
@@ -681,7 +767,9 @@ redundancy_res_2 <-
     mutate(redundancy = 1 - richness/abundance)
 ```
 
+
 We could then plot a histogram or bar chart to take a closer look:
+
 
 ```{r}
 #| warning: false
@@ -690,6 +778,7 @@ ggplot(redundancy_res_2, aes(x = redundancy)) +
   geom_histogram()
 ```
 
+
 What does this histogram tell you?
 
 We don't have time to investigate the effects of different resolutions for this dataset, but that is something you should be sure to look into for your own analysis.
@@ -697,6 +786,7 @@ We don't have time to investigate the effects of different resolutions for this 
 ### Plotting
 
 `phyloregion` stores the GIS data as an R object called a `SpatialPolygonsDataFrame`, or class `sp`. Recently, a newer data format called "Simple features", or class `sf`, has become popular and is gradually replacing `sp`. `sf` is the format that we have been using for plotting so far. We don't have time to go into details about these, but just know that you can convert from `sp` to `sf` with the function `st_as_sf()`. We do this below so we can plot the grid-cells on the world map. Note that we also need to deal with the Coordinate Reference System (CRS).
+
 
 ```{r}
 # Set the CRS to match between the background map and points
@@ -713,9 +803,11 @@ ggplot() +
   scale_fill_viridis_c(trans = "log10")
 ```
 
+
 We can see that there is highest richness in SE Asia. Cool!
 
 Since we have come this far, let's go ahead and do one more analysis that actually uses the phylogeny and grid-cell data together: we will calculate raw PD.
+
 
 ```{r}
 # PD is available in the phyloregion package
@@ -744,7 +836,9 @@ ggplot() +
   scale_fill_viridis_c(trans = "log10")
 ```
 
+
 As expected, it looks very similar to species richness. We will get more into methods that account for this expected relationship tomorrow!
+
 
 ```{r}
 ggplot(poly_shp_sf) +
@@ -752,3 +846,4 @@ ggplot(poly_shp_sf) +
     aes(x = richness, y = pd)
   )
 ```
+
