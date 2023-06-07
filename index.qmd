@@ -634,6 +634,10 @@ Understanding the distribution of bio-regions
 
 High rates of endemism on remote islands cause difference in taxonomic and phylogenetic bioregions
 
+## Rates of protection vary by biodiversity metric
+
+![](images/japan_protected.png){fig-alt="Figure showing bioregions of ferns of Japan" height="450"}
+
 # Spatial phylogenetics in R with `canaper`
 
 ## Live coding
