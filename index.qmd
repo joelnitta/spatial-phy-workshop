@@ -655,7 +655,7 @@ Understanding the distribution of bio-regions
 - Used to be done *ad-hoc*
   - Not objective
 
-- Newer approaches are quantitative (covered by Brent's talk)
+- Newer approaches are quantitative
 
 ## 3-4 regions in ferns of Japan
 
@@ -668,6 +668,26 @@ High rates of endemism on remote islands cause difference in taxonomic and phylo
 ![](images/japan_protected.png){fig-alt="Figure showing bioregions of ferns of Japan" height="450"}
 
 # Spatial phylogenetics in R with `canaper`
+
+## `canaper` R package
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Can **automate** CANAPE analysis with R scripts
+- Don't need to switch between Biodiverse and R (do it all in R)
+:::
+
+::: {.column width="10%"}
+:::
+
+::: {.column width="40%"}
+![](https://docs.ropensci.org/canaper/logo.png){width="300px"}
+:::
+
+::::
+
+<https://docs.ropensci.org/canaper/>
 
 ## Live coding
 
@@ -687,6 +707,6 @@ A typical workflow involves the following steps:
 
 ## Survey
 
-Please fill out the post-workshops survey:
+Please fill out the post-workshop survey:
 
 <https://forms.gle/Dh1TdJctskWXVHSW7>
