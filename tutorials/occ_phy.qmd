@@ -18,6 +18,35 @@ library(tidyverse)
 
 This tutorial demonstrates how to obtain occurrence records and phylogenies to use for spatial phylogenetics in R. As an example, we will obtain occurrence records and a phylogeny for the fern genus *Crepidomanes*.
 
+## Setup
+
+Install the following R packages:
+
+```{r}
+#| label: install-r-packages
+#| eval: false
+install.packages(
+  c(
+    "rgbif",
+    "tidyverse",
+    "rnaturalearth",
+    "CoordinateCleaner",
+    "sf",
+    "phyloregion",
+    "remotes"
+  )
+)
+```
+
+`naturalearthhires` and `ftolr` are also needed, but you must use a different command to install them:
+
+```{r}
+#| label: install-naturalearthhires
+#| eval: false
+remotes::install_github("ropensci/rnaturalearthhires")
+remotes::install_github("fernphy/ftolr")
+```
+
 ## Obtaining occurrence data with rgbif
 
 ```{r}

@@ -5,6 +5,31 @@ phylogenies to use for spatial phylogenetics in R. As an example, we
 will obtain occurrence records and a phylogeny for the fern genus
 *Crepidomanes*.
 
+## Setup
+
+Install the following R packages:
+
+```r
+install.packages(
+  c(
+    "rgbif",
+    "tidyverse",
+    "rnaturalearth",
+    "CoordinateCleaner",
+    "sf",
+    "phyloregion",
+    "remotes"
+  )
+)
+```
+
+`naturalearthhires` and `ftolr` are also needed, but you must use a different command to install them:
+
+```r
+remotes::install_github("ropensci/rnaturalearthhires")
+remotes::install_github("fernphy/ftolr")
+```
+
 ## Obtaining occurrence data with rgbif
 
 [GBIF](https://www.gbif.org/) is the largest platform for accessing
