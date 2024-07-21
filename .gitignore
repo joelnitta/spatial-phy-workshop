@@ -3,3 +3,6 @@ data_raw
 *.pptx
 /.quarto/
 *.zip
+working
+.DS_Store
+index.html
