@@ -70,6 +70,10 @@ install.packages("renv")
 renv::restore()
 ```
 
+## Deployment
+
+To deploy the rendered slides, run `quarto publish`.
+
 ## License
 
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
