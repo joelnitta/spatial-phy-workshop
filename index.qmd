@@ -655,3 +655,9 @@ A typical workflow involves the following steps:
 3. Conduct randomization test
 4. Categorize results
 5. Plot results
+
+## Survey
+
+Please fill out the post-workshops survey:
+
+<https://forms.gle/Dh1TdJctskWXVHSW7>
