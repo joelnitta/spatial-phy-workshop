@@ -11,6 +11,35 @@ footer: <a href="https://joelnitta.github.io/spatial-phy-workshop">https://joeln
 
 # Assembling Spatial and Genetic Data
 
+## Dr. Joel H. Nitta
+
+:::: {.columns}
+
+::: {.column width="45%"}
+@joelnitta@fosstodon.org
+
+<https://joelnitta.com>
+
+- Associate Professor @ [Chiba University](https://www.chiba-u.ac.jp/e/index.html)
+
+- Research interests: Ecology and evolution of __ferns__
+
+::: {.medsmall}
+Photo: J-Y Meyer
+:::
+
+:::
+
+::: {.column width="10%"}
+:::
+
+::: {.column width="45%"}
+<img src="https://github.com/joelnitta/joelnitta-site/blob/master/static/media/headers/research_img2.jpg?raw=true" alt="drawing" height="100%"/>
+
+:::
+
+::::
+
 ## Basic inputs for spatial phylogenetics
 
 :::: {.columns}
