@@ -1,0 +1,4 @@
+project:
+  title: "Spatial Phylogenetics Workshop"
+  render:
+    - index.qmd
